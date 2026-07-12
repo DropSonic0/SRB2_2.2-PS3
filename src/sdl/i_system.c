@@ -23,7 +23,9 @@
 /// \file
 /// \brief SRB2 system stuff for SDL
 
+#ifndef __SNC__
 #include <signal.h>
+#endif
 
 #ifdef _WIN32
 #define RPC_NO_WINDOWS_H
@@ -445,6 +447,7 @@ static void I_ReportSignal(int num, int coredumped)
 #endif
 }
 
+#ifndef __SNC__
 #ifndef NEWSIGNALHANDLER
 FUNCNORETURN static ATTRNORETURN void signal_handler(INT32 num)
 {
@@ -467,6 +470,7 @@ FUNCNORETURN static ATTRNORETURN void quit_handler(int num)
 	raise(num);
 	I_Quit();
 }
+#endif
 
 #ifdef HAVE_TERMIOS
 // TERMIOS console code from Quake3: thank you!
@@ -806,6 +810,7 @@ static inline void I_ShutdownConsole(void){}
 //
 static void I_RegisterSignals (void)
 {
+#ifndef __SNC__
 #ifdef SIGINT
 	signal(SIGINT , quit_handler);
 #endif
@@ -823,6 +828,7 @@ static void I_RegisterSignals (void)
 	signal(SIGSEGV , signal_handler);
 	signal(SIGABRT , signal_handler);
 	signal(SIGFPE , signal_handler);
+#endif
 #endif
 }
 

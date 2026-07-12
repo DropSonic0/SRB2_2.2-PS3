@@ -12,6 +12,7 @@
 ///        used for packet creation and such
 
 
+#include "doomtype.h"
 #include "endian.h"
 
 #ifndef SRB2_BIG_ENDIAN

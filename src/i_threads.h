@@ -9,10 +9,10 @@
 /// \file  i_threads.h
 /// \brief Multithreading abstraction
 
-#ifdef HAVE_THREADS
-
 #ifndef I_THREADS_H
 #define I_THREADS_H
+
+#ifdef HAVE_THREADS
 
 typedef void (*I_thread_fn)(void *userdata);
 
@@ -35,5 +35,22 @@ void      I_hold_cond       (I_cond *, I_mutex);
 void      I_wake_one_cond   (I_cond *);
 void      I_wake_all_cond   (I_cond *);
 
+#else
+
+typedef void (*I_thread_fn)(void *userdata);
+typedef void * I_mutex;
+typedef void * I_cond;
+
+#define I_start_threads()
+#define I_stop_threads()
+#define I_spawn_thread(name, fn, data)
+#define I_thread_is_stopped() 1
+#define I_lock_mutex(m)
+#define I_unlock_mutex(m)
+#define I_hold_cond(c, m)
+#define I_wake_one_cond(c)
+#define I_wake_all_cond(c)
+
+#endif
+
 #endif/*I_THREADS_H*/
-#endif/*HAVE_THREADS*/

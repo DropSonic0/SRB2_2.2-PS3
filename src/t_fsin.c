@@ -1,3 +1,5 @@
+#include "tables.h"
+
 fixed_t finesine[10240] =
 {
 	0, 50, 100, 150, 201, 251, 301, 351,

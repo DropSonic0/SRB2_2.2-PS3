@@ -19,6 +19,8 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+#ifdef HAVE_SDL
+
 /*
  * XPM (X PixMap) image loader:
  *
@@ -1218,3 +1220,5 @@ SDL_Surface *IMG_ReadXPMFromArray(const char **xpm)
     return NULL;
 }
 #endif /* not LOAD_XPM */
+
+#endif /* HAVE_SDL */

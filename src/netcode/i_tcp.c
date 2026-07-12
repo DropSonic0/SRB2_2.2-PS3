@@ -12,6 +12,44 @@
 ///        This is not really OS-dependent because all OSes have the same socket API.
 ///        Just use ifdef for OS-dependent parts.
 
+#ifdef __CELLOS_LV2__
+#undef _WIN32
+#undef WIN32
+#undef USE_WINSOCK
+#undef USE_WINSOCK1
+#undef USE_WINSOCK2
+#define NO_IPV6
+#include <netex/errno.h>
+#ifndef EWOULDBLOCK
+#  ifdef SYS_NET_EWOULDBLOCK
+#    define EWOULDBLOCK SYS_NET_EWOULDBLOCK
+#  else
+#    define EWOULDBLOCK 140
+#  endif
+#endif
+#ifndef ECONNREFUSED
+#  ifdef SYS_NET_ECONNREFUSED
+#    define ECONNREFUSED SYS_NET_ECONNREFUSED
+#  else
+#    define ECONNREFUSED 111
+#  endif
+#endif
+#ifndef EHOSTUNREACH
+#  ifdef SYS_NET_EHOSTUNREACH
+#    define EHOSTUNREACH SYS_NET_EHOSTUNREACH
+#  else
+#    define EHOSTUNREACH 113
+#  endif
+#endif
+#ifndef ENETUNREACH
+#  ifdef SYS_NET_ENETUNREACH
+#    define ENETUNREACH SYS_NET_ENETUNREACH
+#  else
+#    define ENETUNREACH 101
+#  endif
+#endif
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -52,7 +90,9 @@
 		#include <sys/socket.h>
 		#include <netinet/in.h>
 		#include <netdb.h>
+		#ifndef __CELLOS_LV2__
 		#include <sys/ioctl.h>
+		#endif
 	#endif //normal BSD API
 
 	#include <errno.h>
@@ -140,6 +180,9 @@ typedef union
 	// winsock stuff (in winsock a socket is not a file)
 	#define ioctl ioctlsocket
 	#define close closesocket
+#elif defined(__CELLOS_LV2__)
+	#define ioctl(s, r, v) setsockopt(s, SOL_SOCKET, SO_NBIO, v, sizeof(*(v)))
+	#define close socketclose
 #endif
 
 #include "i_addrinfo.h"

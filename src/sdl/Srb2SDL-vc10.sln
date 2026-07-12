@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2PS3", "..\Srb2PS3\Srb2PS3.vcxproj", "{72CE69C2-97C7-40EB-8C6C-34A41E27125E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2Win", "Srb2SDL-vc10.vcxproj", "{61BA7D3C-F77D-4D31-B718-1177FE482CF2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|PS3 = Debug|PS3
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|ARM = Release|ARM
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|PS3 = Release|PS3
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Debug|ARM.ActiveCfg = Debug|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Debug|Mixed Platforms.ActiveCfg = Debug|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Debug|Mixed Platforms.Build.0 = Debug|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Debug|PS3.ActiveCfg = Debug|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Debug|PS3.Build.0 = Debug|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Debug|Win32.ActiveCfg = Debug|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Debug|x64.ActiveCfg = Debug|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Release|ARM.ActiveCfg = Release|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Release|Mixed Platforms.ActiveCfg = Release|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Release|Mixed Platforms.Build.0 = Release|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Release|PS3.ActiveCfg = Release|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Release|PS3.Build.0 = Release|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Release|Win32.ActiveCfg = Release|PS3
+		{72CE69C2-97C7-40EB-8C6C-34A41E27125E}.Release|x64.ActiveCfg = Release|PS3
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|ARM.ActiveCfg = Debug|ARM
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|ARM.Build.0 = Debug|ARM
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|PS3.ActiveCfg = Debug|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|Win32.Build.0 = Debug|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|x64.ActiveCfg = Debug|x64
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Debug|x64.Build.0 = Debug|x64
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|ARM.ActiveCfg = Release|ARM
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|ARM.Build.0 = Release|ARM
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|PS3.ActiveCfg = Release|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|Win32.ActiveCfg = Release|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|Win32.Build.0 = Release|Win32
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|x64.ActiveCfg = Release|x64
+		{61BA7D3C-F77D-4D31-B718-1177FE482CF2}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

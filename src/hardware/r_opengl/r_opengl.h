@@ -20,7 +20,10 @@
 #ifndef _R_OPENGL_H_
 #define _R_OPENGL_H_
 
-#ifdef HAVE_SDL
+#if defined(__CELLOS_LV2__)
+#include <PSGL/psgl.h>
+#include <PSGL/psglu.h>
+#elif defined(HAVE_SDL)
 #define _MATH_DEFINES_DEFINED
 
 #ifdef _MSC_VER

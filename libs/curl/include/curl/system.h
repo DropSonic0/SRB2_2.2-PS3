@@ -50,7 +50,21 @@
  *
  */
 
-#if defined(__DJGPP__) || defined(__GO32__)
+#if defined(__CELLOS_LV2__)
+#  include <sys/types.h>
+#  include <sys/select.h>
+#  include <sys/socket.h>
+#  include <stdint.h>
+#  define CURL_TYPEOF_CURL_OFF_T     long long
+#  define CURL_FORMAT_CURL_OFF_T     "lld"
+#  define CURL_FORMAT_CURL_OFF_TU    "llu"
+#  define CURL_SUFFIX_CURL_OFF_T     LL
+#  define CURL_SUFFIX_CURL_OFF_TU    ULL
+#  define CURL_TYPEOF_CURL_SOCKLEN_T socklen_t
+#  define CURL_PULL_SYS_TYPES_H      1
+#  define CURL_PULL_SYS_SOCKET_H     1
+
+#elif defined(__DJGPP__) || defined(__GO32__)
 #  if defined(__DJGPP__) && (__DJGPP__ > 1)
 #    define CURL_TYPEOF_CURL_OFF_T     long long
 #    define CURL_FORMAT_CURL_OFF_T     "lld"
@@ -352,7 +366,7 @@
 /*    KEEP MSVC THE PENULTIMATE ENTRY    */
 /* ===================================== */
 
-#elif defined(_MSC_VER)
+#elif defined(_MSC_VER) && !defined(__CELLOS_LV2__)
 #  if (_MSC_VER >= 900) && (_INTEGRAL_MAX_BITS >= 64)
 #    define CURL_TYPEOF_CURL_OFF_T     __int64
 #    define CURL_FORMAT_CURL_OFF_T     "I64d"

@@ -30,6 +30,14 @@
  *   https://cool.haxx.se/mailman/listinfo/curl-library/
  */
 
+#if defined(__CELLOS_LV2__)
+#  include <sys/types.h>
+#  include <sys/select.h>
+#  include <sys/socket.h>
+#  include <stdint.h>
+#  define CURL_TYPEOF_CURL_OFF_T long long
+#endif
+
 #ifdef CURL_NO_OLDIES
 #define CURL_STRICTER
 #endif

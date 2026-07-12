@@ -114,8 +114,17 @@
 
 /* Configure process defines this to 1 when it finds out that system  */
 /* header file ws2tcpip.h must be included by the external interface. */
-#define CURL_PULL_WS2TCPIP_H 1
-#ifdef CURL_PULL_WS2TCPIP_H
+#if defined(__CELLOS_LV2__)
+#  include <sys/types.h>
+#  include <sys/select.h>
+#  include <sys/socket.h>
+#  include <stdint.h>
+#  define CURL_PULL_WS2TCPIP_H 0
+#else
+#  define CURL_PULL_WS2TCPIP_H 1
+#endif
+
+#if CURL_PULL_WS2TCPIP_H
 #  ifndef WIN32_LEAN_AND_MEAN
 #    define WIN32_LEAN_AND_MEAN 1
 #  endif
@@ -165,7 +174,11 @@
 typedef CURL_TYPEOF_CURL_SOCKLEN_T curl_socklen_t;
 
 /* Signed integral data type used for curl_off_t. */
+#if defined(__CELLOS_LV2__)
+#define CURL_TYPEOF_CURL_OFF_T long long
+#else
 #define CURL_TYPEOF_CURL_OFF_T int64_t
+#endif
 
 /* Data type definition of curl_off_t. */
 typedef CURL_TYPEOF_CURL_OFF_T curl_off_t;

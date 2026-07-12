@@ -21,7 +21,9 @@
 /// \file
 /// \brief SRB2 system stuff for dedicated servers
 
+#ifndef __SNC__
 #include <signal.h>
+#endif
 
 #ifdef _WIN32
 #define RPC_NO_WINDOWS_H
@@ -1153,6 +1155,7 @@ void I_OsPolling(void)
 		I_GetConsoleEvents();
 }
 
+#ifndef __SNC__
 FUNCNORETURN static ATTRNORETURN void quit_handler(int num)
 {
 	(void)num;
@@ -1160,9 +1163,11 @@ FUNCNORETURN static ATTRNORETURN void quit_handler(int num)
 	// this is risky since some functions can softlock in a signal handler: https://www.unix.com/man-page/posix/7/signal-safety/
 	I_Quit();
 }
+#endif
 
 static void I_RegisterSignals (void)
 {
+#ifndef __SNC__
 #if defined (__unix__) || defined(__APPLE__) || defined (UNIXCOMMON)
 	// signal is deprecated, long live sigaction
 	struct sigaction sig;
@@ -1176,6 +1181,7 @@ static void I_RegisterSignals (void)
 	signal(SIGINT, quit_handler);
 	signal(SIGBREAK, quit_handler);
 	signal(SIGTERM, quit_handler);
+#endif
 #endif
 }
 

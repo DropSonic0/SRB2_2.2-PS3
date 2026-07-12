@@ -22,7 +22,11 @@
 
 #include <stdlib.h>
 
+#ifndef __SNC__
 #include <signal.h>
+#endif
+
+#include "../doomtype.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4214 4244)
@@ -1961,15 +1965,24 @@ void I_ShutdownGraphics(void)
 
 void I_GetCursorPosition(INT32 *x, INT32 *y)
 {
+#ifdef HAVE_SDL
 	SDL_GetMouseState(x, y);
+#else
+	*x = 0;
+	*y = 0;
+#endif
 }
 
 UINT32 I_GetRefreshRate(void)
 {
+#ifdef HAVE_SDL
 	// Moved to VID_GetRefreshRate.
 	// Precalculating it like that won't work as
 	// well for windowed mode since you can drag
 	// the window around, but very slow PCs might have
 	// trouble querying mode over and over again.
 	return refresh_rate;
+#else
+	return 35;
+#endif
 }

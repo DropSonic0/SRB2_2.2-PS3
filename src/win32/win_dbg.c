@@ -19,6 +19,8 @@
 ///	information after crashes.
 
 
+#ifdef _WIN32
+
 #include <tchar.h>
 #ifndef HAVE_SDL
 #include "win_main.h"
@@ -133,39 +135,39 @@ static inline LPCSTR GetExceptionDescription(DWORD ExceptionCode)
 
 	struct ExceptionNames ExceptionMap[] =
 	{
-		{EXCEPTION_ACCESS_VIOLATION, "an Access Violation"},
-		{EXCEPTION_ARRAY_BOUNDS_EXCEEDED, "a Array Bounds Exceeded"},
-		{EXCEPTION_BREAKPOINT, "a Breakpoint"},
-		{EXCEPTION_DATATYPE_MISALIGNMENT, "a Datatype Misalignment"},
-		{EXCEPTION_FLT_DENORMAL_OPERAND, "a Float Denormal Operand"},
-		{EXCEPTION_FLT_DIVIDE_BY_ZERO, "a Float Divide By Zero"},
-		{EXCEPTION_FLT_INEXACT_RESULT, "a Float Inexact Result"},
-		{EXCEPTION_FLT_INVALID_OPERATION, "a Float Invalid Operation"},
-		{EXCEPTION_FLT_OVERFLOW, "a Float Overflow"},
-		{EXCEPTION_FLT_STACK_CHECK, "a Float Stack Check"},
-		{EXCEPTION_FLT_UNDERFLOW, "a Float Underflow"},
-		{EXCEPTION_ILLEGAL_INSTRUCTION, "an Illegal Instruction"},
-		{EXCEPTION_IN_PAGE_ERROR, "an In Page Error"},
-		{EXCEPTION_INT_DIVIDE_BY_ZERO, "an Integer Divide By Zero"},
-		{EXCEPTION_INT_OVERFLOW, "an Integer Overflow"},
-		{EXCEPTION_INVALID_DISPOSITION, "an Invalid Disposition"},
-		{EXCEPTION_NONCONTINUABLE_EXCEPTION, "Noncontinuable Exception"},
-		{EXCEPTION_PRIV_INSTRUCTION, "a Privileged Instruction"},
-		{EXCEPTION_SINGLE_STEP, "a Single Step"},
-		{EXCEPTION_STACK_OVERFLOW, "a Stack Overflow"},
-		{0x40010005, "a Control-C"},
-		{0x40010008, "a Control-Break"},
-		{0xc0000006, "an In Page Error"},
-		{0xc0000017, "a No Memory"},
-		{0xc000001d, "an Illegal Instruction"},
-		{0xc0000025, "a Noncontinuable Exception"},
-		{0xc0000142, "a DLL Initialization Failed"},
-		{0xe06d7363, "a Microsoft C++ Exception"},
+		{ EXCEPTION_ACCESS_VIOLATION, "an Access Violation" },
+		{ EXCEPTION_ARRAY_BOUNDS_EXCEEDED, "a Array Bounds Exceeded" },
+		{ EXCEPTION_BREAKPOINT, "a Breakpoint" },
+		{ EXCEPTION_DATATYPE_MISALIGNMENT, "a Datatype Misalignment" },
+		{ EXCEPTION_FLT_DENORMAL_OPERAND, "a Float Denormal Operand" },
+		{ EXCEPTION_FLT_DIVIDE_BY_ZERO, "a Float Divide By Zero" },
+		{ EXCEPTION_FLT_INEXACT_RESULT, "a Float Inexact Result" },
+		{ EXCEPTION_FLT_INVALID_OPERATION, "a Float Invalid Operation" },
+		{ EXCEPTION_FLT_OVERFLOW, "a Float Overflow" },
+		{ EXCEPTION_FLT_STACK_CHECK, "a Float Stack Check" },
+		{ EXCEPTION_FLT_UNDERFLOW, "a Float Underflow" },
+		{ EXCEPTION_ILLEGAL_INSTRUCTION, "an Illegal Instruction" },
+		{ EXCEPTION_IN_PAGE_ERROR, "an In Page Error" },
+		{ EXCEPTION_INT_DIVIDE_BY_ZERO, "an Integer Divide By Zero" },
+		{ EXCEPTION_INT_OVERFLOW, "an Integer Overflow" },
+		{ EXCEPTION_INVALID_DISPOSITION, "an Invalid Disposition" },
+		{ EXCEPTION_NONCONTINUABLE_EXCEPTION, "Noncontinuable Exception" },
+		{ EXCEPTION_PRIV_INSTRUCTION, "a Privileged Instruction" },
+		{ EXCEPTION_SINGLE_STEP, "a Single Step" },
+		{ EXCEPTION_STACK_OVERFLOW, "a Stack Overflow" },
+		{ 0x40010005, "a Control-C" },
+		{ 0x40010008, "a Control-Break" },
+		{ 0xc0000006, "an In Page Error" },
+		{ 0xc0000017, "a No Memory" },
+		{ 0xc000001d, "an Illegal Instruction" },
+		{ 0xc0000025, "a Noncontinuable Exception" },
+		{ 0xc0000142, "a DLL Initialization Failed" },
+		{ 0xe06d7363, "a Microsoft C++ Exception" },
 	};
 
 	for (i = 0; i < (sizeof(ExceptionMap) / sizeof(ExceptionMap[0])); i++)
-		if (ExceptionCode == ExceptionMap[i].ExceptionCode)
-			return ExceptionMap[i].ExceptionName;
+	if (ExceptionCode == ExceptionMap[i].ExceptionCode)
+		return ExceptionMap[i].ExceptionName;
 
 	return "Unknown exception type";
 }
@@ -199,8 +201,8 @@ static VOID PrintTime(LPSTR output, FILETIME TimeToPrint)
 	{
 		// What a silly way to print out the file date/time.
 		wsprintfA(output, "%d/%d/%d %02d:%02d:%02d",
-		          (Date / 32) & 15, Date & 31, (Date / 512) + 1980,
-		          (Time / 2048), (Time / 32) & 63, (Time & 31) * 2);
+			(Date / 32) & 15, Date & 31, (Date / 512) + 1980,
+			(Time / 2048), (Time / 32) & 63, (Time & 31) * 2);
 	}
 	else
 		output[0] = 0;
@@ -272,7 +274,7 @@ static VOID ShowModuleInfo(HANDLE LogFile, HMODULE ModuleHandle)
 #ifdef NO_SEH_MINGW
 	__except1
 #else
-	__except(EXCEPTION_EXECUTE_HANDLER)
+	__except (EXCEPTION_EXECUTE_HANDLER)
 #endif
 	{}
 }
@@ -301,7 +303,7 @@ static VOID RecordModuleList(HANDLE LogFile)
 	GetSystemInfo(&SystemInfo);
 	PageSize = SystemInfo.dwPageSize;
 	NumPages = 4 * (size_t)(ONEG / PageSize);
-	while(pageNum < NumPages)
+	while (pageNum < NumPages)
 	{
 		if (VirtualQuery((LPVOID)(pageNum * PageSize), &MemInfo,
 			sizeof(MemInfo)))
@@ -358,19 +360,19 @@ static VOID RecordSystemInformation(HANDLE fileHandle)
 
 	GetSystemInfo(&SystemInfo);
 	FPrintf(fileHandle, "%d processor(s), type %d %d.%d.\r\n"
-	        "Program Memory from 0x%p to 0x%p\r\n",
-	        SystemInfo.dwNumberOfProcessors,
-	        SystemInfo.dwProcessorType,
-	        SystemInfo.wProcessorLevel,
-	        SystemInfo.wProcessorRevision,
-	        SystemInfo.lpMinimumApplicationAddress,
-	        SystemInfo.lpMaximumApplicationAddress);
+		"Program Memory from 0x%p to 0x%p\r\n",
+		SystemInfo.dwNumberOfProcessors,
+		SystemInfo.dwProcessorType,
+		SystemInfo.wProcessorLevel,
+		SystemInfo.wProcessorRevision,
+		SystemInfo.lpMinimumApplicationAddress,
+		SystemInfo.lpMaximumApplicationAddress);
 
 	MemInfo.dwLength = sizeof(MemInfo);
 	GlobalMemoryStatus(&MemInfo);
 	// Print out the amount of physical memory, rounded up.
 	FPrintf(fileHandle, "%d MBytes physical memory.\r\n", (MemInfo.dwTotalPhys +
-	        ONEM - 1) / ONEM);
+		ONEM - 1) / ONEM);
 }
 
 // --------------------------------------------------------------------------
@@ -394,7 +396,7 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 	static BOOL         BeenHere = FALSE;
 	HANDLE              fileHandle;
 	LPBYTE              code = NULL;
-	int                 codebyte,i;
+	int                 codebyte, i;
 
 	if (data)
 	{
@@ -461,8 +463,8 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 	// to get the filename of the module that the crash happened in.
 	if (code && VirtualQuery(code, &MemInfo, sizeof(MemInfo)) &&
 		GetModuleFileName((HMODULE)MemInfo.AllocationBase,
-		                   CrashModulePathName,
-		                   sizeof(CrashModulePathName)) > 0)
+		CrashModulePathName,
+		sizeof(CrashModulePathName)) > 0)
 		CrashModuleFileName = GetFilePart(CrashModulePathName);
 
 	// Print out the beginning of the error log in a Win95 error window
@@ -481,9 +483,9 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 		CrashModuleFileName);
 #endif
 	//if (&Message = Null)
-		FPrintf(fileHandle, "Exception handler called in %s.\r\n", "main thread");
+	FPrintf(fileHandle, "Exception handler called in %s.\r\n", "main thread");
 	//else
-		//FPrintf(fileHandle, "Exception handler called in %s.\r\n", Message);
+	//FPrintf(fileHandle, "Exception handler called in %s.\r\n", Message);
 
 	RecordSystemInformation(fileHandle);
 
@@ -514,22 +516,22 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 		FPrintf(fileHandle, "Registers:\r\n");
 #ifdef _X86_
 		FPrintf(fileHandle, "EAX=%.8lx CS=%.4x EIP=%.8lx EFLGS=%.8lx\r\n",
-			Context->Eax,Context->SegCs,Context->Eip,Context->EFlags);
+			Context->Eax, Context->SegCs, Context->Eip, Context->EFlags);
 		FPrintf(fileHandle, "EBX=%.8lx SS=%.4x ESP=%.8lx EBP=%.8lx\r\n",
-			Context->Ebx,Context->SegSs,Context->Esp,Context->Ebp);
+			Context->Ebx, Context->SegSs, Context->Esp, Context->Ebp);
 		FPrintf(fileHandle, "ECX=%.8lx DS=%.4x ESI=%.8lx FS=%.4x\r\n",
-			Context->Ecx,Context->SegDs,Context->Esi,Context->SegFs);
+			Context->Ecx, Context->SegDs, Context->Esi, Context->SegFs);
 		FPrintf(fileHandle, "EDX=%.8lx ES=%.4x EDI=%.8lx GS=%.4x\r\n",
-			Context->Edx,Context->SegEs,Context->Edi,Context->SegGs);
+			Context->Edx, Context->SegEs, Context->Edi, Context->SegGs);
 #elif defined (_AMD64_)
 		FPrintf(fileHandle, "RAX=%.16lx CS=%.8x RIP=%.16lx EFLGS=%.16lx\r\n",
-			Context->Rax,Context->SegCs,Context->Rip,Context->EFlags);
+			Context->Rax, Context->SegCs, Context->Rip, Context->EFlags);
 		FPrintf(fileHandle, "RBX=%.16lx SS=%.8x RSP=%.16lx EBP=%.16lx\r\n",
-			Context->Rbx,Context->SegSs,Context->Rsp,Context->Rbp);
+			Context->Rbx, Context->SegSs, Context->Rsp, Context->Rbp);
 		FPrintf(fileHandle, "RCX=%.16lx DS=%.8x RSI=%.16lx FS=%.8x\r\n",
-			Context->Rcx,Context->SegDs,Context->Rsi,Context->SegFs);
+			Context->Rcx, Context->SegDs, Context->Rsi, Context->SegFs);
 		FPrintf(fileHandle, "RDX=%.16lx ES=%.8x RDI=%.16lx GS=%.8x\r\n",
-			Context->Rdx,Context->SegEs,Context->Rdi,Context->SegGs);
+			Context->Rdx, Context->SegEs, Context->Rdi, Context->SegGs);
 #else //defined (_IA64_)
 		FPrintf(fileHandle, "Unknown CPU type\r\n");
 #endif
@@ -537,7 +539,7 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 
 	// moved down because it was causing the printout to stop
 	FPrintf(fileHandle, "Command Line parameters: ");
-	for(i = 1;i < myargc;i++)
+	for (i = 1; i < myargc; i++)
 		FPrintf(fileHandle, "%s ", myargv[i]);
 
 	FPrintf(fileHandle, "Bytes at CS : EIP:\r\n");
@@ -548,7 +550,7 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 	// is no memory to read. If the dereferencing of code[] fails, the
 	// exception handler will print '??'.
 	if (code)
-	for(codebyte = 0; codebyte < NumCodeBytes; codebyte++)
+	for (codebyte = 0; codebyte < NumCodeBytes; codebyte++)
 	{
 #ifdef NO_SEH_MINGW
 		__try1(EXCEPTION_EXECUTE_HANDLER)
@@ -561,7 +563,7 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 #ifdef NO_SEH_MINGW
 		__except1
 #else
-		__except(EXCEPTION_EXECUTE_HANDLER)
+		__except (EXCEPTION_EXECUTE_HANDLER)
 #endif
 		{
 			FPrintf(fileHandle, "?? ");
@@ -585,7 +587,7 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 		size_t    Count = 0;
 		TCHAR     buffer[1000] = TEXT("");
 		const int safetyzone = 50;
-		LPTSTR    nearend = buffer + sizeof(buffer) - safetyzone*sizeof(TCHAR);
+		LPTSTR    nearend = buffer + sizeof(buffer)-safetyzone*sizeof(TCHAR);
 		LPTSTR    output = buffer;
 		LPCVOID   Suffix;
 
@@ -606,20 +608,20 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 		__asm
 		{
 			mov eax, fs:[4]
-			mov pStackTop, eax
+				mov pStackTop, eax
 		}
 #endif
 #elif defined (_AMD64_)
 #ifdef __GNUC__
 		__asm__("mov %%gs : 4, %%rax": "=a"(pStackTop));
 #elif defined (_MSC_VER)
-/*
+		/*
 		__asm
 		{
-			mov rax, fs:[4]
-			mov pStackTop, rax
+		mov rax, fs:[4]
+		mov pStackTop, rax
 		}
-*/
+		*/
 #endif
 #endif
 		if (pStackTop == NULL)
@@ -630,7 +632,7 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 		// confusing delays when programs crash. Therefore I implemented
 		// simple buffering for the stack dumping code instead of calling
 		// FPrintf directly.
-		while(pStack + 1 <= pStackTop)
+		while (pStack + 1 <= pStackTop)
 		{
 			if ((Count % StackColumns) == 0)
 				output += wsprintf(output, TEXT("%p: "), pStack);
@@ -641,7 +643,7 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 			output += wsprintf(output, TEXT("%p%s"), *pStack, Suffix);
 			pStack++;
 			// Check for when the buffer is almost full, and flush it to disk.
-			if ( output > nearend)
+			if (output > nearend)
 			{
 				FPrintf(fileHandle, "%s", buffer);
 				buffer[0] = 0;
@@ -649,13 +651,13 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 			}
 		}
 		// Print out any final characters from the cache.
-		StackSkip:
+	StackSkip:
 		FPrintf(fileHandle, "%s", buffer);
 	}
 #ifdef NO_SEH_MINGW
 	__except1
 #else
-	__except(EXCEPTION_EXECUTE_HANDLER)
+	__except (EXCEPTION_EXECUTE_HANDLER)
 #endif
 	{
 		FPrintf(fileHandle, "Exception encountered during stack dump.\r\n");
@@ -673,3 +675,5 @@ LONG WINAPI RecordExceptionInfo(PEXCEPTION_POINTERS data/*, LPCSTR Message, LPST
 		return prevExceptionFilter(data);
 	return EXCEPTION_CONTINUE_SEARCH;
 }
+
+#endif

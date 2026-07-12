@@ -11,6 +11,17 @@
 ///
 ///        Some systems/SDKs, like PSL1GHT v2 does not have addrinfo functions
 ///        So a stub is needed
+#ifdef __CELLOS_LV2__
+#  include <sys/types.h>
+#  include <sys/select.h>
+#  include <stdint.h>
+#  include <sys/socket.h>
+#  include <netinet/in.h>
+#  include <arpa/inet.h>
+#  include <netdb.h>
+#  include "../doomtype.h"
+#endif
+
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>

@@ -39,7 +39,7 @@
 #define EAI_NONAME -2
 #endif
 
-#ifdef _WIN32 // already use the stub for Win32
+#if defined(_WIN32) || defined(__CELLOS_LV2__) // already use the stub for Win32 and PS3
 // w32api, ws2tcpip.h, r1.12
 struct my_addrinfo {
         int     ai_flags;
