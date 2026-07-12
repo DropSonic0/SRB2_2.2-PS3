@@ -55,6 +55,9 @@
     <Filter Include="W_Wad">
       <UniqueIdentifier>{81b2feae-8edb-4ee1-a728-bf11c2b54a23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DummyApp">
+      <UniqueIdentifier>{a85cc75e-4c18-4a38-bd6c-d303e10a0b7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\p5prof.h">
@@ -794,9 +797,6 @@
     <ClCompile Include="..\netcode\http-mserv.c">
       <Filter>I_Interface</Filter>
     </ClCompile>
-    <ClCompile Include="..\netcode\i_addrinfo.c">
-      <Filter>I_Interface</Filter>
-    </ClCompile>
     <ClCompile Include="..\netcode\i_tcp.c">
       <Filter>I_Interface</Filter>
     </ClCompile>
@@ -974,18 +974,6 @@
     <ClCompile Include="..\taglist.c">
       <Filter>P_Play</Filter>
     </ClCompile>
-    <ClCompile Include="..\t_facon.c">
-      <Filter>P_Play</Filter>
-    </ClCompile>
-    <ClCompile Include="..\t_fsin.c">
-      <Filter>P_Play</Filter>
-    </ClCompile>
-    <ClCompile Include="..\t_ftan.c">
-      <Filter>P_Play</Filter>
-    </ClCompile>
-    <ClCompile Include="..\t_tan2a.c">
-      <Filter>P_Play</Filter>
-    </ClCompile>
     <ClCompile Include="..\r_bbox.c">
       <Filter>R_Rend</Filter>
     </ClCompile>
@@ -1058,45 +1046,6 @@
     <ClCompile Include="..\win32\win_dbg.c">
       <Filter>SDLApp</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdl\dosstr.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\endtxt.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\hwsym_sdl.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\IMG_xpm.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\i_main.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\i_net.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\i_system.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\i_ttf.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\i_video.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\mixer_sound.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\ogl_sdl.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\SDL_main\SDL_windows_main.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl\sdl_sound.c">
-      <Filter>SDLApp</Filter>
-    </ClCompile>
     <ClCompile Include="..\lzf.c">
       <Filter>W_Wad</Filter>
     </ClCompile>
@@ -1105,5 +1054,23 @@
     </ClCompile>
     <ClCompile Include="..\apng.c" />
     <ClCompile Include="..\u_list.c" />
+    <ClCompile Include="..\dummy\i_cdmus.c">
+      <Filter>DummyApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dummy\i_main.c">
+      <Filter>DummyApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dummy\i_net.c">
+      <Filter>DummyApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dummy\i_sound.c">
+      <Filter>DummyApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dummy\i_system.c">
+      <Filter>DummyApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dummy\i_video.c">
+      <Filter>DummyApp</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

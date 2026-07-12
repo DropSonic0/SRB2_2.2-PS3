@@ -24,7 +24,7 @@
 #pragma warning(disable :  4127)
 #endif
 
-#if defined (STDC_HEADERS) || defined (_LIBC)
+#if defined (STDC_HEADERS) || defined (_LIBC) || defined (__CELLOS_LV2__)
  #include <stdlib.h>
 #else
  #ifndef HAVE_MEMCPY

@@ -370,6 +370,13 @@ void RemoveLuaFileCallback(INT32 id)
 }
 
 
+#ifdef __CELLOS_LV2__
+static FILE *ps3_tmpfile(void) {
+  return NULL;
+}
+#define tmpfile ps3_tmpfile
+#endif
+
 static int io_tmpfile (lua_State *L) {
   FILE **pf = newfile(L);
   *pf = tmpfile();

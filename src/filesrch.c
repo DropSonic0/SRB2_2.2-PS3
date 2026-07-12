@@ -24,6 +24,13 @@
 #endif
 #include <sys/stat.h>
 
+#ifndef S_ISREG
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#endif
+#ifndef S_ISDIR
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
+
 #ifndef S_ISLNK
 #define IGNORE_SYMLINKS
 #endif
@@ -805,7 +812,12 @@ lumpinfo_t *getdirectoryfiles(const char *path, UINT16 *nlmp, UINT16 *nfolders)
 	// Create the files and directories as lump entries
 	// It's possible to create lumps and count files at the same time,
 	// but I didn't want to have to reallocate memory for every lump.
+#ifdef __CELLOS_LV2__
+	closedir(dirhandle[rootdir]);
+	dirhandle[rootdir] = opendir(path);
+#else
 	rewinddir(dirhandle[rootdir]);
+#endif
 	depthleft = rootdir;
 
 	strlcpy(dirpath, path, dirpathlen);
@@ -1154,7 +1166,12 @@ boolean preparefilemenu(boolean samedepth)
 		I_Error("preparefilemenu(): could not reallocate coredirmenu.");
 	}
 
+#ifdef __CELLOS_LV2__
+	closedir(dirhandle);
+	dirhandle = opendir(menupath);
+#else
 	rewinddir(dirhandle);
+#endif
 
 	while ((pos+folderpos) < sizecoredirmenu)
 	{

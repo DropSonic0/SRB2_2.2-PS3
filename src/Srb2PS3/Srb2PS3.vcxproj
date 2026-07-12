@@ -65,6 +65,8 @@
     </ClCompile>
     <Link>
       <OutputFormat>ELFFile</OutputFormat>
+      <AdditionalDependencies>libzlib.a;libpng.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SRB2_2.2-PS3\src\sdl\PS3_Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -304,6 +306,12 @@
     <ClCompile Include="..\deh_lua.c" />
     <ClCompile Include="..\deh_soc.c" />
     <ClCompile Include="..\deh_tables.c" />
+    <ClCompile Include="..\dummy\i_cdmus.c" />
+    <ClCompile Include="..\dummy\i_main.c" />
+    <ClCompile Include="..\dummy\i_net.c" />
+    <ClCompile Include="..\dummy\i_sound.c" />
+    <ClCompile Include="..\dummy\i_system.c" />
+    <ClCompile Include="..\dummy\i_video.c" />
     <ClCompile Include="..\d_main.c" />
     <ClCompile Include="..\filesrch.c" />
     <ClCompile Include="..\f_finale.c" />
@@ -371,7 +379,6 @@
     <ClCompile Include="..\netcode\d_netfil.c" />
     <ClCompile Include="..\netcode\gamestate.c" />
     <ClCompile Include="..\netcode\http-mserv.c" />
-    <ClCompile Include="..\netcode\i_addrinfo.c" />
     <ClCompile Include="..\netcode\i_tcp.c" />
     <ClCompile Include="..\netcode\mserv.c" />
     <ClCompile Include="..\netcode\net_command.c" />
@@ -413,19 +420,6 @@
     <ClCompile Include="..\r_things.c" />
     <ClCompile Include="..\r_translation.c" />
     <ClCompile Include="..\screen.c" />
-    <ClCompile Include="..\sdl\dosstr.c" />
-    <ClCompile Include="..\sdl\endtxt.c" />
-    <ClCompile Include="..\sdl\hwsym_sdl.c" />
-    <ClCompile Include="..\sdl\IMG_xpm.c" />
-    <ClCompile Include="..\sdl\i_main.c" />
-    <ClCompile Include="..\sdl\i_net.c" />
-    <ClCompile Include="..\sdl\i_system.c" />
-    <ClCompile Include="..\sdl\i_ttf.c" />
-    <ClCompile Include="..\sdl\i_video.c" />
-    <ClCompile Include="..\sdl\mixer_sound.c" />
-    <ClCompile Include="..\sdl\ogl_sdl.c" />
-    <ClCompile Include="..\sdl\SDL_main\SDL_windows_main.c" />
-    <ClCompile Include="..\sdl\sdl_sound.c" />
     <ClCompile Include="..\snake.c" />
     <ClCompile Include="..\sounds.c" />
     <ClCompile Include="..\string.c" />
@@ -433,10 +427,6 @@
     <ClCompile Include="..\s_sound.c" />
     <ClCompile Include="..\tables.c" />
     <ClCompile Include="..\taglist.c" />
-    <ClCompile Include="..\t_facon.c" />
-    <ClCompile Include="..\t_fsin.c" />
-    <ClCompile Include="..\t_ftan.c" />
-    <ClCompile Include="..\t_tan2a.c" />
     <ClCompile Include="..\u_list.c" />
     <ClCompile Include="..\v_video.c" />
     <ClCompile Include="..\win32\win_dbg.c" />
