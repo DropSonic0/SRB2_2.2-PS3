@@ -503,6 +503,12 @@ Set_api (const char *api)
 
 #endif/*MASTERSERVER*/
 
+#ifndef MASTERSERVER
+void RegisterServer(void) {}
+void UnregisterServer(void) {}
+static boolean Online(void) { return false; }
+#endif
+
 static boolean ServerName_CanChange(const char* newvalue)
 {
 	if (strlen(newvalue) < MAXSERVERNAME)

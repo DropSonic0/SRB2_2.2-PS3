@@ -2,6 +2,7 @@
 #include "../doomtype.h"
 #include "../i_system.h"
 #include "../i_time.h"
+#include <stdarg.h>
 
 FILE *logstream = NULL;
 
@@ -51,6 +52,7 @@ ticcmd_t *I_BaseTiccmd2(void)
 
 void I_Quit(void)
 {
+	I_ShutdownSystem();
 	exit(0);
 }
 
@@ -99,9 +101,23 @@ void I_UpdateMumble(const mobj_t *mobj, const listener_t listener)
 }
 #endif
 
-void I_OutputMsg(const char *error, ...)
+void I_OutputMsg(const char *fmt, ...)
 {
-	(void)error;
+	va_list argptr;
+
+	va_start(argptr, fmt);
+	vprintf(fmt, argptr);
+	va_end(argptr);
+
+#ifdef LOGMESSAGES
+	if (logstream)
+	{
+		va_start(argptr, fmt);
+		vfprintf(logstream, fmt, argptr);
+		va_end(argptr);
+		fflush(logstream);
+	}
+#endif
 }
 
 void I_StartupMouse(void){}
@@ -130,7 +146,16 @@ INT32 I_StartupSystem(void)
 	return -1;
 }
 
-void I_ShutdownSystem(void){}
+void I_ShutdownSystem(void)
+{
+#ifdef LOGMESSAGES
+	if (logstream)
+	{
+		fclose(logstream);
+		logstream = NULL;
+	}
+#endif
+}
 
 void I_GetDiskFreeSpace(INT64* freespace)
 {

@@ -4,6 +4,10 @@
 
 int main(int argc, char **argv)
 {
+#ifdef LOGMESSAGES
+	logstream = fopen("log.txt", "wt");
+#endif
+
 	myargc = argc;
 	myargv = argv; /// \todo pull out path to exe from this string
 

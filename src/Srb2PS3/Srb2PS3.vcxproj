@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|PS3">
@@ -57,16 +57,17 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
     <ClCompile>
-      <PreprocessorDefinitions>__CELLOS_LV2__;HAVE_CURL;NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CppLanguageStd>Cpp03</CppLanguageStd>
-      <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\curl\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFormat>ELFFile</OutputFormat>
-      <AdditionalDependencies>libzlib.a;libpng.a;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\SRB2_2.2-PS3\src\sdl\PS3_Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libnet_stub.a</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libpng.a;libzlib.a;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -433,6 +434,36 @@
     <ClCompile Include="..\w_wad.c" />
     <ClCompile Include="..\y_inter.c" />
     <ClCompile Include="..\z_zone.c" />
+    <ClCompile Include="..\..\libs\libpng-src\png.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngerror.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngget.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngmem.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngpread.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngread.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngrio.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngrtran.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngrutil.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngset.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngtrans.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngwio.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngwrite.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngwtran.c" />
+    <ClCompile Include="..\..\libs\libpng-src\pngwutil.c" />
+    <ClCompile Include="..\..\libs\zlib\adler32.c" />
+    <ClCompile Include="..\..\libs\zlib\compress.c" />
+    <ClCompile Include="..\..\libs\zlib\crc32.c" />
+    <ClCompile Include="..\..\libs\zlib\deflate.c" />
+    <ClCompile Include="..\..\libs\zlib\gzclose.c" />
+    <ClCompile Include="..\..\libs\zlib\gzlib.c" />
+    <ClCompile Include="..\..\libs\zlib\gzread.c" />
+    <ClCompile Include="..\..\libs\zlib\gzwrite.c" />
+    <ClCompile Include="..\..\libs\zlib\infback.c" />
+    <ClCompile Include="..\..\libs\zlib\inffast.c" />
+    <ClCompile Include="..\..\libs\zlib\inflate.c" />
+    <ClCompile Include="..\..\libs\zlib\inftrees.c" />
+    <ClCompile Include="..\..\libs\zlib\trees.c" />
+    <ClCompile Include="..\..\libs\zlib\uncompr.c" />
+    <ClCompile Include="..\..\libs\zlib\zutil.c" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

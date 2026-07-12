@@ -900,6 +900,7 @@ static void PT_Login(SINT8 node, INT32 netconsole)
 #endif
 }
 
+#ifdef HAVE_CURL
 /** Add a login for HTTP downloads. If the
   * user/password is missing, remove it.
   *
@@ -967,6 +968,7 @@ static void Command_list_http_logins (void)
 		);
 	}
 }
+#endif
 
 static void PT_AskLuaFile(SINT8 node)
 {
@@ -1673,8 +1675,10 @@ void D_ClientServerInit(void)
 	COM_AddCommand("reloadbans", Command_ReloadBan, COM_LUA);
 	COM_AddCommand("connect", Command_connect, COM_LUA);
 	COM_AddCommand("nodes", Command_Nodes, COM_LUA);
+#ifdef HAVE_CURL
 	COM_AddCommand("set_http_login", Command_set_http_login, 0);
 	COM_AddCommand("list_http_logins", Command_list_http_logins, 0);
+#endif
 	COM_AddCommand("resendgamestate", Command_ResendGamestate, COM_LUA);
 #ifdef PACKETDROP
 	COM_AddCommand("drop", Command_Drop, COM_LUA);

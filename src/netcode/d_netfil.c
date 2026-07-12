@@ -112,6 +112,7 @@ static pauseddownload_t *pauseddownload = NULL;
 
 file_download_t filedownload;
 
+#ifdef HAVE_CURL
 static CURL *http_handle;
 static CURLM *multi_handle;
 static UINT32 curl_dlnow;
@@ -123,6 +124,7 @@ static UINT32 curl_origtotalfilesize;
 static char *curl_realname = NULL;
 static fileneeded_t *curl_curfile = NULL;
 HTTP_login *curl_logins;
+#endif
 
 luafiletransfer_t *luafiletransfers = NULL;
 boolean waitingforluafiletransfer = false;
@@ -1586,6 +1588,7 @@ void Command_Downloads_f(void)
 		}
 }
 
+#ifdef HAVE_CURL
 static size_t curlwrite_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
     return fwrite(ptr, size, nmemb, stream);
@@ -1823,6 +1826,27 @@ CURLGetLogin (const char *url, HTTP_login ***return_prev_next)
 
 	return NULL;
 }
+#else
+boolean CURLPrepareFile(const char* url, int dfilenum)
+{
+	(void)url;
+	(void)dfilenum;
+	return false;
+}
+void CURLAbortFile(void)
+{
+}
+void CURLGetFile(void)
+{
+}
+HTTP_login *
+CURLGetLogin (const char *url, HTTP_login ***return_prev_next)
+{
+	(void)url;
+	(void)return_prev_next;
+	return NULL;
+}
+#endif
 
 // Functions cut and pasted from Doomatic :)
 

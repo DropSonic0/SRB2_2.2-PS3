@@ -410,6 +410,50 @@ unset_bit_array (bitarray_t * const array, const int value)
 
 typedef UINT64 precise_t;
 
+#ifdef __CELLOS_LV2__
+#include <stdio.h>
+static inline int access(const char *path, int amode)
+{
+	FILE *f = NULL;
+	if (amode == 0 || amode == 4) // F_OK or R_OK
+	{
+		f = fopen(path, "rb");
+		if (f)
+		{
+			fclose(f);
+			return 0;
+		}
+	}
+	else if (amode == 2 || amode == 6) // W_OK or R_OK|W_OK
+	{
+		f = fopen(path, "r+b");
+		if (f)
+		{
+			fclose(f);
+			return 0;
+		}
+	}
+	return -1;
+}
+
+static inline int chdir(const char *path)
+{
+	(void)path;
+	return 0;
+}
+
+static inline char *getcwd(char *buf, size_t size)
+{
+	if (buf && size > 1)
+	{
+		buf[0] = '/';
+		buf[1] = '\0';
+		return buf;
+	}
+	return NULL;
+}
+#endif
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
