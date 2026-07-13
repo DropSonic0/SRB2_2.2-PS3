@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="A_Asm">
@@ -1057,20 +1057,23 @@
     </ClCompile>
     <ClCompile Include="..\apng.c" />
     <ClCompile Include="..\u_list.c" />
-    <ClCompile Include="..\dummy\i_cdmus.c">
-      <Filter>DummyApp</Filter>
+    <ClCompile Include="..\ps3\i_cdmus.c">
+      <Filter>PS3App</Filter>
     </ClCompile>
-    <ClCompile Include="..\dummy\i_main.c">
-      <Filter>DummyApp</Filter>
+    <ClCompile Include="..\ps3\i_main.c">
+      <Filter>PS3App</Filter>
     </ClCompile>
-    <ClCompile Include="..\dummy\i_net.c">
-      <Filter>DummyApp</Filter>
+    <ClCompile Include="..\ps3\i_net.c">
+      <Filter>PS3App</Filter>
     </ClCompile>
-    <ClCompile Include="..\dummy\i_sound.c">
-      <Filter>DummyApp</Filter>
+    <ClCompile Include="..\ps3\i_sound.c">
+      <Filter>PS3App</Filter>
     </ClCompile>
-    <ClCompile Include="..\dummy\i_system.c">
-      <Filter>DummyApp</Filter>
+    <ClCompile Include="..\ps3\i_system.c">
+      <Filter>PS3App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ps3\sdl_stub.c">
+      <Filter>PS3App</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libs\libpng-src\png.c">
       <Filter>O_Other</Filter>

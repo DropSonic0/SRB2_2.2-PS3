@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|PS3">
@@ -53,6 +53,7 @@
       <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;__CELLOS_LV2__;LOGMESSAGES;HAVE_ZLIB;HAVE_PNG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\src\ps3;C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
@@ -61,7 +62,7 @@
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CppLanguageStd>Cpp03</CppLanguageStd>
-      <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\src\ps3;C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFormat>ELFFile</OutputFormat>
@@ -307,11 +308,12 @@
     <ClCompile Include="..\deh_lua.c" />
     <ClCompile Include="..\deh_soc.c" />
     <ClCompile Include="..\deh_tables.c" />
-    <ClCompile Include="..\dummy\i_cdmus.c" />
-    <ClCompile Include="..\dummy\i_main.c" />
-    <ClCompile Include="..\dummy\i_net.c" />
-    <ClCompile Include="..\dummy\i_sound.c" />
-    <ClCompile Include="..\dummy\i_system.c" />
+    <ClCompile Include="..\ps3\i_cdmus.c" />
+    <ClCompile Include="..\ps3\i_main.c" />
+    <ClCompile Include="..\ps3\i_net.c" />
+    <ClCompile Include="..\ps3\i_sound.c" />
+    <ClCompile Include="..\ps3\i_system.c" />
+    <ClCompile Include="..\ps3\sdl_stub.c" />
     <ClCompile Include="..\d_main.c" />
     <ClCompile Include="..\filesrch.c" />
     <ClCompile Include="..\f_finale.c" />
