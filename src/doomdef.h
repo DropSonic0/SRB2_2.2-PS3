@@ -489,7 +489,9 @@ enum {
 };
 
 // Name of local directory for config files and savegames
-#if (defined (__unix__) || defined (UNIXCOMMON)) && !defined (__CYGWIN__) && !defined (__APPLE__)
+#ifdef __CELLOS_LV2__
+// No DEFAULTDIR for PS3 to write directly inside the game's USRDIR
+#elif (defined (__unix__) || defined (UNIXCOMMON)) && !defined (__CYGWIN__) && !defined (__APPLE__)
 #define DEFAULTDIR ".srb2"
 #else
 #define DEFAULTDIR "srb2"

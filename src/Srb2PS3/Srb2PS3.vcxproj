@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|PS3">
@@ -50,14 +50,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
     <ClCompile>
-      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;__CELLOS_LV2__;LOGMESSAGES;HAVE_ZLIB;HAVE_PNG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
     <ClCompile>
-      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;HAVE_ZLIB;HAVE_PNG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CppLanguageStd>Cpp03</CppLanguageStd>
@@ -65,9 +65,9 @@
     </ClCompile>
     <Link>
       <OutputFormat>ELFFile</OutputFormat>
-      <AdditionalDependencies>libnet_stub.a</AdditionalDependencies>
+      <AdditionalDependencies>libPSGLU.a;libPSGL.a;libgcm_cmd.a;libgcm_sys_stub.a;libresc_stub.a;libsysutil_game_stub.a;libsysutil_stub.a;libio_stub.a;libaudio_stub.a;libsysmodule_stub.a;libm.a;libnet_stub.a</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libpng.a;libzlib.a;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\usr\local\cell\target\ppu\lib\PSGL\RSX\ultra-opt;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -312,7 +312,6 @@
     <ClCompile Include="..\dummy\i_net.c" />
     <ClCompile Include="..\dummy\i_sound.c" />
     <ClCompile Include="..\dummy\i_system.c" />
-    <ClCompile Include="..\dummy\i_video.c" />
     <ClCompile Include="..\d_main.c" />
     <ClCompile Include="..\filesrch.c" />
     <ClCompile Include="..\f_finale.c" />
@@ -385,6 +384,7 @@
     <ClCompile Include="..\netcode\net_command.c" />
     <ClCompile Include="..\netcode\server_connection.c" />
     <ClCompile Include="..\netcode\tic_command.c" />
+    <ClCompile Include="..\ps3\i_video.c" />
     <ClCompile Include="..\p_ceilng.c" />
     <ClCompile Include="..\p_enemy.c" />
     <ClCompile Include="..\p_floor.c" />

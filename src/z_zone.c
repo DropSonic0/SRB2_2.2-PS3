@@ -32,6 +32,10 @@
 #include "i_system.h" // I_GetFreeMem
 #include "i_video.h" // rendermode
 #include "z_zone.h"
+#ifdef __CELLOS_LV2__
+#include <stdlib.h>
+extern void *memalign(size_t boundary, size_t size);
+#endif
 #include "m_misc.h" // M_Memcpy
 #include "lua_script.h"
 
@@ -51,6 +55,12 @@ static boolean Z_calloc = false;
 //#define ZDEBUG2
 #endif
 
+#if defined(__CELLOS_LV2__) && defined(__GNUC__)
+#define ATTR_ALIGNED_16 __attribute__((aligned(16)))
+#else
+#define ATTR_ALIGNED_16
+#endif
+
 typedef struct memblock_s
 {
 	void **user;
@@ -66,7 +76,7 @@ typedef struct memblock_s
 #endif
 
 	struct memblock_s *next, *prev;
-} memblock_t;
+} ATTR_ALIGNED_16 memblock_t;
 
 #define MEMORY(x) (void *)((uintptr_t)(x) + sizeof(memblock_t))
 #define MEMBLOCK(x) (memblock_t *)((uintptr_t)(x) - sizeof(memblock_t))
@@ -182,13 +192,21 @@ static void *xm(size_t size)
 
 	if (padedsize < size)/* overflow check */
 		I_Error("You are allocating memory too large!");
+#ifdef __CELLOS_LV2__
+	p = memalign(16, padedsize);
+#else
 	p = malloc(padedsize);
+#endif
 
 	if (p == NULL)
 	{
 		// Oh crumbs: we're out of heap. Try purging the cache and reallocating.
 		Z_FreeTags(PU_PURGELEVEL, INT32_MAX);
+#ifdef __CELLOS_LV2__
+		p = memalign(16, padedsize);
+#else
 		p = malloc(padedsize);
+#endif
 
 		if (p == NULL)
 		{
@@ -228,7 +246,11 @@ void *Z_MallocAlign(size_t size, INT32 tag, void *user, INT32 alignbits)
 
 	block = xm(sizeof (memblock_t) + size);
 	ptr = MEMORY(block);
+#ifdef __CELLOS_LV2__
+	I_Assert((intptr_t)ptr % 8 == 0);
+#else
 	I_Assert((intptr_t)ptr % sizeof (void *) == 0);
+#endif
 
 #ifdef HAVE_VALGRIND
 	Z_calloc = false;

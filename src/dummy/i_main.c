@@ -2,10 +2,22 @@
 #include "../d_main.h"
 #include "../m_argv.h"
 
+#ifdef __CELLOS_LV2__
+#include <sys/process.h>
+SYS_PROCESS_PARAM(1001, 1024*1024)
+#ifndef LOGMESSAGES
+#define LOGMESSAGES
+#endif
+#endif
+
 int main(int argc, char **argv)
 {
 #ifdef LOGMESSAGES
+#ifdef __CELLOS_LV2__
+	logstream = fopen("/dev_hdd0/game/SRB222PS3/USRDIR/log.txt", "wt");
+#else
 	logstream = fopen("log.txt", "wt");
+#endif
 #endif
 
 	myargc = argc;

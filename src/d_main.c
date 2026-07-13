@@ -1778,6 +1778,9 @@ const char *D_Home(void)
 #ifdef ANDROID
 	return "/data/data/org.srb2/";
 #endif
+#ifdef __CELLOS_LV2__
+	return "/dev_hdd0/game/SRB222PS3/USRDIR";
+#endif
 
 	if (M_CheckParm("-home") && M_IsNextParm())
 		userhome = M_GetNextParm();

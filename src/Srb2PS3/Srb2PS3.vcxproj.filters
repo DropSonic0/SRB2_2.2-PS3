@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="A_Asm">
@@ -57,6 +57,9 @@
     </Filter>
     <Filter Include="DummyApp">
       <UniqueIdentifier>{a85cc75e-4c18-4a38-bd6c-d303e10a0b7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS3App">
+      <UniqueIdentifier>{49b700a3-becd-45f6-bb45-3483920a4ed3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1069,9 +1072,6 @@
     <ClCompile Include="..\dummy\i_system.c">
       <Filter>DummyApp</Filter>
     </ClCompile>
-    <ClCompile Include="..\dummy\i_video.c">
-      <Filter>DummyApp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\libs\libpng-src\png.c">
       <Filter>O_Other</Filter>
     </ClCompile>
@@ -1161,6 +1161,9 @@
     </ClCompile>
     <ClCompile Include="..\..\libs\zlib\zutil.c">
       <Filter>O_Other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ps3\i_video.c">
+      <Filter>PS3App</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

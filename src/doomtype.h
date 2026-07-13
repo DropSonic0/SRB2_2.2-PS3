@@ -412,6 +412,7 @@ typedef UINT64 precise_t;
 
 #ifdef __CELLOS_LV2__
 #include <stdio.h>
+#include <string.h>
 static inline int access(const char *path, int amode)
 {
 	FILE *f = NULL;
@@ -444,7 +445,12 @@ static inline int chdir(const char *path)
 
 static inline char *getcwd(char *buf, size_t size)
 {
-	if (buf && size > 1)
+	if (buf && size >= 32)
+	{
+		strcpy(buf, "/dev_hdd0/game/SRB222PS3/USRDIR");
+		return buf;
+	}
+	else if (buf && size > 1)
 	{
 		buf[0] = '/';
 		buf[1] = '\0';

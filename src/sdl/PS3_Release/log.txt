@@ -1,0 +1,38 @@
+Setting up SRB2...
+
+
+Sonic Robo Blast 2
+Copyright (C) 1998-2025 by Sonic Team Junior
+
+This program comes with ABSOLUTELY NO WARRANTY.
+
+This is free software, and you are welcome to redistribute it
+and/or modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2 of
+the License, or (at your option) any later version.
+See the 'LICENSE.txt' file for details.
+
+Sonic the Hedgehog and related characters are trademarks of SEGA.
+We do not claim ownership of SEGA's intellectual property used
+in this program.
+
+M_StartupLocale...
+Z_Init(): Init zone memory allocation daemon. 
+System memory: 0MB - Free: 0MB
+I_InitializeTime()...
+W_InitMultipleFiles(): Adding IWAD and main PWADs.
+Added file /dev_hdd0/game/SRB222PS3/USRDIR/srb2.pk3 (12614 lumps)
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/srb2.pk3|SOC/SOC_LETR
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/srb2.pk3|SOC/SOC_TITL
+Added file /dev_hdd0/game/SRB222PS3/USRDIR/zones.pk3 (169 lumps)
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/zones.pk3|SOC/SOC_EMBM.txt
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/zones.pk3|SOC/SOC_HEAD.txt
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/zones.pk3|SOC/SOC_SECR.txt
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/zones.pk3|SOC/Tutorial.txt
+Added file /dev_hdd0/game/SRB222PS3/USRDIR/characters.pk3 (2054 lumps)
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/characters.pk3|SOC/Characters.txt
+Added file /dev_hdd0/game/SRB222PS3/USRDIR/music.pk3 (215 lumps)
+I_StartupGraphics()...
+Number of console HUD lines is now 5
+HU_LoadGraphics()...
+d_main.c: Calling HU_LoadGraphics()...

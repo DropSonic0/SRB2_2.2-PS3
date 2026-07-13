@@ -4,6 +4,12 @@
 #include "../i_time.h"
 #include <stdarg.h>
 
+#ifdef __CELLOS_LV2__
+#ifndef LOGMESSAGES
+#define LOGMESSAGES
+#endif
+#endif
+
 FILE *logstream = NULL;
 
 UINT8 graphics_started = 0;
@@ -169,9 +175,13 @@ char *I_GetUserName(void)
 
 INT32 I_mkdir(const char *dirname, INT32 unixright)
 {
+#ifdef __CELLOS_LV2__
+	return mkdir(dirname, unixright);
+#else
 	(void)dirname;
 	(void)unixright;
 	return -1;
+#endif
 }
 
 const CPUInfoFlags *I_CPUInfo(void)
