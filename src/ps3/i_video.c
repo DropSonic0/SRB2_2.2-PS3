@@ -46,6 +46,7 @@ void I_StartupGraphics(void)
 	options.fifoSize = 0;
 	options.hostMemorySize = 8 * 1024 * 1024;
 
+	CONS_Printf("I_StartupGraphics: Calling psglInit...\n");
 	psglInit(&options);
 
 	memset(&params, 0, sizeof(params));
@@ -57,20 +58,35 @@ void I_StartupGraphics(void)
 	params.enable |= PSGL_DEVICE_PARAMETERS_RESC_RATIO_MODE;
 	params.rescRatioMode = RESC_RATIO_MODE_FULLSCREEN;
 
+	CONS_Printf("I_StartupGraphics: Calling psglCreateDeviceExtended...\n");
 	psgl_device = psglCreateDeviceExtended(&params);
+	CONS_Printf("I_StartupGraphics: psgl_device = %p\n", psgl_device);
+
+	CONS_Printf("I_StartupGraphics: Calling psglCreateContext...\n");
 	psgl_context = psglCreateContext();
+	CONS_Printf("I_StartupGraphics: psgl_context = %p\n", psgl_context);
+
+	CONS_Printf("I_StartupGraphics: Calling psglMakeCurrent...\n");
 	psglMakeCurrent(psgl_context, psgl_device);
 
+	CONS_Printf("I_StartupGraphics: Generating screen texture...\n");
 	glGenTextures(1, &screen_texture);
 	glBindTexture(GL_TEXTURE_2D, screen_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	CONS_Printf("I_StartupGraphics: screen_texture ID = %u\n", screen_texture);
+
+	CONS_Printf("I_StartupGraphics: Initializing 1024x512 POT texture on GPU...\n");
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_ARGB_SCE, 1024, 512, 0, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+	CONS_Printf("I_StartupGraphics: Texture initialized successfully.\n");
 
 	rendermode = render_soft;
 	chosenrendermode = render_soft;
 
 	// Automatically set default resolution mode
+	CONS_Printf("I_StartupGraphics: Setting video mode via VID_SetMode(0)...\n");
 	VID_SetMode(0);
+	CONS_Printf("I_StartupGraphics: Video mode set successfully.\n");
 #endif
 }
 
@@ -81,6 +97,11 @@ void I_ShutdownGraphics(void)
 	{
 		free(gl_buffer);
 		gl_buffer = NULL;
+	}
+	if (vid.buffer)
+	{
+		free(vid.buffer);
+		vid.buffer = NULL;
 	}
 	if (psgl_context)
 	{
@@ -129,7 +150,35 @@ INT32 VID_SetMode(INT32 modenum)
 	vid.bpp = 1;
 	vid.width = windowedModes[0][0];
 	vid.height = windowedModes[0][1];
+	vid.rowbytes = vid.width * vid.bpp;
 	vid.modenum = 0;
+
+#ifdef __CELLOS_LV2__
+	if (vid.buffer)
+	{
+		free(vid.buffer);
+		vid.buffer = NULL;
+	}
+	vid.buffer = calloc(NUMSCREENS, vid.rowbytes * vid.height);
+	if (vid.buffer)
+	{
+		int i;
+		screens[0] = vid.buffer;
+		for (i = 1; i < NUMSCREENS; i++)
+		{
+			screens[i] = screens[i - 1] + vid.rowbytes * vid.height;
+		}
+	}
+
+	if (gl_buffer)
+	{
+		free(gl_buffer);
+		gl_buffer = NULL;
+	}
+	CONS_Printf("VID_SetMode: Allocating 640x400 gl_buffer...\n");
+	gl_buffer = calloc(640 * 400, sizeof(UINT32));
+	CONS_Printf("VID_SetMode: gl_buffer allocated at %p\n", gl_buffer);
+#endif
 
 	return 0;
 }
@@ -160,65 +209,70 @@ void I_FinishUpdate(void)
 	if (rendermode == render_none)
 		return;
 
-	if (screens[0])
+	if (screens[0] && gl_buffer)
 	{
 		int i;
 		int num_pixels = vid.width * vid.height;
-		if (!gl_buffer)
+
+		for (i = 0; i < num_pixels; i++)
 		{
-			gl_buffer = malloc(640 * 400 * sizeof(UINT32));
+			UINT8 index = screens[0][i];
+			RGBA_t color = current_palette[index];
+			// Convert to ARGB (GL_ARGB_SCE format as used by PSGL)
+			gl_buffer[i] = (color.s.alpha << 24) | (color.s.red << 16) | (color.s.green << 8) | color.s.blue;
 		}
-		if (gl_buffer)
-		{
-			for (i = 0; i < num_pixels; i++)
-			{
-				UINT8 index = screens[0][i];
-				RGBA_t color = current_palette[index];
-				// Convert to ARGB (GL_ARGB_SCE format as used by PSGL)
-				gl_buffer[i] = (color.s.alpha << 24) | (color.s.red << 16) | (color.s.green << 8) | color.s.blue;
-			}
 
-			glBindTexture(GL_TEXTURE_2D, screen_texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_ARGB_SCE, vid.width, vid.height, 0, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, gl_buffer);
+		glBindTexture(GL_TEXTURE_2D, screen_texture);
+		// Upload the 640x400 buffer into the 1024x512 texture using glTexSubImage2D
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, vid.width, vid.height, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, gl_buffer);
 
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glOrthof(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
+		// Disable 3D states that might distort or prevent rendering
+		glDisable(GL_LIGHTING);
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_BLEND);
 
-			glClear(GL_COLOR_BUFFER_BIT);
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, screen_texture);
+		// Set texture environment and color
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-			GLfloat vertices[] = {
-				0.0f, 0.0f,
-				1.0f, 0.0f,
-				1.0f, 1.0f,
-				0.0f, 1.0f
-			};
-			GLfloat texcoords[] = {
-				0.0f, 1.0f,
-				1.0f, 1.0f,
-				1.0f, 0.0f,
-				0.0f, 0.0f
-			};
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrthof(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glEnable(GL_TEXTURE_2D);
 
-			glVertexPointer(2, GL_FLOAT, 0, vertices);
-			glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+		GLfloat vertices[] = {
+			0.0f, 0.0f,
+			1.0f, 0.0f,
+			1.0f, 1.0f,
+			0.0f, 1.0f
+		};
+		// Scale texture coordinates to map 640/1024 = 0.625f and 400/512 = 0.78125f
+		GLfloat texcoords[] = {
+			0.0f, 0.78125f,
+			0.625f, 0.78125f,
+			0.625f, 0.0f,
+			0.0f, 0.0f
+		};
 
-			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDisableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(2, GL_FLOAT, 0, vertices);
+		glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
 
-			glDisable(GL_TEXTURE_2D);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-			psglSwap();
-		}
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+		glDisable(GL_TEXTURE_2D);
+
+		psglSwap();
 	}
 #endif
 }
