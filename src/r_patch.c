@@ -37,19 +37,19 @@ patch_t *Patch_CreateFromDoomPatch(softwarepatch_t *source)
 	if (!source)
 		return patch;
 
-	patch->width      = SHORT(source->width);
-	patch->height     = SHORT(source->height);
+	patch->width = SHORT(source->width);
+	patch->height = SHORT(source->height);
 	patch->leftoffset = SHORT(source->leftoffset);
-	patch->topoffset  = SHORT(source->topoffset);
+	patch->topoffset = SHORT(source->topoffset);
 
 	size_t total_pixels = 0;
 	size_t total_posts = 0;
 
 	Patch_CalcDataSizes(source, &total_pixels, &total_posts);
 
-	patch->columns = Z_Calloc(sizeof(column_t) * patch->width, PU_PATCH_DATA, NULL);
-	patch->posts = Z_Calloc(sizeof(post_t) * total_posts, PU_PATCH_DATA, NULL);
-	patch->pixels = Z_Calloc(sizeof(UINT8) * total_pixels, PU_PATCH_DATA, NULL);
+	patch->columns = Z_Calloc(sizeof(column_t)* patch->width, PU_PATCH_DATA, NULL);
+	patch->posts = Z_Calloc(sizeof(post_t)* total_posts, PU_PATCH_DATA, NULL);
+	patch->pixels = Z_Calloc(sizeof(UINT8)* total_pixels, PU_PATCH_DATA, NULL);
 
 	Patch_MakeColumns(source, patch->width, patch->width, patch->pixels, patch->columns, patch->posts, false);
 
@@ -58,10 +58,10 @@ patch_t *Patch_CreateFromDoomPatch(softwarepatch_t *source)
 
 void Patch_CalcDataSizes(softwarepatch_t *source, size_t *total_pixels, size_t *total_posts)
 {
-	for (INT32 i = 0; i < source->width; i++)
+	for (INT32 i = 0; i < SHORT(source->width); i++)
 	{
 		doompost_t *src_posts = (doompost_t*)((UINT8 *)source + LONG(source->columnofs[i]));
-		for (doompost_t *post = src_posts; post->topdelta != 0xff ;)
+		for (doompost_t *post = src_posts; post->topdelta != 0xff;)
 		{
 			(*total_posts)++;
 			(*total_pixels) += post->length;
@@ -88,7 +88,7 @@ void Patch_MakeColumns(softwarepatch_t *source, size_t num_columns, INT16 width,
 
 		doompost_t *src_posts = (doompost_t*)((UINT8 *)source + LONG(source->columnofs[i]));
 
-		for (doompost_t *post = src_posts; post->topdelta != 0xff ;)
+		for (doompost_t *post = src_posts; post->topdelta != 0xff;)
 		{
 			size_t topdelta = post->topdelta;
 			if (topdelta <= prevdelta)

@@ -56,18 +56,18 @@ I_mutex con_mutex;
 #endif/*HAVE_THREADS*/
 
 static boolean con_started = false; // console has been initialised
-       boolean con_startup = false; // true at game startup
-       boolean con_refresh = false; // screen needs refreshing
+boolean con_startup = false; // true at game startup
+boolean con_refresh = false; // screen needs refreshing
 static boolean con_forcepic = true; // at startup toggle console translucency when first off
-       boolean con_recalc;          // set true when screen size has changed
+boolean con_recalc;          // set true when screen size has changed
 
 static tic_t con_tick; // console ticker for blinking prompt cursor
-                        // con_scrollup should use time (currenttime - lasttime)..
+// con_scrollup should use time (currenttime - lasttime)..
 
 static boolean consoletoggle; // true when console key pushed, ticker will handle
 static boolean consoleready;  // console prompt is ready
 
-       INT32 con_destlines; // vid lines used by console at final position
+INT32 con_destlines; // vid lines used by console at final position
 static INT32 con_curlines;  // vid lines currently used by console
 
 static UINT8  con_hudlines;             // number of console heads up message lines
@@ -77,8 +77,8 @@ static UINT32 con_hudtime[MAXHUDLINES]; // remaining time of display for hud msg
 static char *con_line;          // console text output current line
 static size_t con_cx;           // cursor position in current line
 static size_t con_cy;           // cursor line number in con_buffer, is always
-                                // increasing, and wrapped around in the text
-                                // buffer using modulo.
+// increasing, and wrapped around in the text
+// buffer using modulo.
 
 static size_t con_totallines;      // lines of console text into the console buffer
 static size_t con_width;           // columns of chars, depend on vid mode width
@@ -122,36 +122,36 @@ static char con_buffer[CON_BUFFERSIZE];
 
 // how many seconds the hud messages lasts on the screen
 // CV_Unsigned can overflow when multiplied by TICRATE later, so let's use a 3-year limit instead
-static CV_PossibleValue_t hudtime_cons_t[] = {{0, "MIN"}, {99999999, "MAX"}, {0, NULL}};
-static consvar_t cons_hudtime = CVAR_INIT ("con_hudtime", "5", CV_SAVE, hudtime_cons_t, NULL);
+static CV_PossibleValue_t hudtime_cons_t[] = { { 0, "MIN" }, { 99999999, "MAX" }, { 0, NULL } };
+static consvar_t cons_hudtime = CVAR_INIT("con_hudtime", "5", CV_SAVE, hudtime_cons_t, NULL);
 
 // number of lines displayed on the HUD
-static CV_PossibleValue_t hudlines_cons_t[] = {{0, "MIN"}, {MAXHUDLINES, "MAX"}, {0, NULL}};
-static consvar_t cons_hudlines = CVAR_INIT ("con_hudlines", "5", CV_CALL|CV_SAVE, hudlines_cons_t, CONS_hudlines_Change);
+static CV_PossibleValue_t hudlines_cons_t[] = { { 0, "MIN" }, { MAXHUDLINES, "MAX" }, { 0, NULL } };
+static consvar_t cons_hudlines = CVAR_INIT("con_hudlines", "5", CV_CALL | CV_SAVE, hudlines_cons_t, CONS_hudlines_Change);
 
 // number of lines console move per frame
 // (con_speed needs a limit, apparently)
-static CV_PossibleValue_t speed_cons_t[] = {{0, "MIN"}, {64, "MAX"}, {0, NULL}};
-static consvar_t cons_speed = CVAR_INIT ("con_speed", "8", CV_SAVE, speed_cons_t, NULL);
+static CV_PossibleValue_t speed_cons_t[] = { { 0, "MIN" }, { 64, "MAX" }, { 0, NULL } };
+static consvar_t cons_speed = CVAR_INIT("con_speed", "8", CV_SAVE, speed_cons_t, NULL);
 
 // percentage of screen height to use for console
-static consvar_t cons_height = CVAR_INIT ("con_height", "50", CV_CALL|CV_SAVE, CV_Unsigned, CONS_height_Change);
+static consvar_t cons_height = CVAR_INIT("con_height", "50", CV_CALL | CV_SAVE, CV_Unsigned, CONS_height_Change);
 
-static CV_PossibleValue_t backpic_cons_t[] = {{0, "translucent"}, {1, "picture"}, {0, NULL}};
+static CV_PossibleValue_t backpic_cons_t[] = { { 0, "translucent" }, { 1, "picture" }, { 0, NULL } };
 // whether to use console background picture, or translucent mode
-static consvar_t cons_backpic = CVAR_INIT ("con_backpic", "translucent", CV_SAVE, backpic_cons_t, NULL);
+static consvar_t cons_backpic = CVAR_INIT("con_backpic", "translucent", CV_SAVE, backpic_cons_t, NULL);
 
-static CV_PossibleValue_t backcolor_cons_t[] = {{0, "White"}, 		{1, "Black"},		{2, "Sepia"},
-												{3, "Brown"},		{4, "Pink"},		{5, "Raspberry"},
-												{6, "Red"},			{7, "Creamsicle"},	{8, "Orange"},
-												{9, "Gold"},		{10,"Yellow"},		{11,"Emerald"},
-												{12,"Green"},		{13,"Cyan"},		{14,"Steel"},
-												{15,"Periwinkle"},	{16,"Blue"},		{17,"Purple"},
-												{18,"Lavender"},
-												{0, NULL}};
+static CV_PossibleValue_t backcolor_cons_t[] = { { 0, "White" }, { 1, "Black" }, { 2, "Sepia" },
+{ 3, "Brown" }, { 4, "Pink" }, { 5, "Raspberry" },
+{ 6, "Red" }, { 7, "Creamsicle" }, { 8, "Orange" },
+{ 9, "Gold" }, { 10, "Yellow" }, { 11, "Emerald" },
+{ 12, "Green" }, { 13, "Cyan" }, { 14, "Steel" },
+{ 15, "Periwinkle" }, { 16, "Blue" }, { 17, "Purple" },
+{ 18, "Lavender" },
+{ 0, NULL } };
 
 
-consvar_t cons_backcolor = CVAR_INIT ("con_backcolor", "Green", CV_CALL|CV_SAVE, backcolor_cons_t, CONS_backcolor_Change);
+consvar_t cons_backcolor = CVAR_INIT("con_backcolor", "Green", CV_CALL | CV_SAVE, backcolor_cons_t, CONS_backcolor_Change);
 
 static void CON_Print(char *msg);
 
@@ -195,7 +195,7 @@ static void CONS_Clear_f(void)
 	memset(con_buffer, 0, CON_BUFFERSIZE);
 
 	con_cx = 0;
-	con_cy = con_totallines-1;
+	con_cy = con_totallines - 1;
 	con_line = &con_buffer[con_cy*con_width];
 	con_scrollup = 0;
 
@@ -206,8 +206,8 @@ static void CONS_Clear_f(void)
 //
 /*static void CONS_English_f(void)
 {
-	shiftxform = english_shiftxform;
-	CONS_Printf(M_GetText("%s keymap.\n"), M_GetText("English"));
+shiftxform = english_shiftxform;
+CONS_Printf(M_GetText("%s keymap.\n"), M_GetText("English"));
 }*/
 
 static char *bindtable[NUMINPUTS];
@@ -228,11 +228,11 @@ static void CONS_Bind_f(void)
 		CONS_Printf("\x82%s", M_GetText("Bind table :\n"));
 		na = 0;
 		for (key = 0; key < NUMINPUTS; key++)
-			if (bindtable[key])
-			{
-				CONS_Printf("%s : \"%s\"\n", G_KeyNumToName(key), bindtable[key]);
-				na = 1;
-			}
+		if (bindtable[key])
+		{
+			CONS_Printf("%s : \"%s\"\n", G_KeyNumToName(key), bindtable[key]);
+			na = 1;
+		}
 		if (!na)
 			CONS_Printf(M_GetText("(empty)\n"));
 		return;
@@ -310,27 +310,27 @@ void CON_SetupBackColormapEx(INT32 color, boolean prompt)
 
 	switch (color)
 	{
-		case 0:		palindex = 15; 	break; 	// White
-		case 1:		palindex = 31;	break; 	// Black
-		case 2:		palindex = 251;	break;	// Sepia
-		case 3:		palindex = 239;	break; 	// Brown
-		case 4:		palindex = 215; shift = 7; 	break; 	// Pink
-		case 5:		palindex = 37; shift = 7;	break; 	// Raspberry
-		case 6:		palindex = 47; shift = 7;	break; 	// Red
-		case 7:		palindex = 53;	shift = 7;	break;	// Creamsicle
-		case 8:		palindex = 63;	break; 	// Orange
-		case 9:		palindex = 56; shift = 7;	break; 	// Gold
-		case 10:	palindex = 79; shift = 7;	break; 	// Yellow
-		case 11:	palindex = 119; shift = 7; 	break; 	// Emerald
-		case 12:	palindex = 111;	break; 	// Green
-		case 13:	palindex = 136;	shift = 7; break; 	// Cyan
-		case 14:	palindex = 175; shift = 7;	break; 	// Steel
-		case 15:	palindex = 166;	shift = 7; 	break; 	// Periwinkle
-		case 16:	palindex = 159;	break; 	// Blue
-		case 17:	palindex = 187; shift = 7; 	break; 	// Purple
-		case 18:	palindex = 199; shift = 7; 	break; 	// Lavender
+	case 0:		palindex = 15; 	break; 	// White
+	case 1:		palindex = 31;	break; 	// Black
+	case 2:		palindex = 251;	break;	// Sepia
+	case 3:		palindex = 239;	break; 	// Brown
+	case 4:		palindex = 215; shift = 7; 	break; 	// Pink
+	case 5:		palindex = 37; shift = 7;	break; 	// Raspberry
+	case 6:		palindex = 47; shift = 7;	break; 	// Red
+	case 7:		palindex = 53;	shift = 7;	break;	// Creamsicle
+	case 8:		palindex = 63;	break; 	// Orange
+	case 9:		palindex = 56; shift = 7;	break; 	// Gold
+	case 10:	palindex = 79; shift = 7;	break; 	// Yellow
+	case 11:	palindex = 119; shift = 7; 	break; 	// Emerald
+	case 12:	palindex = 111;	break; 	// Green
+	case 13:	palindex = 136;	shift = 7; break; 	// Cyan
+	case 14:	palindex = 175; shift = 7;	break; 	// Steel
+	case 15:	palindex = 166;	shift = 7; 	break; 	// Periwinkle
+	case 16:	palindex = 159;	break; 	// Blue
+	case 17:	palindex = 187; shift = 7; 	break; 	// Purple
+	case 18:	palindex = 199; shift = 7; 	break; 	// Lavender
 		// Default green
-		default:	palindex = 111; break;
+	default:	palindex = 111; break;
 	}
 
 	if (prompt)
@@ -349,7 +349,7 @@ void CON_SetupBackColormapEx(INT32 color, boolean prompt)
 	// setup background colormap
 	for (i = 0, j = 0; i < 768; i += 3, j++)
 	{
-		palsum = (pal[i] + pal[i+1] + pal[i+2]) >> shift;
+		palsum = (pal[i] + pal[i + 1] + pal[i + 2]) >> shift;
 		if (prompt)
 			promptbgmap[j] = (UINT8)(palindex - palsum);
 		else
@@ -371,67 +371,67 @@ static void CONS_backcolor_Change(void)
 static void CON_SetupColormaps(void)
 {
 	INT32 i;
-	UINT8 *memorysrc = (UINT8 *)Z_Malloc((256*15), PU_STATIC, NULL);
+	UINT8 *memorysrc = (UINT8 *)Z_Malloc((256 * 15), PU_STATIC, NULL);
 
 	magentamap = memorysrc;
-	yellowmap  = (magentamap+256);
-	lgreenmap  = (yellowmap+256);
-	bluemap    = (lgreenmap+256);
-	redmap     = (bluemap+256);
-	graymap    = (redmap+256);
-	orangemap  = (graymap+256);
-	skymap     = (orangemap+256);
-	purplemap  = (skymap+256);
-	aquamap    = (purplemap+256);
-	peridotmap = (aquamap+256);
-	azuremap   = (peridotmap+256);
-	brownmap   = (azuremap+256);
-	rosymap    = (brownmap+256);
-	invertmap  = (rosymap+256);
+	yellowmap = (magentamap + 256);
+	lgreenmap = (yellowmap + 256);
+	bluemap = (lgreenmap + 256);
+	redmap = (bluemap + 256);
+	graymap = (redmap + 256);
+	orangemap = (graymap + 256);
+	skymap = (orangemap + 256);
+	purplemap = (skymap + 256);
+	aquamap = (purplemap + 256);
+	peridotmap = (aquamap + 256);
+	azuremap = (peridotmap + 256);
+	brownmap = (azuremap + 256);
+	rosymap = (brownmap + 256);
+	invertmap = (rosymap + 256);
 
 	// setup the other colormaps, for console text
 
 	// these don't need to be aligned, unless you convert the
 	// V_DrawMappedPatch() into optimised asm.
 
-	for (i = 0; i < (256*15); i++, ++memorysrc)
+	for (i = 0; i < (256 * 15); i++, ++memorysrc)
 		*memorysrc = (UINT8)(i & 0xFF); // remap each color to itself...
 
 #define colset(map, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) \
-	map[0x0] = (UINT8)a;\
-	map[0x1] = (UINT8)b;\
-	map[0x2] = (UINT8)c;\
-	map[0x3] = (UINT8)d;\
-	map[0x4] = (UINT8)e;\
-	map[0x5] = (UINT8)f;\
-	map[0x6] = (UINT8)g;\
-	map[0x7] = (UINT8)h;\
-	map[0x8] = (UINT8)i;\
-	map[0x9] = (UINT8)j;\
-	map[0xA] = (UINT8)k;\
-	map[0xB] = (UINT8)l;\
-	map[0xC] = (UINT8)m;\
-	map[0xD] = (UINT8)n;\
-	map[0xE] = (UINT8)o;\
+	map[0x0] = (UINT8)a; \
+	map[0x1] = (UINT8)b; \
+	map[0x2] = (UINT8)c; \
+	map[0x3] = (UINT8)d; \
+	map[0x4] = (UINT8)e; \
+	map[0x5] = (UINT8)f; \
+	map[0x6] = (UINT8)g; \
+	map[0x7] = (UINT8)h; \
+	map[0x8] = (UINT8)i; \
+	map[0x9] = (UINT8)j; \
+	map[0xA] = (UINT8)k; \
+	map[0xB] = (UINT8)l; \
+	map[0xC] = (UINT8)m; \
+	map[0xD] = (UINT8)n; \
+	map[0xE] = (UINT8)o; \
 	map[0xF] = (UINT8)p;
 
 	// Tried to keep the colors vanilla while adding some shades in between them ~SonicX8000
 
 	//                      0x1       0x3                           0x9                           0xF
 	colset(magentamap, 177, 177, 178, 178, 178, 180, 180, 180, 182, 182, 182, 182, 184, 184, 184, 185);
-	colset(yellowmap,   82,  82,  73,  73,  73,  74,  74,  74,  66,  66,  66,  66,  67,  67,  67,  68);
-	colset(lgreenmap,   96,  96,  98,  98,  98, 100, 100, 100, 103, 103, 103, 103, 105, 105, 105, 107);
-	colset(bluemap,    146, 146, 147, 147, 147, 148, 148, 148, 149, 149, 149, 149, 150, 150, 150, 151);
-	colset(redmap,      32,  32,  33,  33,  33,  34,  34,  34,  35,  35,  35,  35,  37,  37,  37,  39);
-	colset(graymap,      8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  22,  23);
-	colset(orangemap,   50,  50,  52,  52,  52,  54,  54,  54,  56,  56,  56,  56,  59,  59,  59,  60);
-	colset(skymap,     129, 129, 130, 130, 130, 131, 131, 131, 133, 133, 133, 133, 135, 135, 135, 136);
-	colset(purplemap,  160, 160, 161, 161, 161, 162, 162, 162, 163, 163, 163, 163, 164, 164, 164, 165);
-	colset(aquamap,    120, 120, 121, 121, 121, 122, 122, 122, 123, 123, 123, 123, 124, 124, 124, 125);
-	colset(peridotmap,  73,  73, 188, 188, 188, 189, 189, 189, 190, 190, 190, 190, 191, 191, 191,  94);
-	colset(azuremap,   144, 144, 145, 145, 145, 146, 146, 146, 170, 170, 170, 170, 171, 171, 171, 172);
-	colset(brownmap,   219, 219, 221, 221, 221, 222, 222, 222, 224, 224, 224, 224, 227, 227, 227, 229);
-	colset(rosymap,    200, 200, 201, 201, 201, 202, 202, 202, 203, 203, 203, 203, 204, 204, 204, 205);
+	colset(yellowmap, 82, 82, 73, 73, 73, 74, 74, 74, 66, 66, 66, 66, 67, 67, 67, 68);
+	colset(lgreenmap, 96, 96, 98, 98, 98, 100, 100, 100, 103, 103, 103, 103, 105, 105, 105, 107);
+	colset(bluemap, 146, 146, 147, 147, 147, 148, 148, 148, 149, 149, 149, 149, 150, 150, 150, 151);
+	colset(redmap, 32, 32, 33, 33, 33, 34, 34, 34, 35, 35, 35, 35, 37, 37, 37, 39);
+	colset(graymap, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23);
+	colset(orangemap, 50, 50, 52, 52, 52, 54, 54, 54, 56, 56, 56, 56, 59, 59, 59, 60);
+	colset(skymap, 129, 129, 130, 130, 130, 131, 131, 131, 133, 133, 133, 133, 135, 135, 135, 136);
+	colset(purplemap, 160, 160, 161, 161, 161, 162, 162, 162, 163, 163, 163, 163, 164, 164, 164, 165);
+	colset(aquamap, 120, 120, 121, 121, 121, 122, 122, 122, 123, 123, 123, 123, 124, 124, 124, 125);
+	colset(peridotmap, 73, 73, 188, 188, 188, 189, 189, 189, 190, 190, 190, 190, 191, 191, 191, 94);
+	colset(azuremap, 144, 144, 145, 145, 145, 146, 146, 146, 170, 170, 170, 170, 171, 171, 171, 172);
+	colset(brownmap, 219, 219, 221, 221, 221, 222, 222, 222, 224, 224, 224, 224, 227, 227, 227, 229);
+	colset(rosymap, 200, 200, 201, 201, 201, 202, 202, 202, 203, 203, 203, 203, 204, 204, 204, 205);
 
 #undef colset
 
@@ -581,7 +581,7 @@ static void CON_RecalcSize(void)
 	if (dedicated)
 		conw = 1;
 	else
-		conw = (vid.width>>3) / con_scalefactor - 2;
+		conw = (vid.width >> 3) / con_scalefactor - 2;
 
 	if (con_curlines == vid.height) // first init
 	{
@@ -615,7 +615,7 @@ static void CON_RecalcSize(void)
 	M_Memcpy(tmp_buffer, con_buffer, CON_BUFFERSIZE);
 
 	if (conw < 1)
-		con_width = (BASEVIDWIDTH>>3) - 2;
+		con_width = (BASEVIDWIDTH >> 3) - 2;
 	else
 		con_width = conw;
 
@@ -625,7 +625,7 @@ static void CON_RecalcSize(void)
 	memset(con_buffer, ' ', CON_BUFFERSIZE);
 
 	con_cx = 0;
-	con_cy = con_totallines-1;
+	con_cy = con_totallines - 1;
 	con_line = &con_buffer[con_cy*con_width];
 	con_scrollup = 0;
 
@@ -642,8 +642,8 @@ static void CON_RecalcSize(void)
 				conw = oldcon_width - 1;
 				while (string[conw] == ' ' && conw)
 					conw--;
-				string[conw+1] = '\n';
-				string[conw+2] = '\0';
+				string[conw + 1] = '\n';
+				string[conw + 2] = '\0';
 				CON_Print(string);
 			}
 		}
@@ -662,7 +662,7 @@ static void CON_ChangeHeight(void)
 	minheight = 20 * con_scalefactor;	// 20 = 8+8+4
 
 	// toggle console in
-	con_destlines = (cons_height.value*vid.height)/100;
+	con_destlines = (cons_height.value*vid.height) / 100;
 	if (con_destlines < minheight)
 		con_destlines = minheight;
 	else if (con_destlines > vid.height)
@@ -841,13 +841,13 @@ static void CON_InputAddString(const char *c)
 
 	Lock_state();
 
-	if (input_len + csize > CON_MAXPROMPTCHARS-1)
+	if (input_len + csize > CON_MAXPROMPTCHARS - 1)
 	{
 		Unlock_state();
 		return;
 	}
 	if (input_cur != input_len)
-		memmove(&inputlines[inputline][input_cur+csize], &inputlines[inputline][input_cur], input_len-input_cur);
+		memmove(&inputlines[inputline][input_cur + csize], &inputlines[inputline][input_cur], input_len - input_cur);
 	memcpy(&inputlines[inputline][input_cur], c, csize);
 	input_len += csize;
 	input_sel = (input_cur += csize);
@@ -874,7 +874,7 @@ static void CON_InputDelSelection(void)
 	len = (end - start);
 
 	if (end != input_len)
-		memmove(&inputlines[inputline][start], &inputlines[inputline][end], input_len-end);
+		memmove(&inputlines[inputline][start], &inputlines[inputline][end], input_len - end);
 	memset(&inputlines[inputline][input_len - len], 0, len);
 
 	input_len -= len;
@@ -885,13 +885,13 @@ static void CON_InputDelSelection(void)
 
 static void CON_InputAddChar(char c)
 {
-	if (input_len >= CON_MAXPROMPTCHARS-1)
+	if (input_len >= CON_MAXPROMPTCHARS - 1)
 		return;
 
 	Lock_state();
 
 	if (input_cur != input_len)
-		memmove(&inputlines[inputline][input_cur+1], &inputlines[inputline][input_cur], input_len-input_cur);
+		memmove(&inputlines[inputline][input_cur + 1], &inputlines[inputline][input_cur], input_len - input_cur);
 	inputlines[inputline][input_cur++] = c;
 	inputlines[inputline][++input_len] = 0;
 	input_sel = input_cur;
@@ -907,7 +907,7 @@ static void CON_InputDelChar(void)
 	Lock_state();
 
 	if (input_cur != input_len)
-		memmove(&inputlines[inputline][input_cur-1], &inputlines[inputline][input_cur], input_len-input_cur);
+		memmove(&inputlines[inputline][input_cur - 1], &inputlines[inputline][input_cur], input_len - input_cur);
 	inputlines[inputline][--input_len] = 0;
 	input_sel = --input_cur;
 
@@ -924,7 +924,7 @@ boolean CON_Responder(event_t *ev)
 {
 	// sequential completions a la 4dos
 	static char completioncmd[80 + sizeof("find ")] = "find ";
-	static char *completion = &completioncmd[sizeof("find ")-1];
+	static char *completion = &completioncmd[sizeof("find ") - 1];
 
 	static INT32 skips;
 
@@ -988,8 +988,8 @@ boolean CON_Responder(event_t *ev)
 
 	// Always eat ctrl/shift/alt if console open, so the menu doesn't get ideas
 	if (key == KEY_LSHIFT || key == KEY_RSHIFT
-	 || key == KEY_LCTRL || key == KEY_RCTRL
-	 || key == KEY_LALT || key == KEY_RALT)
+		|| key == KEY_LCTRL || key == KEY_RCTRL
+		|| key == KEY_LALT || key == KEY_RALT)
 		return true;
 
 	if (key == KEY_LEFTARROW)
@@ -1077,7 +1077,7 @@ boolean CON_Responder(event_t *ev)
 
 		if (key == KEY_HOME) // oldest text in buffer
 		{
-			con_scrollup = (con_totallines-((con_curlines-16)>>3));
+			con_scrollup = (con_totallines - ((con_curlines - 16) >> 3));
 			return true;
 		}
 		else if (key == KEY_END) // most recent text in buffer
@@ -1091,9 +1091,9 @@ boolean CON_Responder(event_t *ev)
 			if (input_sel == input_cur) // Don't replace the clipboard without a text selection
 				return true;
 			else if (input_sel > input_cur)
-				I_ClipboardCopy(&inputlines[inputline][input_cur], input_sel-input_cur);
+				I_ClipboardCopy(&inputlines[inputline][input_cur], input_sel - input_cur);
 			else
-				I_ClipboardCopy(&inputlines[inputline][input_sel], input_cur-input_sel);
+				I_ClipboardCopy(&inputlines[inputline][input_sel], input_cur - input_sel);
 			CON_InputDelSelection();
 			completion[0] = 0;
 			return true;
@@ -1103,9 +1103,9 @@ boolean CON_Responder(event_t *ev)
 			if (input_sel == input_cur) // Don't replace the clipboard without a text selection
 				return true;
 			else if (input_sel > input_cur)
-				I_ClipboardCopy(&inputlines[inputline][input_cur], input_sel-input_cur);
+				I_ClipboardCopy(&inputlines[inputline][input_cur], input_sel - input_cur);
 			else
-				I_ClipboardCopy(&inputlines[inputline][input_sel], input_cur-input_sel);
+				I_ClipboardCopy(&inputlines[inputline][input_sel], input_cur - input_sel);
 			return true;
 		}
 		else if (key == 'v' || key == 'V')
@@ -1143,9 +1143,9 @@ boolean CON_Responder(event_t *ev)
 			if (!input_len || input_len >= 40 || strchr(inputlines[inputline], ' '))
 				return true;
 			strcpy(completion, inputlines[inputline]);
-			skips       = 0;
-			com_skips   = 0;
-			var_skips   = 0;
+			skips = 0;
+			com_skips = 0;
+			var_skips = 0;
 			alias_skips = 0;
 		}
 		else
@@ -1167,8 +1167,8 @@ boolean CON_Responder(event_t *ev)
 
 			if (cmd && skips == com_skips)
 			{
-				com_skips  ++;
-				var_skips  ++;
+				com_skips++;
+				var_skips++;
 				alias_skips++;
 			}
 		}
@@ -1179,7 +1179,7 @@ boolean CON_Responder(event_t *ev)
 
 			if (cmd && skips == var_skips)
 			{
-				var_skips  ++;
+				var_skips++;
 				alias_skips++;
 			}
 		}
@@ -1209,7 +1209,7 @@ boolean CON_Responder(event_t *ev)
 	// move up (backward) in console textbuffer
 	if (key == KEY_PGUP)
 	{
-		if (con_scrollup < (con_totallines-((con_curlines-16)>>3)))
+		if (con_scrollup < (con_totallines - ((con_curlines - 16) >> 3)))
 			con_scrollup++;
 		return true;
 	}
@@ -1250,7 +1250,7 @@ boolean CON_Responder(event_t *ev)
 
 		CONS_Printf("\x86""%c""\x80""%s\n", CON_PROMPTCHAR, inputlines[inputline]);
 
-		inputline = (inputline+1) & 31;
+		inputline = (inputline + 1) & 31;
 		inputhist = inputline;
 		CON_InputClear();
 
@@ -1262,7 +1262,7 @@ boolean CON_Responder(event_t *ev)
 	{
 		// copy one of the previous inputlines to the current
 		do
-			inputhist = (inputhist - 1) & 31; // cycle back
+		inputhist = (inputhist - 1) & 31; // cycle back
 		while (inputhist != inputline && !inputlines[inputhist][0]);
 
 		// stop at the last history input line, which is the
@@ -1280,7 +1280,7 @@ boolean CON_Responder(event_t *ev)
 		if (inputhist == inputline)
 			return true;
 		do
-			inputhist = (inputhist + 1) & 31;
+		inputhist = (inputhist + 1) & 31;
 		while (inputhist != inputline && !inputlines[inputhist][0]);
 
 		// back to currentline
@@ -1294,10 +1294,10 @@ boolean CON_Responder(event_t *ev)
 	// allow people to use keypad in console (good for typing IP addresses) - Calum
 	if (key >= KEY_KEYPAD7 && key <= KEY_KPADDEL)
 	{
-		char keypad_translation[] = {'7','8','9','-',
-		                             '4','5','6','+',
-		                             '1','2','3',
-		                             '0','.'};
+		char keypad_translation[] = { '7', '8', '9', '-',
+			'4', '5', '6', '+',
+			'1', '2', '3',
+			'0', '.' };
 
 		key = keypad_translation[key - KEY_KEYPAD7];
 	}
@@ -1384,7 +1384,7 @@ static void CON_Print(char *msg)
 			else if (*msg == ' ') // space
 			{
 				con_line[con_cx++] = ' ';
-				if (con_cx - controlchars >= con_width-11)
+				if (con_cx - controlchars >= con_width - 11)
 				{
 					CON_Linefeed();
 					con_line[con_cx++] = color;
@@ -1400,7 +1400,7 @@ static void CON_Print(char *msg)
 					con_line[con_cx++] = ' ';
 				} while ((con_cx - controlchars) % 4 != 0);
 
-				if (con_cx - controlchars >= con_width-11)
+				if (con_cx - controlchars >= con_width - 11)
 				{
 					CON_Linefeed();
 					con_line[con_cx++] = color;
@@ -1417,11 +1417,11 @@ static void CON_Print(char *msg)
 		}
 
 		// printable character
-		for (l = 0; l < (con_width-11) && msg[l] > ' '; l++)
+		for (l = 0; l < (con_width - 11) && msg[l] > ' '; l++)
 			;
 
 		// word wrap
-		if ((con_cx - controlchars) + l > con_width-11)
+		if ((con_cx - controlchars) + l > con_width - 11)
 		{
 			CON_Linefeed();
 			con_line[con_cx++] = color;
@@ -1439,7 +1439,7 @@ static void CON_Print(char *msg)
 void CON_LogMessage(const char *msg)
 {
 	char txt[8192], *t;
-	const char *p = msg, *e = txt+sizeof (txt)-2;
+	const char *p = msg, *e = txt + sizeof (txt)-2;
 
 	for (t = txt; *p != '\0'; p++)
 	{
@@ -1451,7 +1451,7 @@ void CON_LogMessage(const char *msg)
 			*t = '\0'; //end of string
 			I_OutputMsg("%s", txt); //print string
 			t = txt; //reset t pointer
-			memset(txt,'\0', sizeof (txt)); //reset txt
+			memset(txt, '\0', sizeof (txt)); //reset txt
 		}
 	}
 	*t = '\0'; //end of string
@@ -1495,7 +1495,9 @@ void CONS_Printf(const char *fmt, ...)
 	if (refresh)
 	{
 		CON_Drawer(); // here we display the console text
+		I_OutputMsg("CONS_Printf: calling I_FinishUpdate()...\n");
 		I_FinishUpdate(); // page flip or blit buffer
+		I_OutputMsg("CONS_Printf: I_FinishUpdate() done!\n");
 	}
 }
 
@@ -1513,18 +1515,18 @@ void CONS_Alert(alerttype_t level, const char *fmt, ...)
 
 	switch (level)
 	{
-		case CONS_NOTICE:
-			// no notice for notices, hehe
-			CONS_Printf("\x83" "%s" "\x80 ", M_GetText("NOTICE:"));
-			break;
-		case CONS_WARNING:
-			refreshdirmenu |= REFRESHDIR_WARNING;
-			CONS_Printf("\x82" "%s" "\x80 ", M_GetText("WARNING:"));
-			break;
-		case CONS_ERROR:
-			refreshdirmenu |= REFRESHDIR_ERROR;
-			CONS_Printf("\x85" "%s" "\x80 ", M_GetText("ERROR:"));
-			break;
+	case CONS_NOTICE:
+		// no notice for notices, hehe
+		CONS_Printf("\x83" "%s" "\x80 ", M_GetText("NOTICE:"));
+		break;
+	case CONS_WARNING:
+		refreshdirmenu |= REFRESHDIR_WARNING;
+		CONS_Printf("\x82" "%s" "\x80 ", M_GetText("WARNING:"));
+		break;
+	case CONS_ERROR:
+		refreshdirmenu |= REFRESHDIR_ERROR;
+		CONS_Printf("\x85" "%s" "\x80 ", M_GetText("ERROR:"));
+		break;
 	}
 
 	// I am lazy and I feel like just letting CONS_Printf take care of things.
@@ -1587,9 +1589,9 @@ static void CON_DrawInput(void)
 	INT32 x, y, i;
 
 	y = con_curlines - 12 * con_scalefactor;
-	x = charwidth*2;
+	x = charwidth * 2;
 
-	clen = con_width-13;
+	clen = con_width - 13;
 
 	if (input_len <= clen)
 	{
@@ -1600,7 +1602,7 @@ static void CON_DrawInput(void)
 	{
 		clen -= 2; // There will always be some extra truncation -- but where is what we'll find out
 
-		if (input_cur <= clen/2)
+		if (input_cur <= clen / 2)
 		{
 			// Close enough to right edge to show all
 			c = 0;
@@ -1611,8 +1613,8 @@ static void CON_DrawInput(void)
 		{
 			// Cursor in the middle (or right side) of input
 			// Move over for the ellipsis
-			c = input_cur - (clen/2) + 2;
-			x += charwidth*2;
+			c = input_cur - (clen / 2) + 2;
+			x += charwidth * 2;
 			lellip = 1;
 
 			if (c + clen >= input_len)
@@ -1632,14 +1634,14 @@ static void CON_DrawInput(void)
 
 	if (lellip)
 	{
-		x -= charwidth*3;
+		x -= charwidth * 3;
 		if (input_sel < c)
-			V_DrawFill(x, y, charwidth*3, (10 * con_scalefactor), 77 | V_NOSCALESTART);
+			V_DrawFill(x, y, charwidth * 3, (10 * con_scalefactor), 77 | V_NOSCALESTART);
 		for (i = 0; i < 3; ++i, x += charwidth)
 			V_DrawCharacter(x, y, '.' | cv_constextsize.value | V_GRAYMAP | V_NOSCALESTART, true);
 	}
 	else
-		V_DrawCharacter(x-charwidth, y, CON_PROMPTCHAR | cv_constextsize.value | V_GRAYMAP | V_NOSCALESTART, true);
+		V_DrawCharacter(x - charwidth, y, CON_PROMPTCHAR | cv_constextsize.value | V_GRAYMAP | V_NOSCALESTART, true);
 
 	for (cend = c + clen; c < cend; ++c, x += charwidth)
 	{
@@ -1652,14 +1654,14 @@ static void CON_DrawInput(void)
 			V_DrawCharacter(x, y, p[c] | cv_constextsize.value | V_NOSCALESTART, true);
 
 		if (c == input_cur && con_tick >= 4)
-			V_DrawCharacter(x, y + (con_scalefactor*2), '_' | cv_constextsize.value | V_NOSCALESTART, true);
+			V_DrawCharacter(x, y + (con_scalefactor * 2), '_' | cv_constextsize.value | V_NOSCALESTART, true);
 	}
 	if (cend == input_cur && con_tick >= 4)
-		V_DrawCharacter(x, y + (con_scalefactor*2), '_' | cv_constextsize.value | V_NOSCALESTART, true);
+		V_DrawCharacter(x, y + (con_scalefactor * 2), '_' | cv_constextsize.value | V_NOSCALESTART, true);
 	if (rellip)
 	{
 		if (input_sel > cend)
-			V_DrawFill(x, y, charwidth*3, (10 * con_scalefactor), 77 | V_NOSCALESTART);
+			V_DrawFill(x, y, charwidth * 3, (10 * con_scalefactor), 77 | V_NOSCALESTART);
 		for (i = 0; i < 3; ++i, x += charwidth)
 			V_DrawCharacter(x, y, '.' | cv_constextsize.value | V_GRAYMAP | V_NOSCALESTART, true);
 	}
@@ -1736,12 +1738,21 @@ static void CON_DrawBackpic(void)
 		piclump = W_GetNumForPatchName("MISSING");
 
 	// Cache the patch.
+	I_OutputMsg("  CON_DrawBackpic: caching patch lump %u...\n", (unsigned int)piclump);
 	con_backpic = W_CachePatchNum(piclump, PU_PATCH);
+	I_OutputMsg("  CON_DrawBackpic: con_backpic = %p\n", con_backpic);
+
+	if (!con_backpic)
+	{
+		I_OutputMsg("  CON_DrawBackpic: con_backpic is NULL! Aborting.\n");
+		return;
+	}
 
 	// Center the backpic, and draw a vertically cropped patch.
+	I_OutputMsg("  CON_DrawBackpic: width = %d, height = %d, vid.dup = %d\n", (int)con_backpic->width, (int)con_backpic->height, (int)vid.dup);
 	w = con_backpic->width * vid.dup;
 	x = (vid.width / 2) - (w / 2);
-	h = con_curlines/vid.dup;
+	h = con_curlines / vid.dup;
 
 	// If the patch doesn't fill the entire screen,
 	// then fill the sides with a solid color.
@@ -1761,7 +1772,7 @@ static void CON_DrawBackpic(void)
 
 	// Draw the patch.
 	V_DrawCroppedPatch(x << FRACBITS, 0, FRACUNIT, FRACUNIT, V_NOSCALESTART, con_backpic, NULL,
-			0, (BASEVIDHEIGHT - h) << FRACBITS, BASEVIDWIDTH << FRACBITS, h << FRACBITS);
+		0, (BASEVIDHEIGHT - h) << FRACBITS, BASEVIDWIDTH << FRACBITS, h << FRACBITS);
 
 	// Unlock the cached patch.
 	W_UnlockCachedPatch(con_backpic);
@@ -1804,12 +1815,12 @@ static void CON_DrawConsole(void)
 
 		if (rendermode == render_none) return;
 
-		for (y = (con_curlines-minheight) % charheight; y <= con_curlines-minheight; y += charheight, i++)
+		for (y = (con_curlines - minheight) % charheight; y <= con_curlines - minheight; y += charheight, i++)
 		{
 			INT32 x;
 			size_t c;
 
-			p = (UINT8 *)&con_buffer[((i > 0 ? i : 0)%con_totallines)*con_width];
+			p = (UINT8 *)&con_buffer[((i > 0 ? i : 0) % con_totallines)*con_width];
 
 			for (c = 0, x = charwidth; c < con_width; c++, x += charwidth, p++)
 			{
@@ -1827,7 +1838,7 @@ static void CON_DrawConsole(void)
 	}
 
 	// draw prompt if enough place (not while game startup)
-	if ((con_curlines >= (minheight-charheight)) && !con_startup)
+	if ((con_curlines >= (minheight - charheight)) && !con_startup)
 		CON_DrawInput();
 }
 
@@ -1843,6 +1854,8 @@ void CON_Drawer(void)
 		return;
 	}
 
+	I_OutputMsg("CON_Drawer: con_curlines = %d, con_destlines = %d\n", con_curlines, con_destlines);
+
 	if (con_recalc)
 	{
 		CON_RecalcSize();
@@ -1855,10 +1868,14 @@ void CON_Drawer(void)
 		CON_MoveConsole();
 
 	if (con_curlines > 0)
+	{
+		I_OutputMsg("CON_Drawer: drawing console...\n");
 		CON_DrawConsole();
+		I_OutputMsg("CON_Drawer: drawing console done!\n");
+	}
 	else if (gamestate == GS_LEVEL || gamestate == GS_INTERMISSION || gamestate == GS_CREDITS
-	|| gamestate == GS_EVALUATION || gamestate == GS_ENDING || gamestate == GS_CUTSCENE
-	|| gamestate == GS_WAITINGPLAYERS || cv_debug)
+		|| gamestate == GS_EVALUATION || gamestate == GS_ENDING || gamestate == GS_CUTSCENE
+		|| gamestate == GS_WAITINGPLAYERS || cv_debug)
 		CON_DrawHudlines();
 
 	Unlock_state();

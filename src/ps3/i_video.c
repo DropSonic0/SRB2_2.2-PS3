@@ -24,6 +24,9 @@ static PSGLcontext* psgl_context = NULL;
 static GLuint screen_texture = 0;
 static UINT32 *gl_buffer = NULL;
 static RGBA_t current_palette[256];
+static GLuint device_width = 0;
+static GLuint device_height = 0;
+extern UINT8 graphics_started;
 #endif
 
 static INT32 windowedModes[1][2] = {
@@ -39,12 +42,12 @@ void I_StartupGraphics(void)
 	memset(&options, 0, sizeof(options));
 	options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_HOST_MEMORY_SIZE;
 	options.maxSPUs = 1;
-	options.initializeSPUs = false;
+	options.initializeSPUs = true;
 	options.persistentMemorySize = 0;
 	options.transientMemorySize = 0;
 	options.errorConsole = 0;
 	options.fifoSize = 0;
-	options.hostMemorySize = 8 * 1024 * 1024;
+	options.hostMemorySize = 64 * 1024 * 1024;
 
 	CONS_Printf("I_StartupGraphics: Calling psglInit...\n");
 	psglInit(&options);
@@ -68,6 +71,13 @@ void I_StartupGraphics(void)
 
 	CONS_Printf("I_StartupGraphics: Calling psglMakeCurrent...\n");
 	psglMakeCurrent(psgl_context, psgl_device);
+	psglResetCurrentContext();
+
+	GLuint w = 0, h = 0;
+	psglGetDeviceDimensions(psgl_device, &w, &h);
+	device_width = w;
+	device_height = h;
+	CONS_Printf("I_StartupGraphics: PS3 Device Size: %ux%u\n", w, h);
 
 	CONS_Printf("I_StartupGraphics: Generating screen texture...\n");
 	glGenTextures(1, &screen_texture);
@@ -77,7 +87,7 @@ void I_StartupGraphics(void)
 	CONS_Printf("I_StartupGraphics: screen_texture ID = %u\n", screen_texture);
 
 	CONS_Printf("I_StartupGraphics: Initializing 1024x512 POT texture on GPU...\n");
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ARGB_SCE, 1024, 512, 0, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_ARGB_SCE, 1024, 512, 0, GL_ARGB_SCE, GL_UNSIGNED_BYTE, NULL);
 	CONS_Printf("I_StartupGraphics: Texture initialized successfully.\n");
 
 	rendermode = render_soft;
@@ -87,12 +97,14 @@ void I_StartupGraphics(void)
 	CONS_Printf("I_StartupGraphics: Setting video mode via VID_SetMode(0)...\n");
 	VID_SetMode(0);
 	CONS_Printf("I_StartupGraphics: Video mode set successfully.\n");
+	graphics_started = 1;
 #endif
 }
 
 void I_ShutdownGraphics(void)
 {
 #ifdef __CELLOS_LV2__
+	graphics_started = 0;
 	if (gl_buffer)
 	{
 		free(gl_buffer);
@@ -224,13 +236,15 @@ void I_FinishUpdate(void)
 
 		glBindTexture(GL_TEXTURE_2D, screen_texture);
 		// Upload the 640x400 buffer into the 1024x512 texture using glTexSubImage2D
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, vid.width, vid.height, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, gl_buffer);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, vid.width, vid.height, GL_ARGB_SCE, GL_UNSIGNED_BYTE, gl_buffer);
 
 		// Disable 3D states that might distort or prevent rendering
 		glDisable(GL_LIGHTING);
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_BLEND);
+
+		glViewport(0, 0, device_width, device_height);
 
 		// Set texture environment and color
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -245,32 +259,41 @@ void I_FinishUpdate(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glEnable(GL_TEXTURE_2D);
 
-		GLfloat vertices[] = {
-			0.0f, 0.0f,
-			1.0f, 0.0f,
-			1.0f, 1.0f,
-			0.0f, 1.0f
-		};
-		// Scale texture coordinates to map 640/1024 = 0.625f and 400/512 = 0.78125f
-		GLfloat texcoords[] = {
-			0.0f, 0.78125f,
-			0.625f, 0.78125f,
-			0.625f, 0.0f,
-			0.0f, 0.0f
-		};
-
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		glVertexPointer(2, GL_FLOAT, 0, vertices);
+		static GLfloat vertices[] __attribute__((aligned(16))) = {
+			0.0f, 0.0f, 0.0f, // Triangle 1: Bottom-Left
+			1.0f, 0.0f, 0.0f, // Triangle 1: Bottom-Right
+			0.0f, 1.0f, 0.0f, // Triangle 1: Top-Left
+
+			0.0f, 1.0f, 0.0f, // Triangle 2: Top-Left
+			1.0f, 0.0f, 0.0f, // Triangle 2: Bottom-Right
+			1.0f, 1.0f, 0.0f  // Triangle 2: Top-Right
+		};
+		static GLfloat texcoords[] __attribute__((aligned(16))) = {
+			0.0f, 0.78125f,   // Triangle 1: Bottom-Left
+			0.625f, 0.78125f, // Triangle 1: Bottom-Right
+			0.0f, 0.0f,       // Triangle 1: Top-Left
+
+			0.0f, 0.0f,       // Triangle 2: Top-Left
+			0.625f, 0.78125f, // Triangle 2: Bottom-Right
+			0.625f, 0.0f      // Triangle 2: Top-Right
+		};
+
+		glVertexPointer(3, GL_FLOAT, 0, vertices);
 		glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
 
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 		glDisable(GL_TEXTURE_2D);
+
+		glFlush();
 
 		psglSwap();
 	}
