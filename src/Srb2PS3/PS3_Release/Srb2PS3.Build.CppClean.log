@@ -30,6 +30,7 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\lzio.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\b_bot.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\command.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\comptime.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\console.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\dehacked.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\deh_lua.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\deh_soc.o
@@ -135,6 +136,7 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_data.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_draw.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_fps.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_main.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_patch.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_patchrotation.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_picformats.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_plane.o
@@ -190,8 +192,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\inftrees.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\trees.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\uncompr.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\zutil.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_patch.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\console.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_video.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.command.1.tlog
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.read.1.tlog

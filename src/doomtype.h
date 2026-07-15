@@ -17,46 +17,66 @@
 #ifndef __DOOMTYPE__
 #define __DOOMTYPE__
 
+#ifdef __SNC__
+#pragma diag_suppress 302   /* typedef name has already been declared (with same type) */
+#pragma diag_suppress 1628  /* parameter type incompatibility (such as passing int/uint16_t to enum) */
+#pragma diag_suppress 189   /* enumerated type mixed with another type */
+#pragma diag_suppress 1787  /* invalid value for enumeration type */
+#pragma diag_suppress 68    /* sign-change conversion */
+#pragma diag_suppress 187   /* pointless comparison of unsigned with zero */
+#pragma diag_suppress 515   /* void* cast to function pointer assignment */
+#pragma diag_suppress 145   /* void* cast to function pointer initialization */
+#pragma diag_suppress 516   /* pointless comparison of unsigned with negative */
+#pragma diag_suppress 552   /* variable set but never used */
+#pragma diag_suppress 178   /* function declared but never referenced */
+#pragma diag_suppress 112   /* statement is unreachable */
+#pragma diag_suppress 1319  /* noreturn function does return */
+#pragma diag_suppress 1421  /* support for trigraphs is disabled */
+#pragma diag_suppress 1669  /* potential uninitialized reference */
+#pragma diag_suppress 1634  /* missing case labels */
+#pragma diag_suppress 109   /* signed bit field of length 1 */
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #ifdef _WIN32
-//#define WIN32_LEAN_AND_MEAN
+	//#define WIN32_LEAN_AND_MEAN
 #define RPC_NO_WINDOWS_H
 #include <windows.h>
 #endif
 
-/* 7.18.1.1  Exact-width integer types */
+	/* 7.18.1.1  Exact-width integer types */
 #ifdef _MSC_VER
-// libopenmpt.h will include stdint.h later;
-// include it now so that INT8_MAX etc. don't get redefined
+	// libopenmpt.h will include stdint.h later;
+	// include it now so that INT8_MAX etc. don't get redefined
 #ifdef HAVE_OPENMPT
 #include <stdint.h>
 #endif
 
 #define SINT8 signed __int8
 
-typedef long ssize_t;
+	typedef long ssize_t;
 
-/* Older Visual C++ headers don't have the Win64-compatible typedefs... */
+	/* Older Visual C++ headers don't have the Win64-compatible typedefs... */
 #if (_MSC_VER <= 1200)
-	#ifndef DWORD_PTR
-		#define DWORD_PTR DWORD
-	#endif
-	#ifndef PDWORD_PTR
-		#define PDWORD_PTR PDWORD
-	#endif
+#ifndef DWORD_PTR
+#define DWORD_PTR DWORD
+#endif
+#ifndef PDWORD_PTR
+#define PDWORD_PTR PDWORD
+#endif
 #endif
 #elif defined(__SNC__)
-typedef signed char int8_t;
-typedef unsigned char uint8_t;
-typedef signed short int16_t;
-typedef unsigned short uint16_t;
-typedef signed int int32_t;
-typedef unsigned int uint32_t;
-typedef signed long long int64_t;
-typedef unsigned long long uint64_t;
+	typedef signed char int8_t;
+	typedef unsigned char uint8_t;
+	typedef signed short int16_t;
+	typedef unsigned short uint16_t;
+	typedef signed int int32_t;
+	typedef unsigned int uint32_t;
+	typedef signed long long int64_t;
+	typedef unsigned long long uint64_t;
 
 #define UINT8 uint8_t
 #define SINT8 int8_t
@@ -90,101 +110,101 @@ typedef unsigned long long uint64_t;
 #define NOIPX
 #endif
 
-/* Strings and some misc platform specific stuff */
+	/* Strings and some misc platform specific stuff */
 
 #ifdef _MSC_VER
 	// Microsoft VisualC++
 #if (_MSC_VER <= 1800) // MSVC 2013 and back
-	#define snprintf                _snprintf
+#define snprintf                _snprintf
 #if (_MSC_VER <= 1200) // MSVC 6.0 and back
-	#define vsnprintf               _vsnprintf
+#define vsnprintf               _vsnprintf
 #endif
 #endif
-	#define strncasecmp             strnicmp
-	#define strcasecmp              stricmp
+#define strncasecmp             strnicmp
+#define strcasecmp              stricmp
 #ifndef __cplusplus
-	#define inline                  __inline
+#define inline                  __inline
 #endif
 #elif defined (__WATCOMC__)
-	#include <dos.h>
-	#include <sys\types.h>
-	#include <direct.h>
-	#include <malloc.h>
-	#define strncasecmp             strnicmp
-	#define strcasecmp              strcmpi
+#include <dos.h>
+#include <sys\types.h>
+#include <direct.h>
+#include <malloc.h>
+#define strncasecmp             strnicmp
+#define strcasecmp              strcmpi
 #endif
 #if defined (__unix__) || defined (__APPLE__) || defined (UNIXCOMMON) || defined (__CELLOS_LV2__)
-	#undef stricmp
-	#define stricmp(x,y) strcasecmp(x,y)
-	#undef strnicmp
-	#define strnicmp(x,y,n) strncasecmp(x,y,n)
+#undef stricmp
+#define stricmp(x,y) strcasecmp(x,y)
+#undef strnicmp
+#define strnicmp(x,y,n) strncasecmp(x,y,n)
 #endif
 
-char *nongnu_strcasestr(const char *in, const char *what);
+	char *nongnu_strcasestr(const char *in, const char *what);
 #ifndef _GNU_SOURCE
 #define strcasestr nongnu_strcasestr
 #endif
 #define stristr strcasestr
 
-int startswith (const char *base, const char *tag);
-int endswith (const char *base, const char *tag);
-char *xstrtok(char *line, const char *delims);
+	int startswith(const char *base, const char *tag);
+	int endswith(const char *base, const char *tag);
+	char *xstrtok(char *line, const char *delims);
 
 #if defined (_WIN32) || defined (__HAIKU__)
 #define HAVE_DOSSTR_FUNCS
 #endif
 
 #if defined (__APPLE__)
-	#define SRB2_HAVE_STRLCPY
+#define SRB2_HAVE_STRLCPY
 #elif defined (__GLIBC_PREREQ)
 	// glibc 2.38: added strlcpy and strlcat to _DEFAULT_SOURCE
-	#if __GLIBC_PREREQ(2, 38)
-		#define SRB2_HAVE_STRLCPY
-	#endif
+#if __GLIBC_PREREQ(2, 38)
+#define SRB2_HAVE_STRLCPY
+#endif
 #endif
 
 #ifndef HAVE_DOSSTR_FUNCS
-int strupr(char *n); // from dosstr.c
-int strlwr(char *n); // from dosstr.c
+	int strupr(char *n); // from dosstr.c
+	int strlwr(char *n); // from dosstr.c
 #endif
 
 #include <stddef.h> // for size_t
 
 #ifndef SRB2_HAVE_STRLCPY
-size_t strlcat(char *dst, const char *src, size_t siz);
-size_t strlcpy(char *dst, const char *src, size_t siz);
+	size_t strlcat(char *dst, const char *src, size_t siz);
+	size_t strlcpy(char *dst, const char *src, size_t siz);
 #endif
 
-// Macro for use with char foo[FOOSIZE+1] type buffers.
-// Never use this with a buffer that is a "char *" or passed
-// into the function as an argument.
-//
-// In those cases sizeof will return the size of the pointer,
-// not the number of bytes in the buffer.
+	// Macro for use with char foo[FOOSIZE+1] type buffers.
+	// Never use this with a buffer that is a "char *" or passed
+	// into the function as an argument.
+	//
+	// In those cases sizeof will return the size of the pointer,
+	// not the number of bytes in the buffer.
 #define STRBUFCPY(dst,src) strlcpy(dst, src, sizeof dst)
 
-/* Boolean type definition */
+	/* Boolean type definition */
 
-// Note: C++ bool and C99/C11 _Bool are NOT compatible.
-// Historically, boolean was win32 BOOL on Windows. For equivalence, it's now
-// int32_t. "true" and "false" are only declared for C code; in C++, conversion
-// between "bool" and "int32_t" takes over.
+	// Note: C++ bool and C99/C11 _Bool are NOT compatible.
+	// Historically, boolean was win32 BOOL on Windows. For equivalence, it's now
+	// int32_t. "true" and "false" are only declared for C code; in C++, conversion
+	// between "bool" and "int32_t" takes over.
 #ifndef _WIN32
-typedef int32_t boolean;
+	typedef int32_t boolean;
 #else
 #define boolean BOOL
 #endif
 
 #ifndef __cplusplus
 #ifndef _WIN32
-enum {false = 0, true = 1};
+	enum { false = 0, true = 1 };
 #else
 #define false FALSE
 #define true TRUE
 #endif
 #endif
 
-/* 7.18.2.1  Limits of exact-width integer types */
+	/* 7.18.2.1  Limits of exact-width integer types */
 
 #ifndef INT8_MIN
 #define INT8_MIN (-128)
@@ -225,65 +245,65 @@ enum {false = 0, true = 1};
 #define UINT64_MAX 0xffffffffffffffffULL /* 18446744073709551615ULL */
 #endif
 
-/* Compiler-specific attributes and other macros */
+	/* Compiler-specific attributes and other macros */
 
 #ifdef __GNUC__ // __attribute__ ((X))
-	#define FUNCNORETURN __attribute__ ((noreturn))
+#define FUNCNORETURN __attribute__ ((noreturn))
 
-	#if ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 1)) && defined (__MINGW32__) // MinGW, >= GCC 4.1
-		#include "inttypes.h"
-		#if 0 //defined  (__USE_MINGW_ANSI_STDIO) && __USE_MINGW_ANSI_STDIO > 0
-			#define FUNCPRINTF __attribute__ ((format(gnu_printf, 1, 2)))
-			#define FUNCDEBUG  __attribute__ ((format(gnu_printf, 2, 3)))
-			#define FUNCIERROR __attribute__ ((format(gnu_printf, 1, 2),noreturn))
-		#elif (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4) // >= GCC 4.4
-			#define FUNCPRINTF __attribute__ ((format(ms_printf, 1, 2)))
-			#define FUNCDEBUG  __attribute__ ((format(ms_printf, 2, 3)))
-			#define FUNCIERROR __attribute__ ((format(ms_printf, 1, 2),noreturn))
-		#else
-			#define FUNCPRINTF __attribute__ ((format(printf, 1, 2)))
-			#define FUNCDEBUG  __attribute__ ((format(printf, 2, 3)))
-			#define FUNCIERROR __attribute__ ((format(printf, 1, 2),noreturn))
-		#endif
-	#else
-		#define FUNCPRINTF __attribute__ ((format(printf, 1, 2)))
-		#define FUNCDEBUG  __attribute__ ((format(printf, 2, 3)))
-		#define FUNCIERROR __attribute__ ((format(printf, 1, 2),noreturn))
-	#endif
+#if ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 1)) && defined (__MINGW32__) // MinGW, >= GCC 4.1
+#include "inttypes.h"
+#if 0 //defined  (__USE_MINGW_ANSI_STDIO) && __USE_MINGW_ANSI_STDIO > 0
+#define FUNCPRINTF __attribute__ ((format(gnu_printf, 1, 2)))
+#define FUNCDEBUG  __attribute__ ((format(gnu_printf, 2, 3)))
+#define FUNCIERROR __attribute__ ((format(gnu_printf, 1, 2),noreturn))
+#elif (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4) // >= GCC 4.4
+#define FUNCPRINTF __attribute__ ((format(ms_printf, 1, 2)))
+#define FUNCDEBUG  __attribute__ ((format(ms_printf, 2, 3)))
+#define FUNCIERROR __attribute__ ((format(ms_printf, 1, 2),noreturn))
+#else
+#define FUNCPRINTF __attribute__ ((format(printf, 1, 2)))
+#define FUNCDEBUG  __attribute__ ((format(printf, 2, 3)))
+#define FUNCIERROR __attribute__ ((format(printf, 1, 2),noreturn))
+#endif
+#else
+#define FUNCPRINTF __attribute__ ((format(printf, 1, 2)))
+#define FUNCDEBUG  __attribute__ ((format(printf, 2, 3)))
+#define FUNCIERROR __attribute__ ((format(printf, 1, 2),noreturn))
+#endif
 
-	#ifndef FUNCIERROR
-		#define FUNCIERROR __attribute__ ((noreturn))
-	#endif
+#ifndef FUNCIERROR
+#define FUNCIERROR __attribute__ ((noreturn))
+#endif
 
-	#define FUNCMATH __attribute__((const))
+#define FUNCMATH __attribute__((const))
 
-	#if (__GNUC__ > 3) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1) // >= GCC 3.1
-		#define FUNCDEAD __attribute__ ((deprecated))
-		#define FUNCINLINE __attribute__((always_inline))
-		#define FUNCNONNULL __attribute__((nonnull))
-	#endif
+#if (__GNUC__ > 3) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1) // >= GCC 3.1
+#define FUNCDEAD __attribute__ ((deprecated))
+#define FUNCINLINE __attribute__((always_inline))
+#define FUNCNONNULL __attribute__((nonnull))
+#endif
 
-	#define FUNCNOINLINE __attribute__((noinline))
+#define FUNCNOINLINE __attribute__((noinline))
 
-	#if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4) // >= GCC 4.4
-		#ifdef __i386__ // i386 only
-			#define FUNCTARGET(X)  __attribute__ ((__target__ (X)))
-		#endif
-	#endif
+#if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4) // >= GCC 4.4
+#ifdef __i386__ // i386 only
+#define FUNCTARGET(X)  __attribute__ ((__target__ (X)))
+#endif
+#endif
 
-	#if defined (__MINGW32__) && ((__GNUC__ > 3) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)) // MinGW, >= GCC 3.4
-		#define ATTRPACK __attribute__((packed, gcc_struct))
-	#else
-		#define ATTRPACK __attribute__((packed))
-	#endif
+#if defined (__MINGW32__) && ((__GNUC__ > 3) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)) // MinGW, >= GCC 3.4
+#define ATTRPACK __attribute__((packed, gcc_struct))
+#else
+#define ATTRPACK __attribute__((packed))
+#endif
 
-	#define ATTRUNUSED __attribute__((unused))
+#define ATTRUNUSED __attribute__((unused))
 #elif defined (_MSC_VER)
-	#define ATTRNORETURN __declspec(noreturn)
-	#define ATTRINLINE __forceinline
-	#if _MSC_VER > 1200 // >= MSVC 6.0
-		#define ATTRNOINLINE __declspec(noinline)
-	#endif
+#define ATTRNORETURN __declspec(noreturn)
+#define ATTRINLINE __forceinline
+#if _MSC_VER > 1200 // >= MSVC 6.0
+#define ATTRNOINLINE __declspec(noinline)
+#endif
 #endif
 
 #ifndef FUNCPRINTF
@@ -332,36 +352,36 @@ enum {false = 0, true = 1};
 #define ATTRNOINLINE
 #endif
 
-/* Miscellaneous types that don't fit anywhere else (Can this be changed?) */
+	/* Miscellaneous types that don't fit anywhere else (Can this be changed?) */
 
-typedef struct
-{
-	UINT8 red;
-	UINT8 green;
-	UINT8 blue;
-	UINT8 alpha;
-} byteColor_t;
+	typedef struct
+	{
+		UINT8 red;
+		UINT8 green;
+		UINT8 blue;
+		UINT8 alpha;
+	} byteColor_t;
 
-union FColorRGBA
-{
-	UINT32 rgba;
-	byteColor_t s;
-} ATTRPACK;
-typedef union FColorRGBA RGBA_t;
+	union FColorRGBA
+	{
+		UINT32 rgba;
+		byteColor_t s;
+	} ATTRPACK;
+	typedef union FColorRGBA RGBA_t;
 
-typedef enum
-{
-	postimg_none,
-	postimg_water,
-	postimg_motion,
-	postimg_flip,
-	postimg_heat
-} postimg_t;
+	typedef enum
+	{
+		postimg_none,
+		postimg_water,
+		postimg_motion,
+		postimg_flip,
+		postimg_heat
+	} postimg_t;
 
-typedef UINT32 lumpnum_t; // 16 : 16 unsigned long (wad num: lump num)
+	typedef UINT32 lumpnum_t; // 16 : 16 unsigned long (wad num: lump num)
 #define LUMPERROR UINT32_MAX
 
-typedef UINT32 tic_t;
+	typedef UINT32 tic_t;
 #define INFTICS UINT32_MAX
 
 #include "endian.h" // This is needed to make sure the below macro acts correctly in big endian builds
@@ -374,90 +394,90 @@ typedef UINT32 tic_t;
 
 #define TOSTR(x) #x
 
-/* preprocessor dumb and needs second macro to expand input */
+	/* preprocessor dumb and needs second macro to expand input */
 #define WSTRING2(s) L ## s
 #define WSTRING(s) WSTRING2 (s)
 
-/*
-A hack by Monster Iestyn: Return a pointer to a field of
-a struct from a pointer to another field in the struct.
-Needed for some lua shenanigans.
-*/
+	/*
+	A hack by Monster Iestyn: Return a pointer to a field of
+	a struct from a pointer to another field in the struct.
+	Needed for some lua shenanigans.
+	*/
 #define FIELDFROM( type, field, have, want ) \
-	(void *)((intptr_t)(field) - offsetof (type, have) + offsetof (type, want))
+	(void *)((intptr_t)(field)-offsetof(type, have) + offsetof(type, want))
 
-typedef UINT8 bitarray_t;
+	typedef UINT8 bitarray_t;
 
 #define BIT_ARRAY_SIZE(n) (((n) + 7) >> 3)
 
-static inline int
-in_bit_array (const bitarray_t * const array, const int value)
-{
-	return (array[value >> 3] & (1<<(value & 7)));
-}
+	static inline int
+		in_bit_array(const bitarray_t * const array, const int value)
+	{
+			return (array[value >> 3] & (1 << (value & 7)));
+		}
 
-static inline void
-set_bit_array (bitarray_t * const array, const int value)
-{
-	array[value >> 3] |= (1<<(value & 7));
-}
+	static inline void
+		set_bit_array(bitarray_t * const array, const int value)
+	{
+			array[value >> 3] |= (1 << (value & 7));
+		}
 
-static inline void
-unset_bit_array (bitarray_t * const array, const int value)
-{
-	array[value >> 3] &= ~(1<<(value & 7));
-}
+	static inline void
+		unset_bit_array(bitarray_t * const array, const int value)
+	{
+			array[value >> 3] &= ~(1 << (value & 7));
+		}
 
-typedef UINT64 precise_t;
+	typedef UINT64 precise_t;
 
 #ifdef __CELLOS_LV2__
 #include <stdio.h>
 #include <string.h>
-static inline int access(const char *path, int amode)
-{
-	FILE *f = NULL;
-	if (amode == 0 || amode == 4) // F_OK or R_OK
+	static inline int access(const char *path, int amode)
 	{
-		f = fopen(path, "rb");
-		if (f)
+		FILE *f = NULL;
+		if (amode == 0 || amode == 4) // F_OK or R_OK
 		{
-			fclose(f);
-			return 0;
+			f = fopen(path, "rb");
+			if (f)
+			{
+				fclose(f);
+				return 0;
+			}
 		}
-	}
-	else if (amode == 2 || amode == 6) // W_OK or R_OK|W_OK
-	{
-		f = fopen(path, "r+b");
-		if (f)
+		else if (amode == 2 || amode == 6) // W_OK or R_OK|W_OK
 		{
-			fclose(f);
-			return 0;
+			f = fopen(path, "r+b");
+			if (f)
+			{
+				fclose(f);
+				return 0;
+			}
 		}
+		return -1;
 	}
-	return -1;
-}
 
-static inline int chdir(const char *path)
-{
-	(void)path;
-	return 0;
-}
+	static inline int chdir(const char *path)
+	{
+		(void)path;
+		return 0;
+	}
 
-static inline char *getcwd(char *buf, size_t size)
-{
-	if (buf && size >= 32)
+	static inline char *getcwd(char *buf, size_t size)
 	{
-		strcpy(buf, "/dev_hdd0/game/SRB222PS3/USRDIR");
-		return buf;
+		if (buf && size >= 32)
+		{
+			strcpy(buf, "/dev_hdd0/game/SRB222PS3/USRDIR");
+			return buf;
+		}
+		else if (buf && size > 1)
+		{
+			buf[0] = '/';
+			buf[1] = '\0';
+			return buf;
+		}
+		return NULL;
 	}
-	else if (buf && size > 1)
-	{
-		buf[0] = '/';
-		buf[1] = '\0';
-		return buf;
-	}
-	return NULL;
-}
 #endif
 
 #ifdef __cplusplus
