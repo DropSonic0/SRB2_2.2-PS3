@@ -3,12 +3,26 @@
 #include "../i_video.h"
 #include "../screen.h"
 #include "../v_video.h"
+#include "../i_system.h"
 
 #ifdef __CELLOS_LV2__
 #include <PSGL/psgl.h>
 #include <PSGL/psglu.h>
 #include <stdlib.h>
 #include <string.h>
+
+INT32 oglflags = 0;
+
+boolean LoadGL(void)
+{
+	return true;
+}
+
+void *GetGLFunc(const char *name)
+{
+	(void)name;
+	return NULL;
+}
 #endif
 
 rendermode_t rendermode = render_none;
@@ -24,6 +38,10 @@ static PSGLcontext* psgl_context = NULL;
 static GLuint screen_texture = 0;
 static UINT32 *gl_buffer = NULL;
 static RGBA_t current_palette[256];
+static UINT32 gl_palette[256];
+static int tex_allocated = 0;
+static int last_tex_w = 0;
+static int last_tex_h = 0;
 #endif
 
 static INT32 windowedModes[1][2] = {
@@ -35,6 +53,9 @@ void I_StartupGraphics(void)
 #ifdef __CELLOS_LV2__
 	PSGLinitOptions options;
 	PSGLdeviceParameters params;
+
+	// Guarantee vid.buffer is NULL on startup to prevent freeing uninitialized memory
+	vid.buffer = NULL;
 
 	memset(&options, 0, sizeof(options));
 	options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_HOST_MEMORY_SIZE;
@@ -63,8 +84,10 @@ void I_StartupGraphics(void)
 
 	glGenTextures(1, &screen_texture);
 	glBindTexture(GL_TEXTURE_2D, screen_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	rendermode = render_soft;
 	chosenrendermode = render_soft;
@@ -92,6 +115,14 @@ void I_ShutdownGraphics(void)
 		psglDestroyDevice(psgl_device);
 		psgl_device = NULL;
 	}
+	if (vid.buffer)
+	{
+		free(vid.buffer);
+		vid.buffer = NULL;
+	}
+	tex_allocated = 0;
+	last_tex_w = 0;
+	last_tex_h = 0;
 #endif
 }
 
@@ -100,7 +131,13 @@ void VID_StartupOpenGL(void){}
 void I_SetPalette(RGBA_t *palette)
 {
 #ifdef __CELLOS_LV2__
+	int i;
 	memcpy(current_palette, palette, sizeof(current_palette));
+	for (i = 0; i < 256; i++)
+	{
+		RGBA_t color = current_palette[i];
+		gl_palette[i] = (color.s.blue << 24) | (color.s.green << 16) | (color.s.red << 8) | color.s.alpha;
+	}
 #else
 	(void)palette;
 #endif
@@ -131,6 +168,20 @@ INT32 VID_SetMode(INT32 modenum)
 	vid.height = windowedModes[0][1];
 	vid.modenum = 0;
 
+	// Set up game's software render buffer
+	vid.rowbytes = vid.width * vid.bpp;
+	vid.direct = NULL;
+	if (vid.buffer)
+	{
+		free(vid.buffer);
+		vid.buffer = NULL;
+	}
+	vid.buffer = calloc(NUMSCREENS, vid.rowbytes * vid.height);
+	if (!vid.buffer)
+	{
+		printf("Error: Not enough memory for video buffer\n");
+	}
+
 	return 0;
 }
 
@@ -160,65 +211,97 @@ void I_FinishUpdate(void)
 	if (rendermode == render_none)
 		return;
 
-	if (screens[0])
+	if (rendermode == render_soft)
 	{
-		int i;
-		int num_pixels = vid.width * vid.height;
-		if (!gl_buffer)
+		if (screens[0] && vid.width > 0 && vid.height > 0)
 		{
-			gl_buffer = malloc(640 * 400 * sizeof(UINT32));
-		}
-		if (gl_buffer)
-		{
-			for (i = 0; i < num_pixels; i++)
+			int i;
+			int num_pixels = vid.width * vid.height;
+			static int gl_buffer_w = 0;
+			static int gl_buffer_h = 0;
+
+			if (!gl_buffer || gl_buffer_w != (int)vid.width || gl_buffer_h != (int)vid.height)
 			{
-				UINT8 index = screens[0][i];
-				RGBA_t color = current_palette[index];
-				// Convert to ARGB (GL_ARGB_SCE format as used by PSGL)
-				gl_buffer[i] = (color.s.alpha << 24) | (color.s.red << 16) | (color.s.green << 8) | color.s.blue;
+				if (gl_buffer)
+				{
+					free(gl_buffer);
+				}
+				gl_buffer = malloc(vid.width * vid.height * sizeof(UINT32));
+				gl_buffer_w = vid.width;
+				gl_buffer_h = vid.height;
 			}
 
-			glBindTexture(GL_TEXTURE_2D, screen_texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_ARGB_SCE, vid.width, vid.height, 0, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, gl_buffer);
+			if (gl_buffer)
+			{
+				// Unrolled pixel conversion loop by 8 for maximum performance on PS3 PPU
+				for (i = 0; i < num_pixels; i += 8)
+				{
+					gl_buffer[i] = gl_palette[screens[0][i]];
+					gl_buffer[i+1] = gl_palette[screens[0][i+1]];
+					gl_buffer[i+2] = gl_palette[screens[0][i+2]];
+					gl_buffer[i+3] = gl_palette[screens[0][i+3]];
+					gl_buffer[i+4] = gl_palette[screens[0][i+4]];
+					gl_buffer[i+5] = gl_palette[screens[0][i+5]];
+					gl_buffer[i+6] = gl_palette[screens[0][i+6]];
+					gl_buffer[i+7] = gl_palette[screens[0][i+7]];
+				}
 
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glOrthof(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
+				glBindTexture(GL_TEXTURE_2D, screen_texture);
+				if (!tex_allocated || last_tex_w != (int)vid.width || last_tex_h != (int)vid.height)
+				{
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_ARGB_SCE, vid.width, vid.height, 0, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, gl_buffer);
+					tex_allocated = 1;
+					last_tex_w = vid.width;
+					last_tex_h = vid.height;
+				}
+				else
+				{
+					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, vid.width, vid.height, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, gl_buffer);
+				}
 
-			glClear(GL_COLOR_BUFFER_BIT);
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, screen_texture);
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				glOrthof(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
+				glMatrixMode(GL_MODELVIEW);
+				glLoadIdentity();
 
-			GLfloat vertices[] = {
-				0.0f, 0.0f,
-				1.0f, 0.0f,
-				1.0f, 1.0f,
-				0.0f, 1.0f
-			};
-			GLfloat texcoords[] = {
-				0.0f, 1.0f,
-				1.0f, 1.0f,
-				1.0f, 0.0f,
-				0.0f, 0.0f
-			};
+				glClear(GL_COLOR_BUFFER_BIT);
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, screen_texture);
 
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				GLfloat vertices[] = {
+					0.0f, 0.0f,
+					1.0f, 0.0f,
+					1.0f, 1.0f,
+					0.0f, 1.0f
+				};
+				GLfloat texcoords[] = {
+					0.0f, 1.0f,
+					1.0f, 1.0f,
+					1.0f, 0.0f,
+					0.0f, 0.0f
+				};
 
-			glVertexPointer(2, GL_FLOAT, 0, vertices);
-			glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+				glEnableClientState(GL_VERTEX_ARRAY);
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+				glVertexPointer(2, GL_FLOAT, 0, vertices);
+				glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
 
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDisableClientState(GL_VERTEX_ARRAY);
+				glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-			glDisable(GL_TEXTURE_2D);
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				glDisableClientState(GL_VERTEX_ARRAY);
 
-			psglSwap();
+				glDisable(GL_TEXTURE_2D);
+
+				psglSwap();
+			}
 		}
+	}
+	else if (rendermode == render_opengl)
+	{
+		psglSwap();
 	}
 #endif
 }

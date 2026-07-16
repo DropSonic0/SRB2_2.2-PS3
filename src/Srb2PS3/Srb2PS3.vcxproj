@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
     <ClCompile>
-      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;__CELLOS_LV2__;LOGMESSAGES;HAVE_ZLIB;HAVE_PNG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;__CELLOS_LV2__;LOGMESSAGES;HAVE_ZLIB;HAVE_PNG;HWRENDER;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\src\ps3;C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -58,7 +58,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
     <ClCompile>
-      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;HAVE_ZLIB;HAVE_PNG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;HAVE_ZLIB;HAVE_PNG;HWRENDER;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CppLanguageStd>Cpp03</CppLanguageStd>

@@ -1495,9 +1495,7 @@ void CONS_Printf(const char *fmt, ...)
 	if (refresh)
 	{
 		CON_Drawer(); // here we display the console text
-		I_OutputMsg("CONS_Printf: calling I_FinishUpdate()...\n");
 		I_FinishUpdate(); // page flip or blit buffer
-		I_OutputMsg("CONS_Printf: I_FinishUpdate() done!\n");
 	}
 }
 
@@ -1738,9 +1736,7 @@ static void CON_DrawBackpic(void)
 		piclump = W_GetNumForPatchName("MISSING");
 
 	// Cache the patch.
-	I_OutputMsg("  CON_DrawBackpic: caching patch lump %u...\n", (unsigned int)piclump);
 	con_backpic = W_CachePatchNum(piclump, PU_PATCH);
-	I_OutputMsg("  CON_DrawBackpic: con_backpic = %p\n", con_backpic);
 
 	if (!con_backpic)
 	{
@@ -1749,7 +1745,6 @@ static void CON_DrawBackpic(void)
 	}
 
 	// Center the backpic, and draw a vertically cropped patch.
-	I_OutputMsg("  CON_DrawBackpic: width = %d, height = %d, vid.dup = %d\n", (int)con_backpic->width, (int)con_backpic->height, (int)vid.dup);
 	w = con_backpic->width * vid.dup;
 	x = (vid.width / 2) - (w / 2);
 	h = con_curlines / vid.dup;
@@ -1854,8 +1849,6 @@ void CON_Drawer(void)
 		return;
 	}
 
-	I_OutputMsg("CON_Drawer: con_curlines = %d, con_destlines = %d\n", con_curlines, con_destlines);
-
 	if (con_recalc)
 	{
 		CON_RecalcSize();
@@ -1869,9 +1862,7 @@ void CON_Drawer(void)
 
 	if (con_curlines > 0)
 	{
-		I_OutputMsg("CON_Drawer: drawing console...\n");
 		CON_DrawConsole();
-		I_OutputMsg("CON_Drawer: drawing console done!\n");
 	}
 	else if (gamestate == GS_LEVEL || gamestate == GS_INTERMISSION || gamestate == GS_CREDITS
 		|| gamestate == GS_EVALUATION || gamestate == GS_ENDING || gamestate == GS_CUTSCENE

@@ -21,8 +21,68 @@
 #define _R_OPENGL_H_
 
 #if defined(__CELLOS_LV2__)
+#ifndef STATIC_OPENGL
+#define STATIC_OPENGL
+#endif
 #include <PSGL/psgl.h>
 #include <PSGL/psglu.h>
+typedef GLfloat GLclampd;
+typedef char GLchar;
+#ifndef GL_VIEWPORT
+#define GL_VIEWPORT 0x0BA2
+#endif
+#ifndef GL_GENERATE_MIPMAP
+#define GL_GENERATE_MIPMAP 0x8191
+#endif
+#ifndef GL_VERTEX_SHADER
+#define GL_VERTEX_SHADER 0x8B31
+#endif
+#ifndef GL_FRAGMENT_SHADER
+#define GL_FRAGMENT_SHADER 0x8B30
+#endif
+#ifndef GL_COMPILE_STATUS
+#define GL_COMPILE_STATUS 0x8B81
+#endif
+#ifndef GL_LINK_STATUS
+#define GL_LINK_STATUS 0x8B82
+#endif
+#ifndef GL_INFO_LOG_LENGTH
+#define GL_INFO_LOG_LENGTH 0x8B84
+#endif
+#ifndef GL_R8
+#define GL_R8 0x8229
+#endif
+#ifndef GL_TEXTURE_1D
+#define GL_TEXTURE_1D 0x0DE0
+#endif
+
+// PSGL/OpenGL ES 1.1 Compatibility
+#define glClearDepth glClearDepthf
+#define glDepthRange glDepthRangef
+
+static inline void pglColor4ubv(const GLubyte *v)
+{
+	glColor4ub(v[0], v[1], v[2], v[3]);
+}
+
+static inline void pglPolygonMode(GLenum face, GLenum mode)
+{
+	(void)face;
+	(void)mode;
+}
+
+static inline void pglTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const GLvoid *pixels)
+{
+	(void)target;
+	(void)level;
+	(void)internalformat;
+	(void)width;
+	(void)border;
+	(void)format;
+	(void)type;
+	(void)pixels;
+}
+
 #elif defined(HAVE_SDL)
 #define _MATH_DEFINES_DEFINED
 
