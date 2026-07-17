@@ -352,11 +352,15 @@ static INT32 WINAPI SetRes(viddef_t *lvid, vmode_t *pcurrentmode)
 
 	SetupGLFunc13();
 
+#ifdef __CELLOS_LV2__
+	textureformatGL = GL_RGBA_FORMAT;
+#else
 	screen_depth = (GLbyte)(lvid->bpp*8);
 	if (screen_depth > 16)
-		textureformatGL = GL_RGBA;
+		textureformatGL = GL_RGBA_FORMAT;
 	else
 		textureformatGL = GL_RGB5_A1;
+#endif
 
 	SetModelView(lvid->width, lvid->height);
 	SetStates();

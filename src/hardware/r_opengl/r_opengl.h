@@ -26,6 +26,9 @@
 #endif
 #include <PSGL/psgl.h>
 #include <PSGL/psglu.h>
+
+#define GL_RGBA_FORMAT GL_ARGB_SCE
+
 typedef GLfloat GLclampd;
 typedef char GLchar;
 #ifndef GL_VIEWPORT
@@ -62,7 +65,7 @@ typedef char GLchar;
 
 static inline void pglColor4ubv(const GLubyte *v)
 {
-	glColor4ub(v[0], v[1], v[2], v[3]);
+	glColor4ub(v[1], v[2], v[3], v[0]); // red, green, blue, alpha
 }
 
 static inline void pglPolygonMode(GLenum face, GLenum mode)
@@ -107,6 +110,10 @@ static inline void pglTexImage1D(GLenum target, GLint level, GLint internalforma
 
 #define  _CREATE_DLL_  // necessary for Unix AND Windows
 #include "../../doomdef.h"
+
+#ifndef GL_RGBA_FORMAT
+#define GL_RGBA_FORMAT GL_RGBA
+#endif
 #include "../hw_drv.h"
 #include "../../z_zone.h"
 

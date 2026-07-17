@@ -356,10 +356,17 @@ extern "C" {
 
 	typedef struct
 	{
+#ifdef __CELLOS_LV2__
+		UINT8 alpha;
+		UINT8 red;
+		UINT8 green;
+		UINT8 blue;
+#else
 		UINT8 red;
 		UINT8 green;
 		UINT8 blue;
 		UINT8 alpha;
+#endif
 	} byteColor_t;
 
 	union FColorRGBA
@@ -386,7 +393,9 @@ extern "C" {
 
 #include "endian.h" // This is needed to make sure the below macro acts correctly in big endian builds
 
-#ifdef SRB2_BIG_ENDIAN
+#ifdef __CELLOS_LV2__
+#define UINT2RGBA(a) (UINT32)(((a & 0xFF) << 24) | (((a >> 24) & 0xFF) << 16) | (((a >> 16) & 0xFF) << 8) | ((a >> 8) & 0xFF))
+#elif defined(SRB2_BIG_ENDIAN)
 #define UINT2RGBA(a) a
 #else
 #define UINT2RGBA(a) (UINT32)((a&0xff)<<24)|((a&0xff00)<<8)|((a&0xff0000)>>8)|(((UINT32)a&0xff000000)>>24)
