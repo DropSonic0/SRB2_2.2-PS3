@@ -35,3 +35,612 @@ Added file /dev_hdd0/game/SRB222PS3/USRDIR/characters.pk3 (2054 lumps)
 Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/characters.pk3|SOC/Characters.txt
 Added file /dev_hdd0/game/SRB222PS3/USRDIR/music.pk3 (215 lumps)
 I_StartupGraphics()...
+[PS3] Initializing in Software mode (default)
+Number of console HUD lines is now 5
+I_InitJoystick()...
+I_InitJoystick2()...
+HU_LoadGraphics()...
+Executing /dev_hdd0/game/SRB222PS3/USRDIR/config.cfg
+Default resolution: 1280 x 720
+Windowed resolution: 640 x 400
+Default bit depth: 16 bits
+M_Init(): Init miscellaneous info.
+R_Init(): Init SRB2 refresh daemon.
+R_LoadParsedTranslations()...
+R_LoadTextures()...
+P_InitPicAnims()...
+R_InitSprites()...
+srb2.pk3 added 5261 frames in 391 sprites
+R_InitColormaps()...
+S_InitSfxChannels(): Setting up sound channels.
+ST_Init(): Init status bar.
+D_CheckNetGame(): Checking network game status.
+Logfile: /dev_hdd0/game/SRB222PS3/USRDIR/log.txt
+Entering main game loop...
+===========================================================================
+                   We hope you enjoy this game as
+                     much as we did making it!
+                            ...wait. =P
+===========================================================================
+Sonic Robo Blast 2 v2.2.15 (Jul 16 2026 19:47:56 illegal Unknown) PlayStation 3 32-bit 
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.41 ms
+  - Tex Upload (glTexSubImage2D): 1.35 ms
+  - Draw quad: 0.21 ms
+  - Swap buffers (psglSwap): 0.58 ms
+  - Total I_FinishUpdate: 3.56 ms
+ERROR: Music _stjr could not be played: engine failure!
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.77 ms
+ERROR: Music _intro could not be played: engine failure!
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.39 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.84 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.81 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.37 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.81 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.37 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.37 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.81 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.38 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.82 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.38 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.83 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.39 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.82 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.38 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.82 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.39 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.83 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.39 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.83 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.04 ms
+  - Total I_FinishUpdate: 2.82 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.77 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.37 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.38 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.82 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.77 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.38 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.82 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.33 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.33 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.77 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.41 ms
+  - Tex Upload (glTexSubImage2D): 1.36 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.88 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.40 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.84 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.43 ms
+  - Tex Upload (glTexSubImage2D): 1.37 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.91 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.39 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.84 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.39 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.82 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.37 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.81 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.39 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.83 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.38 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.82 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.37 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.81 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.33 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.77 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.38 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.81 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.81 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.37 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.81 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.77 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.32 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.78 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.34 ms
+  - Tex Upload (glTexSubImage2D): 1.34 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.03 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.36 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.80 ms
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.35 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.08 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.79 ms
+ERROR: Music _title could not be played: engine failure!
+[PS3 PERF] Software mode active. Avg times over 100 frames:
+  - Loop (palette mapping): 1.39 ms
+  - Tex Upload (glTexSubImage2D): 1.33 ms
+  - Draw quad: 0.09 ms
+  - Swap buffers (psglSwap): 0.02 ms
+  - Total I_FinishUpdate: 2.83 ms
+
+I_Error(): Out of memory allocating 3690987552 bytes

@@ -5,11 +5,17 @@
 #include "../v_video.h"
 #include "../i_system.h"
 
+#ifdef HWRENDER
+#include "../hardware/hw_main.h"
+#endif
+
 #ifdef __CELLOS_LV2__
 #include <PSGL/psgl.h>
 #include <PSGL/psglu.h>
 #include <stdlib.h>
 #include <string.h>
+
+extern void *memalign(size_t boundary, size_t size);
 
 INT32 oglflags = 0;
 
@@ -35,13 +41,13 @@ consvar_t cv_vidwait = CVAR_INIT("vid_wait", "On", CV_SAVE, CV_OnOff, NULL);
 #ifdef __CELLOS_LV2__
 static PSGLdevice* psgl_device = NULL;
 static PSGLcontext* psgl_context = NULL;
-static GLuint screen_texture = 0;
+#define NUM_SCREEN_TEXS 3
+static GLuint screen_textures[NUM_SCREEN_TEXS] = { 0 };
+static GLuint vbo_retro[NUM_SCREEN_TEXS] = { 0 };
+static int current_tex_idx = 0;
 static UINT32 *gl_buffer = NULL;
 static RGBA_t current_palette[256];
 static UINT32 gl_palette[256];
-static int tex_allocated = 0;
-static int last_tex_w = 0;
-static int last_tex_h = 0;
 #endif
 
 static INT32 windowedModes[1][2] = {
@@ -82,15 +88,39 @@ void I_StartupGraphics(void)
 	psgl_context = psglCreateContext();
 	psglMakeCurrent(psgl_context, psgl_device);
 
-	glGenTextures(1, &screen_texture);
-	glBindTexture(GL_TEXTURE_2D, screen_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glGenTextures(NUM_SCREEN_TEXS, screen_textures);
+	glGenBuffers(NUM_SCREEN_TEXS, vbo_retro);
+	{
+		int t;
+		for (t = 0; t < NUM_SCREEN_TEXS; t++)
+		{
+			glBindTexture(GL_TEXTURE_2D, screen_textures[t]);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	rendermode = render_soft;
-	chosenrendermode = render_soft;
+			glBindBuffer(GL_TEXTURE_REFERENCE_BUFFER_SCE, vbo_retro[t]);
+			glBufferData(GL_TEXTURE_REFERENCE_BUFFER_SCE, 1024 * 1024 * sizeof(UINT32), NULL, GL_STREAM_DRAW);
+		}
+		glBindBuffer(GL_TEXTURE_REFERENCE_BUFFER_SCE, 0);
+	}
+	current_tex_idx = 0;
+
+#ifdef HWRENDER
+	if (M_CheckParm("-opengl"))
+	{
+		rendermode = render_opengl;
+		chosenrendermode = render_opengl;
+		CONS_Printf("[PS3] Initializing in Hardware OpenGL/PSGL mode (-opengl parameter detected)\n");
+	}
+	else
+#endif
+	{
+		rendermode = render_soft;
+		chosenrendermode = render_soft;
+		CONS_Printf("[PS3] Initializing in Software mode (default)\n");
+	}
 
 	// Automatically set default resolution mode
 	VID_SetMode(0);
@@ -120,9 +150,7 @@ void I_ShutdownGraphics(void)
 		free(vid.buffer);
 		vid.buffer = NULL;
 	}
-	tex_allocated = 0;
-	last_tex_w = 0;
-	last_tex_h = 0;
+	glDeleteBuffers(NUM_SCREEN_TEXS, vbo_retro);
 #endif
 }
 
@@ -136,7 +164,8 @@ void I_SetPalette(RGBA_t *palette)
 	for (i = 0; i < 256; i++)
 	{
 		RGBA_t color = current_palette[i];
-		gl_palette[i] = (color.s.blue << 24) | (color.s.green << 16) | (color.s.red << 8) | color.s.alpha;
+		// Pack as ARGB for GL_ARGB_SCE on Big Endian PS3
+		gl_palette[i] = (color.s.alpha << 24) | (color.s.red << 16) | (color.s.green << 8) | color.s.blue;
 	}
 #else
 	(void)palette;
@@ -187,7 +216,27 @@ INT32 VID_SetMode(INT32 modenum)
 
 boolean VID_CheckRenderer(void)
 {
-	return false;
+	boolean rendererchanged = false;
+	if (setrenderneeded)
+	{
+		rendermode = setrenderneeded;
+		rendererchanged = true;
+		setrenderneeded = 0;
+	}
+
+	if (rendermode == render_soft)
+	{
+		SCR_SetDrawFuncs();
+	}
+#ifdef HWRENDER
+	else if (rendermode == render_opengl && rendererchanged)
+	{
+		HWR_Switch();
+		V_SetPalette(0);
+	}
+#endif
+
+	return rendererchanged;
 }
 
 void VID_CheckGLLoaded(rendermode_t oldrender)
@@ -215,49 +264,48 @@ void I_FinishUpdate(void)
 	{
 		if (screens[0] && vid.width > 0 && vid.height > 0)
 		{
-			int i;
-			int num_pixels = vid.width * vid.height;
 			static int gl_buffer_w = 0;
 			static int gl_buffer_h = 0;
 
+			// Allocate gl_buffer with exact dimensions (640x400)
 			if (!gl_buffer || gl_buffer_w != (int)vid.width || gl_buffer_h != (int)vid.height)
 			{
 				if (gl_buffer)
 				{
 					free(gl_buffer);
 				}
-				gl_buffer = malloc(vid.width * vid.height * sizeof(UINT32));
+				gl_buffer = memalign(128, vid.width * vid.height * sizeof(UINT32));
 				gl_buffer_w = vid.width;
 				gl_buffer_h = vid.height;
 			}
 
 			if (gl_buffer)
 			{
+				int num_pixels = vid.width * vid.height;
+				int i;
 				// Unrolled pixel conversion loop by 8 for maximum performance on PS3 PPU
 				for (i = 0; i < num_pixels; i += 8)
 				{
 					gl_buffer[i] = gl_palette[screens[0][i]];
-					gl_buffer[i+1] = gl_palette[screens[0][i+1]];
-					gl_buffer[i+2] = gl_palette[screens[0][i+2]];
-					gl_buffer[i+3] = gl_palette[screens[0][i+3]];
-					gl_buffer[i+4] = gl_palette[screens[0][i+4]];
-					gl_buffer[i+5] = gl_palette[screens[0][i+5]];
-					gl_buffer[i+6] = gl_palette[screens[0][i+6]];
-					gl_buffer[i+7] = gl_palette[screens[0][i+7]];
+					gl_buffer[i + 1] = gl_palette[screens[0][i + 1]];
+					gl_buffer[i + 2] = gl_palette[screens[0][i + 2]];
+					gl_buffer[i + 3] = gl_palette[screens[0][i + 3]];
+					gl_buffer[i + 4] = gl_palette[screens[0][i + 4]];
+					gl_buffer[i + 5] = gl_palette[screens[0][i + 5]];
+					gl_buffer[i + 6] = gl_palette[screens[0][i + 6]];
+					gl_buffer[i + 7] = gl_palette[screens[0][i + 7]];
 				}
 
-				glBindTexture(GL_TEXTURE_2D, screen_texture);
-				if (!tex_allocated || last_tex_w != (int)vid.width || last_tex_h != (int)vid.height)
-				{
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_ARGB_SCE, vid.width, vid.height, 0, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, gl_buffer);
-					tex_allocated = 1;
-					last_tex_w = vid.width;
-					last_tex_h = vid.height;
-				}
-				else
-				{
-					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, vid.width, vid.height, GL_ARGB_SCE, GL_UNSIGNED_INT_8_8_8_8_REV, gl_buffer);
-				}
+				// Rotate to next screen texture for triple-buffered uploads (prevents GPU pipeline stall)
+				current_tex_idx = (current_tex_idx + 1) % NUM_SCREEN_TEXS;
+
+				// Use zero-copy texture references in fast-path VBO memory
+				glBindBuffer(GL_TEXTURE_REFERENCE_BUFFER_SCE, vbo_retro[current_tex_idx]);
+				glBufferSubData(GL_TEXTURE_REFERENCE_BUFFER_SCE, 0, vid.width * vid.height * sizeof(UINT32), gl_buffer);
+
+				glBindTexture(GL_TEXTURE_2D, screen_textures[current_tex_idx]);
+				glTextureReferenceSCE(GL_TEXTURE_2D, 1, vid.width, vid.height, 0, GL_ARGB_SCE, vid.width * sizeof(UINT32), 0);
+				glBindBuffer(GL_TEXTURE_REFERENCE_BUFFER_SCE, 0);
 
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
@@ -267,7 +315,7 @@ void I_FinishUpdate(void)
 
 				glClear(GL_COLOR_BUFFER_BIT);
 				glEnable(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D, screen_texture);
+				glBindTexture(GL_TEXTURE_2D, screen_textures[current_tex_idx]);
 
 				GLfloat vertices[] = {
 					0.0f, 0.0f,
