@@ -211,6 +211,8 @@ static char returnWadPath[256];
 #include "../filesrch.h"
 #ifndef __CELLOS_LV2__
 #include "endtxt.h"
+#else
+#include <cell/pad.h>
 #endif
 #include "sdlmain.h"
 
@@ -287,7 +289,11 @@ UINT8 keyboard_started = false;
 #ifdef __CELLOS_LV2__
 UINT8 graphics_started = 0;
 void I_UpdateMouseGrab(void) {}
-void I_OsPolling(void) {}
+void I_OsPolling(void)
+{
+	I_GetJoystickEvents();
+	I_GetJoystick2Events();
+}
 void I_StartupMouse(void) {}
 void I_GetCursorPosition(INT32 *x, INT32 *y) { if (x) *x = 0; if (y) *y = 0; }
 #endif
@@ -1129,8 +1135,120 @@ void I_ShutdownJoystick(void)
 	// don't shut down the subsystem here, because hotplugging
 }
 
+#ifdef __CELLOS_LV2__
+static int get_ps3_axis(CellPadData *data, int offset)
+{
+	int val = (int)data->button[offset];
+	int centered = val - 128;
+	if (centered > -20 && centered < 20) {
+		return 0;
+	}
+	return centered * 256;
+}
+#endif
+
 void I_GetJoystickEvents(void)
 {
+#ifdef __CELLOS_LV2__
+	static CellPadData pad_data;
+	static uint16_t last_buttons1 = 0;
+	static UINT64 last_joyhats1 = 0;
+	event_t event;
+	int i;
+
+	if (!joystick_started) return;
+
+	if (cellPadGetData(0, &pad_data) == CELL_PAD_OK && pad_data.len > 0)
+	{
+		uint16_t buttons = ((uint16_t)pad_data.button[CELL_PAD_BTN_OFFSET_DIGITAL2] << 8) | (uint16_t)pad_data.button[CELL_PAD_BTN_OFFSET_DIGITAL1];
+		uint16_t changed = buttons ^ last_buttons1;
+		last_buttons1 = buttons;
+
+		// Map bit index to SRB2 button index:
+		// Map table: select (10), L3 (8), R3 (9), start (11), L2 (6), R2 (7), L1 (4), R1 (5), Triangle (3), Circle (1), Cross (0), Square (2)
+		static const int ps3_button_map[16] = {
+			10, // Select (Bit 0)
+			8,  // L3 (Bit 1)
+			9,  // R3 (Bit 2)
+			11, // Start (Bit 3)
+			-1, // Up (Bit 4) - handled as Hat
+			-1, // Right (Bit 5) - handled as Hat
+			-1, // Down (Bit 6) - handled as Hat
+			-1, // Left (Bit 7) - handled as Hat
+			6,  // L2 (Bit 8)
+			7,  // R2 (Bit 9)
+			4,  // L1 (Bit 10)
+			5,  // R1 (Bit 11)
+			3,  // Triangle (Bit 12)
+			1,  // Circle (Bit 13)
+			0,  // Cross (Bit 14)
+			2   // Square (Bit 15)
+		};
+
+		for (i = 0; i < 16; i++)
+		{
+			int mapped_btn = ps3_button_map[i];
+			if (mapped_btn != -1 && (changed & (1 << i)))
+			{
+				memset(&event, 0, sizeof(event));
+				event.type = (buttons & (1 << i)) ? ev_keydown : ev_keyup;
+				event.key = KEY_JOY1 + mapped_btn;
+				D_PostEvent(&event);
+			}
+		}
+
+		// Post events for D-pad (Hat)
+		UINT64 joyhats = 0;
+		if (buttons & CELL_PAD_CTRL_UP) joyhats |= (UINT64)0x1 << 0;
+		if (buttons & CELL_PAD_CTRL_DOWN) joyhats |= (UINT64)0x1 << 1;
+		if (buttons & CELL_PAD_CTRL_LEFT) joyhats |= (UINT64)0x1 << 2;
+		if (buttons & CELL_PAD_CTRL_RIGHT) joyhats |= (UINT64)0x1 << 3;
+
+		if (joyhats != last_joyhats1)
+		{
+			INT64 j = 1;
+			INT64 newhats = joyhats ^ last_joyhats1;
+			last_joyhats1 = joyhats;
+
+			for (i = 0; i < 4; i++, j <<= 1)
+			{
+				if (newhats & j)
+				{
+					memset(&event, 0, sizeof(event));
+					event.type = (joyhats & j) ? ev_keydown : ev_keyup;
+					event.key = KEY_HAT1 + i;
+					D_PostEvent(&event);
+				}
+			}
+		}
+
+		// Post events for Analog sticks (Axes)
+		// Axis Set 0: Left Stick
+		// Axis Set 1: Right Stick
+		for (i = 0; i < JOYAXISSET; i++)
+		{
+			memset(&event, 0, sizeof(event));
+			event.type = ev_joystick;
+			event.key = i;
+			if (i == 0) // Left Stick
+			{
+				event.x = get_ps3_axis(&pad_data, CELL_PAD_BTN_OFFSET_ANALOG_LEFT_X) / 32;
+				event.y = get_ps3_axis(&pad_data, CELL_PAD_BTN_OFFSET_ANALOG_LEFT_Y) / 32;
+			}
+			else if (i == 1) // Right Stick
+			{
+				event.x = get_ps3_axis(&pad_data, CELL_PAD_BTN_OFFSET_ANALOG_RIGHT_X) / 32;
+				event.y = get_ps3_axis(&pad_data, CELL_PAD_BTN_OFFSET_ANALOG_RIGHT_Y) / 32;
+			}
+			else
+			{
+				event.x = 0;
+				event.y = 0;
+			}
+			D_PostEvent(&event);
+		}
+	}
+#else
 	static event_t event = { 0, 0, 0, 0, false };
 	INT32 i = 0;
 	UINT64 joyhats = 0;
@@ -1256,6 +1374,7 @@ void I_GetJoystickEvents(void)
 		}
 		D_PostEvent(&event);
 	}
+#endif
 #endif
 }
 
@@ -1401,6 +1520,100 @@ void I_ShutdownJoystick2(void)
 
 void I_GetJoystick2Events(void)
 {
+#ifdef __CELLOS_LV2__
+	static CellPadData pad_data;
+	static uint16_t last_buttons2 = 0;
+	static UINT64 last_joyhats2 = 0;
+	event_t event;
+	int i;
+
+	if (!joystick2_started) return;
+
+	if (cellPadGetData(1, &pad_data) == CELL_PAD_OK && pad_data.len > 0)
+	{
+		uint16_t buttons = ((uint16_t)pad_data.button[CELL_PAD_BTN_OFFSET_DIGITAL2] << 8) | (uint16_t)pad_data.button[CELL_PAD_BTN_OFFSET_DIGITAL1];
+		uint16_t changed = buttons ^ last_buttons2;
+		last_buttons2 = buttons;
+
+		static const int ps3_button_map[16] = {
+			10, // Select (Bit 0)
+			8,  // L3 (Bit 1)
+			9,  // R3 (Bit 2)
+			11, // Start (Bit 3)
+			-1, // Up (Bit 4) - handled as Hat
+			-1, // Right (Bit 5) - handled as Hat
+			-1, // Down (Bit 6) - handled as Hat
+			-1, // Left (Bit 7) - handled as Hat
+			6,  // L2 (Bit 8)
+			7,  // R2 (Bit 9)
+			4,  // L1 (Bit 10)
+			5,  // R1 (Bit 11)
+			3,  // Triangle (Bit 12)
+			1,  // Circle (Bit 13)
+			0,  // Cross (Bit 14)
+			2   // Square (Bit 15)
+		};
+
+		for (i = 0; i < 16; i++)
+		{
+			int mapped_btn = ps3_button_map[i];
+			if (mapped_btn != -1 && (changed & (1 << i)))
+			{
+				memset(&event, 0, sizeof(event));
+				event.type = (buttons & (1 << i)) ? ev_keydown : ev_keyup;
+				event.key = KEY_2JOY1 + mapped_btn;
+				D_PostEvent(&event);
+			}
+		}
+
+		UINT64 joyhats = 0;
+		if (buttons & CELL_PAD_CTRL_UP) joyhats |= (UINT64)0x1 << 0;
+		if (buttons & CELL_PAD_CTRL_DOWN) joyhats |= (UINT64)0x1 << 1;
+		if (buttons & CELL_PAD_CTRL_LEFT) joyhats |= (UINT64)0x1 << 2;
+		if (buttons & CELL_PAD_CTRL_RIGHT) joyhats |= (UINT64)0x1 << 3;
+
+		if (joyhats != last_joyhats2)
+		{
+			INT64 j = 1;
+			INT64 newhats = joyhats ^ last_joyhats2;
+			last_joyhats2 = joyhats;
+
+			for (i = 0; i < 4; i++, j <<= 1)
+			{
+				if (newhats & j)
+				{
+					memset(&event, 0, sizeof(event));
+					event.type = (joyhats & j) ? ev_keydown : ev_keyup;
+					event.key = KEY_2HAT1 + i;
+					D_PostEvent(&event);
+				}
+			}
+		}
+
+		for (i = 0; i < JOYAXISSET; i++)
+		{
+			memset(&event, 0, sizeof(event));
+			event.type = ev_joystick2;
+			event.key = i;
+			if (i == 0) // Left Stick
+			{
+				event.x = get_ps3_axis(&pad_data, CELL_PAD_BTN_OFFSET_ANALOG_LEFT_X) / 32;
+				event.y = get_ps3_axis(&pad_data, CELL_PAD_BTN_OFFSET_ANALOG_LEFT_Y) / 32;
+			}
+			else if (i == 1) // Right Stick
+			{
+				event.x = get_ps3_axis(&pad_data, CELL_PAD_BTN_OFFSET_ANALOG_RIGHT_X) / 32;
+				event.y = get_ps3_axis(&pad_data, CELL_PAD_BTN_OFFSET_ANALOG_RIGHT_Y) / 32;
+			}
+			else
+			{
+				event.x = 0;
+				event.y = 0;
+			}
+			D_PostEvent(&event);
+		}
+	}
+#else
 	static event_t event = { 0, 0, 0, 0, false };
 	INT32 i = 0;
 	UINT64 joyhats = 0;
@@ -1529,6 +1742,7 @@ void I_GetJoystick2Events(void)
 		D_PostEvent(&event);
 	}
 #endif
+#endif
 }
 
 /**	\brief	Open joystick handle
@@ -1618,11 +1832,45 @@ static int joy_open2(int joyindex)
 	}
 }
 
+#ifdef __CELLOS_LV2__
+static int ps3_pads_initialized = 0;
+
+static void I_InitPS3Controllers(void)
+{
+	if (!ps3_pads_initialized)
+	{
+		int ret = cellPadInit(7);
+		if (ret == CELL_PAD_OK)
+		{
+			CONS_Printf("[PS3] cellPadInit(7) successful\n");
+			ps3_pads_initialized = 1;
+			joystick_started = 1;
+			joystick2_started = 1;
+
+			JoyInfo.axises = 4;
+			JoyInfo.buttons = 12;
+			JoyInfo.hats = 1;
+
+			JoyInfo2.axises = 4;
+			JoyInfo2.buttons = 12;
+			JoyInfo2.hats = 1;
+		}
+		else
+		{
+			CONS_Printf("[PS3] cellPadInit(7) failed: %d\n", ret);
+		}
+	}
+}
+#endif
+
 //
 // I_InitJoystick
 //
 void I_InitJoystick(void)
 {
+#ifdef __CELLOS_LV2__
+	I_InitPS3Controllers();
+#else
 	SDL_Joystick *newjoy = NULL;
 
 	//I_ShutdownJoystick();
@@ -1668,10 +1916,14 @@ void I_InitJoystick(void)
 
 	if (JoyInfo.dev != newjoy && JoyInfo2.dev != newjoy)
 		SDL_JoystickClose(newjoy);
+#endif
 }
 
 void I_InitJoystick2(void)
 {
+#ifdef __CELLOS_LV2__
+	// Already initialized by I_InitPS3Controllers
+#else
 	SDL_Joystick *newjoy = NULL;
 
 	//I_ShutdownJoystick2();
@@ -1717,6 +1969,7 @@ void I_InitJoystick2(void)
 
 	if (JoyInfo.dev != newjoy && JoyInfo2.dev != newjoy)
 		SDL_JoystickClose(newjoy);
+#endif
 }
 
 static void I_ShutdownInput(void)
@@ -1726,6 +1979,14 @@ static void I_ShutdownInput(void)
 	// Note these methods are internal to this file, not called elsewhere.
 	I_ShutdownJoystick();
 	I_ShutdownJoystick2();
+
+#ifdef __CELLOS_LV2__
+	if (ps3_pads_initialized)
+	{
+		cellPadEnd();
+		ps3_pads_initialized = 0;
+	}
+#endif
 
 	if (SDL_WasInit(SDL_INIT_JOYSTICK) == SDL_INIT_JOYSTICK)
 	{

@@ -363,7 +363,12 @@ void I_WaitVBL(INT32 count)
 
 void I_ReadScreen(UINT8 *scr)
 {
-	(void)scr;
+	if (rendermode != render_soft)
+		I_Error("I_ReadScreen: called while in non-software mode");
+	else
+		VID_BlitLinearScreen(screens[0], scr,
+		vid.width*vid.bpp, vid.height,
+		vid.rowbytes, vid.rowbytes);
 }
 
 void I_BeginRead(void){}
