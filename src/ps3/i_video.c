@@ -164,8 +164,8 @@ void I_SetPalette(RGBA_t *palette)
 	for (i = 0; i < 256; i++)
 	{
 		RGBA_t color = current_palette[i];
-		// Pack as ARGB for GL_ARGB_SCE on Big Endian PS3
-		gl_palette[i] = (color.s.alpha << 24) | (color.s.red << 16) | (color.s.green << 8) | color.s.blue;
+		// Pack as BGRA for GL_ARGB_SCE on Big Endian PS3 so that colors map properly on screen
+		gl_palette[i] = (color.s.blue << 24) | (color.s.green << 16) | (color.s.red << 8) | color.s.alpha;
 	}
 #else
 	(void)palette;

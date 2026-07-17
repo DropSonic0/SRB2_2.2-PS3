@@ -2978,19 +2978,19 @@ virtres_t* vres_GetMap(lumpnum_t lumpnum)
 	{
 		// Remember that we're assuming that the WAD will have a specific set of lumps in a specific order.
 		UINT8 *wadData = W_CacheLumpNum(lumpnum, PU_LEVEL);
-		filelump_t *fileinfo = (filelump_t *)(wadData + ((wadinfo_t *)wadData)->infotableofs);
-		numlumps = ((wadinfo_t *)wadData)->numlumps;
+		filelump_t *fileinfo = (filelump_t *)(wadData + LONG(((wadinfo_t *)wadData)->infotableofs));
+		numlumps = LONG(((wadinfo_t *)wadData)->numlumps);
 		vlumps = Z_Calloc(sizeof(virtlump_t)*numlumps, PU_LEVEL, NULL);
 
 		// Build the lumps.
 		for (i = 0; i < numlumps; i++)
 		{
-			vlumps[i].size = (size_t)(((filelump_t *)(fileinfo + i))->size);
+			vlumps[i].size = (size_t)LONG((fileinfo + i)->size);
 			// Play it safe with the name in this case.
 			memcpy(vlumps[i].name, (fileinfo + i)->name, 8);
 			vlumps[i].name[8] = '\0';
 			vlumps[i].data = Z_Malloc(vlumps[i].size, PU_LEVEL, NULL); // This is memory inefficient, sorry about that.
-			memcpy(vlumps[i].data, wadData + (fileinfo + i)->filepos, vlumps[i].size);
+			memcpy(vlumps[i].data, wadData + LONG((fileinfo + i)->filepos), vlumps[i].size);
 		}
 
 		Z_Free(wadData);
