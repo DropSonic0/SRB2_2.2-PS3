@@ -213,6 +213,21 @@ static char returnWadPath[256];
 #include "endtxt.h"
 #else
 #include <cell/pad.h>
+#include <sys/memory.h>
+#include <sysutil/sysutil_common.h>
+#include <sys/process.h>
+
+static volatile int ps3_exit_requested = 0;
+
+static void PS3_SysutilCallback(uint64_t status, uint64_t param, void *data)
+{
+	(void)param;
+	(void)data;
+	if (status == CELL_SYSUTIL_REQUEST_EXITGAME)
+	{
+		ps3_exit_requested = 1;
+	}
+}
 #endif
 #include "sdlmain.h"
 
@@ -293,6 +308,13 @@ void I_OsPolling(void)
 {
 	I_GetJoystickEvents();
 	I_GetJoystick2Events();
+#ifdef __CELLOS_LV2__
+	cellSysutilCheckCallback();
+	if (ps3_exit_requested)
+	{
+		I_Quit();
+	}
+#endif
 }
 void I_StartupMouse(void) {}
 void I_GetCursorPosition(INT32 *x, INT32 *y) { if (x) *x = 0; if (y) *y = 0; }
@@ -2745,6 +2767,9 @@ INT32 I_StartupSystem(void)
 	I_AddExitFunc(I_stop_threads);
 #endif
 	I_StartupConsole();
+#ifdef __CELLOS_LV2__
+	cellSysutilRegisterCallback(0, PS3_SysutilCallback, NULL);
+#endif
 #ifdef NEWSIGNALHANDLER
 	// This is useful when debugging. It lets GDB attach to
 	// the correct process easily.
@@ -2808,7 +2833,11 @@ void I_Quit(void)
 		free(myargv); // Deallocate allocated memory
 death:
 	W_Shutdown();
+#ifdef __CELLOS_LV2__
+	sys_process_exit(0);
+#else
 	exit(0);
+#endif
 }
 
 #ifndef __CELLOS_LV2__
@@ -2881,7 +2910,11 @@ void I_Error(const char *error, ...)
 				buffer, NULL);
 
 			W_Shutdown();
+#ifdef __CELLOS_LV2__
+			sys_process_exit(-1);
+#else
 			exit(-1); // recursive errors detected
+#endif
 		}
 	}
 
@@ -2934,7 +2967,11 @@ void I_Error(const char *error, ...)
 	*(INT32 *)2 = 4; //Alam: Debug!
 #endif
 
+#ifdef __CELLOS_LV2__
+	sys_process_exit(-1);
+#else
 	exit(-1);
+#endif
 }
 
 /**	\brief quit function table
@@ -3527,6 +3564,23 @@ size_t I_GetFreeMem(size_t *total)
 	if (total)
 		*total = totalKBytes << 10;
 	return freeKBytes << 10;
+#elif defined (__CELLOS_LV2__)
+
+	sys_memory_info_t mem_info;
+
+	memset(&mem_info, 0, sizeof(sys_memory_info_t));
+
+	if (sys_memory_get_user_memory_size(&mem_info) == 0)
+	{
+		if (total)
+			*total = (size_t)mem_info.total_user_memory;
+
+		return (size_t)mem_info.available_user_memory;
+	}
+
+	if (total)
+		*total = 210 << 20;
+	return 48 << 20;
 #else
 	// Guess 48 MB.
 	if (total)

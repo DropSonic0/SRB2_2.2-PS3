@@ -137,6 +137,16 @@ void I_ShutdownGraphics(void)
 	}
 	if (psgl_context)
 	{
+		if (vbo_retro[0] != 0)
+		{
+			glDeleteBuffers(NUM_SCREEN_TEXS, vbo_retro);
+			memset(vbo_retro, 0, sizeof(vbo_retro));
+		}
+		if (screen_textures[0] != 0)
+		{
+			glDeleteTextures(NUM_SCREEN_TEXS, screen_textures);
+			memset(screen_textures, 0, sizeof(screen_textures));
+		}
 		psglDestroyContext(psgl_context);
 		psgl_context = NULL;
 	}
@@ -150,7 +160,6 @@ void I_ShutdownGraphics(void)
 		free(vid.buffer);
 		vid.buffer = NULL;
 	}
-	glDeleteBuffers(NUM_SCREEN_TEXS, vbo_retro);
 #endif
 }
 

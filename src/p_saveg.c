@@ -12,6 +12,7 @@
 /// \brief Archiving: SaveGame I/O
 
 #include "doomdef.h"
+#include "m_swap.h"
 #include "byteptr.h"
 #include "d_main.h"
 #include "doomstat.h"
@@ -63,30 +64,34 @@ void P_WriteSINT8(save_t *p, SINT8 v)
 
 void P_WriteUINT16(save_t *p, UINT16 v)
 {
-	ALLOC_SIZE(p, sizeof(v));
-	memcpy(&p->buf[p->pos], &v, sizeof(v));
-	p->pos += sizeof(v);
+	UINT16 val = (UINT16)SHORT(v);
+	ALLOC_SIZE(p, sizeof(val));
+	memcpy(&p->buf[p->pos], &val, sizeof(val));
+	p->pos += sizeof(val);
 }
 
 void P_WriteINT16(save_t *p, INT16 v)
 {
-	ALLOC_SIZE(p, sizeof(v));
-	memcpy(&p->buf[p->pos], &v, sizeof(v));
-	p->pos += sizeof(v);
+	INT16 val = SHORT(v);
+	ALLOC_SIZE(p, sizeof(val));
+	memcpy(&p->buf[p->pos], &val, sizeof(val));
+	p->pos += sizeof(val);
 }
 
 void P_WriteUINT32(save_t *p, UINT32 v)
 {
-	ALLOC_SIZE(p, sizeof(v));
-	memcpy(&p->buf[p->pos], &v, sizeof(v));
-	p->pos += sizeof(v);
+	UINT32 val = (UINT32)LONG(v);
+	ALLOC_SIZE(p, sizeof(val));
+	memcpy(&p->buf[p->pos], &val, sizeof(val));
+	p->pos += sizeof(val);
 }
 
 void P_WriteINT32(save_t *p, INT32 v)
 {
-	ALLOC_SIZE(p, sizeof(v));
-	memcpy(&p->buf[p->pos], &v, sizeof(v));
-	p->pos += sizeof(v);
+	INT32 val = LONG(v);
+	ALLOC_SIZE(p, sizeof(val));
+	memcpy(&p->buf[p->pos], &val, sizeof(val));
+	p->pos += sizeof(val);
 }
 
 void P_WriteChar(save_t *p, char v)
@@ -98,16 +103,18 @@ void P_WriteChar(save_t *p, char v)
 
 void P_WriteFixed(save_t *p, fixed_t v)
 {
-	ALLOC_SIZE(p, sizeof(v));
-	memcpy(&p->buf[p->pos], &v, sizeof(v));
-	p->pos += sizeof(v);
+	fixed_t val = (fixed_t)LONG(v);
+	ALLOC_SIZE(p, sizeof(val));
+	memcpy(&p->buf[p->pos], &val, sizeof(val));
+	p->pos += sizeof(val);
 }
 
 void P_WriteAngle(save_t *p, angle_t v)
 {
-	ALLOC_SIZE(p, sizeof(v));
-	memcpy(&p->buf[p->pos], &v, sizeof(v));
-	p->pos += sizeof(v);
+	angle_t val = (angle_t)LONG(v);
+	ALLOC_SIZE(p, sizeof(val));
+	memcpy(&p->buf[p->pos], &val, sizeof(val));
+	p->pos += sizeof(val);
 }
 
 void P_WriteStringN(save_t *p, char const *s, size_t n)
@@ -191,7 +198,7 @@ UINT16 P_ReadUINT16(save_t *p)
 		return 0;
 	memcpy(&v, &p->buf[p->pos], sizeof(v));
 	p->pos += sizeof(v);
-	return v;
+	return (UINT16)SHORT(v);
 }
 
 INT16 P_ReadINT16(save_t *p)
@@ -201,7 +208,7 @@ INT16 P_ReadINT16(save_t *p)
 		return 0;
 	memcpy(&v, &p->buf[p->pos], sizeof(v));
 	p->pos += sizeof(v);
-	return v;
+	return SHORT(v);
 }
 
 UINT32 P_ReadUINT32(save_t *p)
@@ -211,7 +218,7 @@ UINT32 P_ReadUINT32(save_t *p)
 		return 0;
 	memcpy(&v, &p->buf[p->pos], sizeof(v));
 	p->pos += sizeof(v);
-	return v;
+	return (UINT32)LONG(v);
 }
 
 INT32 P_ReadINT32(save_t *p)
@@ -221,7 +228,7 @@ INT32 P_ReadINT32(save_t *p)
 		return 0;
 	memcpy(&v, &p->buf[p->pos], sizeof(v));
 	p->pos += sizeof(v);
-	return v;
+	return LONG(v);
 }
 
 char P_ReadChar(save_t *p)
@@ -241,7 +248,7 @@ fixed_t P_ReadFixed(save_t *p)
 		return 0;
 	memcpy(&v, &p->buf[p->pos], sizeof(v));
 	p->pos += sizeof(v);
-	return v;
+	return (fixed_t)LONG(v);
 }
 
 angle_t P_ReadAngle(save_t *p)
@@ -251,7 +258,7 @@ angle_t P_ReadAngle(save_t *p)
 		return 0;
 	memcpy(&v, &p->buf[p->pos], sizeof(v));
 	p->pos += sizeof(v);
-	return v;
+	return (angle_t)LONG(v);
 }
 
 void P_ReadStringN(save_t *p, char *s, size_t n)
@@ -2848,9 +2855,16 @@ static inline void SaveDynamicVertexSlopeThinker(save_t *save_p, const thinker_t
 	P_WriteUINT32(save_p, SaveSlope(ht->slope));
 	for (i = 0; i < 3; i++)
 		P_WriteUINT32(save_p, SaveSector(ht->secs[i]));
-	P_WriteMem(save_p, ht->vex, sizeof(ht->vex));
-	P_WriteMem(save_p, ht->origsecheights, sizeof(ht->origsecheights));
-	P_WriteMem(save_p, ht->origvecheights, sizeof(ht->origvecheights));
+	for (i = 0; i < 3; i++)
+	{
+		P_WriteFixed(save_p, ht->vex[i].x);
+		P_WriteFixed(save_p, ht->vex[i].y);
+		P_WriteFixed(save_p, ht->vex[i].z);
+	}
+	for (i = 0; i < 3; i++)
+		P_WriteFixed(save_p, ht->origsecheights[i]);
+	for (i = 0; i < 3; i++)
+		P_WriteFixed(save_p, ht->origvecheights[i]);
 	P_WriteUINT8(save_p, ht->relative);
 }
 
@@ -4056,9 +4070,16 @@ static inline thinker_t* LoadDynamicVertexSlopeThinker(save_t *save_p, actionf_p
 	ht->slope = LoadSlope(P_ReadUINT32(save_p));
 	for (i = 0; i < 3; i++)
 		ht->secs[i] = LoadSector(P_ReadUINT32(save_p));
-	P_ReadMem(save_p, ht->vex, sizeof(ht->vex));
-	P_ReadMem(save_p, ht->origsecheights, sizeof(ht->origsecheights));
-	P_ReadMem(save_p, ht->origvecheights, sizeof(ht->origvecheights));
+	for (i = 0; i < 3; i++)
+	{
+		ht->vex[i].x = P_ReadFixed(save_p);
+		ht->vex[i].y = P_ReadFixed(save_p);
+		ht->vex[i].z = P_ReadFixed(save_p);
+	}
+	for (i = 0; i < 3; i++)
+		ht->origsecheights[i] = P_ReadFixed(save_p);
+	for (i = 0; i < 3; i++)
+		ht->origvecheights[i] = P_ReadFixed(save_p);
 	ht->relative = P_ReadUINT8(save_p);
 	return &ht->thinker;
 }

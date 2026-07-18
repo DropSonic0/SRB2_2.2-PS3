@@ -39,7 +39,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_cdmus.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_main.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_net.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_sound.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_system.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\sdl_stub.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\d_main.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\filesrch.o
@@ -51,7 +50,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\g_input.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw3sound.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_batching.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_bsp.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_cache.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_clip.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_draw.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_light.o
@@ -61,7 +59,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_md2load.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_md3load.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_model.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_shaders.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_opengl.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hu_stuff.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\info.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_time.o
@@ -113,7 +110,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\mserv.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\net_command.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\server_connection.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\tic_command.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_video.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_ceilng.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_enemy.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_floor.o
@@ -123,8 +119,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_map.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_maputl.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_mobj.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_polyobj.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_saveg.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_setup.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_sight.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_slopes.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_spec.o
@@ -146,7 +140,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_segs.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_skins.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_sky.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_splats.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_textures.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_things.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_translation.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\screen.o
@@ -162,7 +155,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\v_video.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\win_dbg.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\w_wad.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\y_inter.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\z_zone.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\png.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\pngerror.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\pngget.o
@@ -193,6 +185,14 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\inftrees.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\trees.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\uncompr.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\zutil.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_saveg.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_system.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\p_setup.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\hw_cache.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_opengl.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_video.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\r_textures.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\z_zone.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.command.1.tlog
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.read.1.tlog
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.write.1.tlog
