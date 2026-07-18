@@ -4,6 +4,9 @@
 #include "../screen.h"
 #include "../v_video.h"
 #include "../i_system.h"
+#include "../doomstat.h"
+#include "../s_sound.h"
+#include "../netcode/d_netcmd.h"
 
 #ifdef HWRENDER
 #include "../hardware/hw_main.h"
@@ -121,6 +124,8 @@ void I_StartupGraphics(void)
 		chosenrendermode = render_soft;
 		CONS_Printf("[PS3] Initializing in Software mode (default)\n");
 	}
+
+	CV_RegisterVar(&cv_vidwait);
 
 	// Automatically set default resolution mode
 	VID_SetMode(0);
@@ -269,10 +274,25 @@ void I_FinishUpdate(void)
 	if (rendermode == render_none)
 		return;
 
+	SCR_CalculateFPS();
+
 	if (rendermode == render_soft)
 	{
 		if (screens[0] && vid.width > 0 && vid.height > 0)
 		{
+			if (marathonmode)
+				SCR_DisplayMarathonInfo();
+
+			// draw captions if enabled
+			if (cv_closedcaptioning.value)
+				SCR_ClosedCaptions();
+
+			if (cv_ticrate.value)
+				SCR_DisplayTicRate();
+
+			if (cv_showping.value && netgame && consoleplayer != serverplayer)
+				SCR_DisplayLocalPing();
+
 			static int gl_buffer_w = 0;
 			static int gl_buffer_h = 0;
 

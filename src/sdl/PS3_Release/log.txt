@@ -61,28 +61,71 @@ Entering main game loop...
                      much as we did making it!
                             ...wait. =P
 ===========================================================================
-Sonic Robo Blast 2 v2.2.15 (Jul 18 2026 01:31:17 illegal Unknown) PlayStation 3 32-bit 
+Sonic Robo Blast 2 v2.2.15 (Jul 18 2026 18:11:34 illegal Unknown) PlayStation 3 32-bit 
 ERROR: Music _stjr could not be played: engine failure!
 ERROR: Music _intro could not be played: engine failure!
-Screen shot srb20002.png saved in /dev_hdd0/game/SRB222PS3/USRDIR/screenshots/
-Screen shot srb20003.png saved in /dev_hdd0/game/SRB222PS3/USRDIR/screenshots/
 ERROR: Music _title could not be played: engine failure!
 ERROR: Music _title could not be played: engine failure!
-ERROR: Music _title could not be played: engine failure!
-ERROR: Music _chsel could not be played: engine failure!
-ERROR: Music _chsel could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
 Starting Server....
 Speeding off to level...
 ERROR: Music GFZ1 could not be played: engine failure!
-ERROR: Music GFZ1 could not be played: engine failure!
-ERROR: Music GFZ1 could not be played: engine failure!
-Earned 1 emblem for Record Attack records.
-ERROR: Music _clear could not be played: engine failure!
-ERROR: Music _1up could not be played: engine failure!
+Added ghost Sonic from MAP01-sonic-last.lmp
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+ERROR: Music _recat could not be played: engine failure!
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
 Speeding off to level...
 ERROR: Music GFZ2 could not be played: engine failure!
-ERROR: Music _title could not be played: engine failure!
-ERROR: Music _title could not be played: engine failure!
+Added ghost Sonic from MAP02-sonic-last.lmp
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
@@ -93,6 +136,13 @@ ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+ERROR: Music VSBOSS could not be played: engine failure!
+Added ghost Sonic from MAP03-sonic-last.lmp
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
@@ -102,6 +152,13 @@ ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+ERROR: Music THZ1 could not be played: engine failure!
+Added ghost Sonic from MAP04-sonic-last.lmp
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
@@ -116,6 +173,13 @@ ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+ERROR: Music THZ2 could not be played: engine failure!
+Added ghost Sonic from MAP05-sonic-last.lmp
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
@@ -129,6 +193,13 @@ ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+ERROR: Music VSBOSS could not be played: engine failure!
+Added ghost Sonic from MAP06-sonic-last.lmp
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
@@ -141,6 +212,13 @@ ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+ERROR: Music DSZ1 could not be played: engine failure!
+Added ghost Sonic from MAP07-sonic-last.lmp
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
@@ -156,6 +234,13 @@ ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+ERROR: Music DSZ2 could not be played: engine failure!
+Added ghost Sonic from MAP08-sonic-last.lmp
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
@@ -171,129 +256,13 @@ ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+ERROR: Music VSBOSS could not be played: engine failure!
+Added ghost Sonic from MAP09-sonic-last.lmp
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
@@ -329,458 +298,6 @@ ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
 ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-ERROR: Music CEZ2 could not be played: engine failure!
-Added ghost Sonic from MAP11-sonic-last.lmp
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _title could not be played: engine failure!
-ERROR: Music _title could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-ERROR: Music GFZ1 could not be played: engine failure!
-Added ghost Sonic from MAP01-sonic-last.lmp
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-ERROR: Music GFZ1 could not be played: engine failure!
-Added ghost Sonic from MAP01-sonic-last.lmp
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-ERROR: Music ERZ1 could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
-ERROR: Music _recat could not be played: engine failure!
 Starting Server....
 Connecting to: SRB2 server
 Gametype: Co-op
@@ -789,6 +306,6 @@ Speeding off to level...
 ERROR: Music CEZ2 could not be played: engine failure!
 Added ghost Sonic from MAP11-sonic-last.lmp
 
-I_Error(): Out of memory allocating 16637980 bytes
+I_Error(): Out of memory allocating 4194332 bytes
 I_ShutdownTcpDriver: shut down
 I_ShutdownSystem(): end of logstream.
