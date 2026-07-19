@@ -129,6 +129,8 @@ void I_StartupGraphics(void)
 
 	// Automatically set default resolution mode
 	VID_SetMode(0);
+
+	graphics_started = true;
 #endif
 }
 
@@ -165,6 +167,8 @@ void I_ShutdownGraphics(void)
 		free(vid.buffer);
 		vid.buffer = NULL;
 	}
+
+	graphics_started = false;
 #endif
 }
 
