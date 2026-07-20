@@ -38,7 +38,7 @@
 static INT32 S_AdjustSoundParams(const mobj_t *listener, const mobj_t *source, INT32 *vol, INT32 *sep, INT32 *pitch, sfxinfo_t *sfxinfo);
 #endif
 
-CV_PossibleValue_t soundvolume_cons_t[] = {{0, "MIN"}, {31, "MAX"}, {0, NULL}};
+CV_PossibleValue_t soundvolume_cons_t[] = { { 0, "MIN" }, { 31, "MAX" }, { 0, NULL } };
 static void SetChannelsNum(void);
 static void Command_Tunes_f(void);
 static void Command_RestartAudio_f(void);
@@ -62,21 +62,21 @@ static boolean S_CheckQueue(void);
 #endif
 
 #ifdef _WINDOWS
-consvar_t cv_samplerate = CVAR_INIT ("samplerate", "44100", 0, CV_Unsigned, NULL); //Alam: For easy hacking?
+consvar_t cv_samplerate = CVAR_INIT("samplerate", "44100", 0, CV_Unsigned, NULL); //Alam: For easy hacking?
 #else
-consvar_t cv_samplerate = CVAR_INIT ("samplerate", "22050", 0, CV_Unsigned, NULL); //Alam: For easy hacking?
+consvar_t cv_samplerate = CVAR_INIT("samplerate", "22050", 0, CV_Unsigned, NULL); //Alam: For easy hacking?
 #endif
 
 // stereo reverse
-consvar_t stereoreverse = CVAR_INIT ("stereoreverse", "Off", CV_SAVE, CV_OnOff, NULL);
+consvar_t stereoreverse = CVAR_INIT("stereoreverse", "Off", CV_SAVE, CV_OnOff, NULL);
 
 // if true, all sounds are loaded at game startup
-static consvar_t precachesound = CVAR_INIT ("precachesound", "Off", CV_SAVE, CV_OnOff, NULL);
+static consvar_t precachesound = CVAR_INIT("precachesound", "Off", CV_SAVE, CV_OnOff, NULL);
 
 // actual general (maximum) sound & music volume, saved into the config
-consvar_t cv_soundvolume = CVAR_INIT ("soundvolume", "16", CV_SAVE, soundvolume_cons_t, NULL);
-consvar_t cv_digmusicvolume = CVAR_INIT ("digmusicvolume", "16", CV_SAVE, soundvolume_cons_t, NULL);
-consvar_t cv_midimusicvolume = CVAR_INIT ("midimusicvolume", "16", CV_SAVE, soundvolume_cons_t, NULL);
+consvar_t cv_soundvolume = CVAR_INIT("soundvolume", "16", CV_SAVE, soundvolume_cons_t, NULL);
+consvar_t cv_digmusicvolume = CVAR_INIT("digmusicvolume", "16", CV_SAVE, soundvolume_cons_t, NULL);
+consvar_t cv_midimusicvolume = CVAR_INIT("midimusicvolume", "16", CV_SAVE, soundvolume_cons_t, NULL);
 
 static void Captioning_OnChange(void)
 {
@@ -85,44 +85,44 @@ static void Captioning_OnChange(void)
 		S_StartSound(NULL, sfx_menu1);
 }
 
-consvar_t cv_closedcaptioning = CVAR_INIT ("closedcaptioning", "Off", CV_SAVE|CV_CALL, CV_OnOff, Captioning_OnChange);
+consvar_t cv_closedcaptioning = CVAR_INIT("closedcaptioning", "Off", CV_SAVE | CV_CALL, CV_OnOff, Captioning_OnChange);
 
 // number of channels available
-consvar_t cv_numChannels = CVAR_INIT ("snd_channels", "32", CV_SAVE|CV_CALL, CV_Unsigned, SetChannelsNum);
+consvar_t cv_numChannels = CVAR_INIT("snd_channels", "32", CV_SAVE | CV_CALL, CV_Unsigned, SetChannelsNum);
 
-static consvar_t surround = CVAR_INIT ("surround", "Off", CV_SAVE, CV_OnOff, NULL);
+static consvar_t surround = CVAR_INIT("surround", "Off", CV_SAVE, CV_OnOff, NULL);
 
-consvar_t cv_resetmusic = CVAR_INIT ("resetmusic", "Off", CV_SAVE, CV_OnOff, NULL);
-consvar_t cv_resetmusicbyheader = CVAR_INIT ("resetmusicbyheader", "Yes", CV_SAVE, CV_YesNo, NULL);
+consvar_t cv_resetmusic = CVAR_INIT("resetmusic", "Off", CV_SAVE, CV_OnOff, NULL);
+consvar_t cv_resetmusicbyheader = CVAR_INIT("resetmusicbyheader", "Yes", CV_SAVE, CV_YesNo, NULL);
 
 static CV_PossibleValue_t cons_1upsound_t[] = {
-	{0, "Jingle"},
-	{1, "Sound"},
-	{0, NULL}
+	{ 0, "Jingle" },
+	{ 1, "Sound" },
+	{ 0, NULL }
 };
-consvar_t cv_1upsound = CVAR_INIT ("1upsound", "Jingle", CV_SAVE, cons_1upsound_t, NULL);
+consvar_t cv_1upsound = CVAR_INIT("1upsound", "Jingle", CV_SAVE, cons_1upsound_t, NULL);
 
 // Sound system toggles, saved into the config
-consvar_t cv_gamedigimusic = CVAR_INIT ("digimusic", "On", CV_SAVE|CV_CALL|CV_NOINIT, CV_OnOff, GameDigiMusic_OnChange);
-consvar_t cv_gamemidimusic = CVAR_INIT ("midimusic", "On", CV_SAVE|CV_CALL|CV_NOINIT, CV_OnOff, GameMIDIMusic_OnChange);
-consvar_t cv_gamesounds = CVAR_INIT ("sounds", "On", CV_SAVE|CV_CALL|CV_NOINIT, CV_OnOff, GameSounds_OnChange);
+consvar_t cv_gamedigimusic = CVAR_INIT("digimusic", "On", CV_SAVE | CV_CALL | CV_NOINIT, CV_OnOff, GameDigiMusic_OnChange);
+consvar_t cv_gamemidimusic = CVAR_INIT("midimusic", "On", CV_SAVE | CV_CALL | CV_NOINIT, CV_OnOff, GameMIDIMusic_OnChange);
+consvar_t cv_gamesounds = CVAR_INIT("sounds", "On", CV_SAVE | CV_CALL | CV_NOINIT, CV_OnOff, GameSounds_OnChange);
 
 // Music preference
 static CV_PossibleValue_t cons_musicpref_t[] = {
-	{0, "Digital"},
-	{1, "MIDI"},
-	{0, NULL}
+	{ 0, "Digital" },
+	{ 1, "MIDI" },
+	{ 0, NULL }
 };
-consvar_t cv_musicpref = CVAR_INIT ("musicpref", "Digital", CV_SAVE|CV_CALL|CV_NOINIT, cons_musicpref_t, MusicPref_OnChange);
+consvar_t cv_musicpref = CVAR_INIT("musicpref", "Digital", CV_SAVE | CV_CALL | CV_NOINIT, cons_musicpref_t, MusicPref_OnChange);
 
 // Window focus sound sytem toggles
-consvar_t cv_playmusicifunfocused = CVAR_INIT ("playmusicifunfocused", "No", CV_SAVE, CV_YesNo, NULL);
-consvar_t cv_playsoundsifunfocused = CVAR_INIT ("playsoundsifunfocused", "No", CV_SAVE, CV_YesNo, NULL);
+consvar_t cv_playmusicifunfocused = CVAR_INIT("playmusicifunfocused", "No", CV_SAVE, CV_YesNo, NULL);
+consvar_t cv_playsoundsifunfocused = CVAR_INIT("playsoundsifunfocused", "No", CV_SAVE, CV_YesNo, NULL);
 
 #ifdef HAVE_OPENMPT
 openmpt_module *openmpt_mhandle = NULL;
-static CV_PossibleValue_t interpolationfilter_cons_t[] = {{0, "Default"}, {1, "None"}, {2, "Linear"}, {4, "Cubic"}, {8, "Windowed sinc"}, {0, NULL}};
-consvar_t cv_modfilter = CVAR_INIT ("modfilter", "0", CV_SAVE|CV_CALL, interpolationfilter_cons_t, ModFilter_OnChange);
+static CV_PossibleValue_t interpolationfilter_cons_t[] = { { 0, "Default" }, { 1, "None" }, { 2, "Linear" }, { 4, "Cubic" }, { 8, "Windowed sinc" }, { 0, NULL } };
+consvar_t cv_modfilter = CVAR_INIT("modfilter", "0", CV_SAVE | CV_CALL, interpolationfilter_cons_t, ModFilter_OnChange);
 #endif
 
 #define S_MAX_VOLUME 127
@@ -234,8 +234,8 @@ static INT32 S_getChannel(const void *origin, sfxinfo_t *sfxinfo)
 	{
 		// Look for lower priority
 		for (cnum = 0; cnum < numofchannels; cnum++)
-			if (channels[cnum].sfxinfo->priority <= sfxinfo->priority)
-				break;
+		if (channels[cnum].sfxinfo->priority <= sfxinfo->priority)
+			break;
 
 		if (cnum == numofchannels)
 		{
@@ -308,7 +308,7 @@ static void SetChannelsNum(void)
 
 
 	if (cv_numChannels.value == 999999999) //Alam_GBC: OH MY ROD!(ROD rimmiced with GOD!)
-		CV_StealthSet(&cv_numChannels,cv_numChannels.defaultvalue);
+		CV_StealthSet(&cv_numChannels, cv_numChannels.defaultvalue);
 
 #ifdef HW3SOUND
 	if (hws_mode != HWS_DEFAULT_MODE)
@@ -358,9 +358,9 @@ lumpnum_t S_GetSfxLumpNum(sfxinfo_t *sfx)
 boolean S_SoundDisabled(void)
 {
 	return (
-			sound_disabled ||
-			( window_notinfocus && ! cv_playsoundsifunfocused.value )
-	);
+		sound_disabled ||
+		(window_notinfocus && !cv_playsoundsifunfocused.value)
+		);
 }
 
 // Stop all sounds, load level info, THEN start sounds.
@@ -378,8 +378,8 @@ void S_StopSounds(void)
 
 	// kill all playing sounds at start of level
 	for (cnum = 0; cnum < numofchannels; cnum++)
-		if (channels[cnum].sfxinfo)
-			S_StopChannel(cnum);
+	if (channels[cnum].sfxinfo)
+		S_StopChannel(cnum);
 
 	S_ResetCaptions();
 }
@@ -448,11 +448,11 @@ void S_StartCaption(sfxenum_t sfx_id, INT32 cnum, UINT16 lifespan)
 	if (sfx->caption[0] == '/') // no caption for this one
 		return;
 
-	start = ((closedcaptions[0].s && (closedcaptions[0].s-S_sfx == sfx_None)) ? 1 : 0);
+	start = ((closedcaptions[0].s && (closedcaptions[0].s - S_sfx == sfx_None)) ? 1 : 0);
 
 	if (sfx_id)
 	{
-		for (i = start; i < (set = NUMCAPTIONS-1); i++)
+		for (i = start; i < (set = NUMCAPTIONS - 1); i++)
 		{
 			same = ((sfx == closedcaptions[i].s) || (closedcaptions[i].s && fastcmp(sfx->caption, closedcaptions[i].s->caption)));
 			if (same)
@@ -482,7 +482,7 @@ void S_StartCaption(sfxenum_t sfx_id, INT32 cnum, UINT16 lifespan)
 				break;
 			}
 		}
-		for (i = NUMCAPTIONS-1; i > set; i--)
+		for (i = NUMCAPTIONS - 1; i > set; i--)
 		{
 			if (sfx == closedcaptions[i].s)
 			{
@@ -496,17 +496,17 @@ void S_StartCaption(sfxenum_t sfx_id, INT32 cnum, UINT16 lifespan)
 
 	if (moveup != 255)
 	{
-		for (i = moveup; i < NUMCAPTIONS-1; i++)
+		for (i = moveup; i < NUMCAPTIONS - 1; i++)
 		{
 			if (!(closedcaptions[i].c || closedcaptions[i].s))
 				break;
 		}
 		for (; i > set; i--)
 		{
-			closedcaptions[i].c = closedcaptions[i-1].c;
-			closedcaptions[i].s = closedcaptions[i-1].s;
-			closedcaptions[i].t = closedcaptions[i-1].t;
-			closedcaptions[i].b = closedcaptions[i-1].b;
+			closedcaptions[i].c = closedcaptions[i - 1].c;
+			closedcaptions[i].s = closedcaptions[i - 1].s;
+			closedcaptions[i].t = closedcaptions[i - 1].t;
+			closedcaptions[i].b = closedcaptions[i - 1].b;
 		}
 	}
 
@@ -525,8 +525,8 @@ void S_StartSoundAtVolume(const void *origin_p, sfxenum_t sfx_id, INT32 volume)
 
 	const mobj_t *origin = (const mobj_t *)origin_p;
 
-	listener_t listener  = {0,0,0,0};
-	listener_t listener2 = {0,0,0,0};
+	listener_t listener = { 0, 0, 0, 0 };
+	listener_t listener2 = { 0, 0, 0, 0 };
 
 	mobj_t *listenmobj = players[displayplayer].mo;
 	mobj_t *listenmobj2 = NULL;
@@ -729,47 +729,47 @@ void S_StartSound(const void *origin, sfxenum_t sfx_id)
 	{
 		switch (sfx_id)
 		{
-//			case sfx_altow1:
-//			case sfx_altow2:
-//			case sfx_altow3:
-//			case sfx_altow4:
-//				sfx_id = sfx_mario8;
-//				break;
-			case sfx_thok:
-			case sfx_wepfir:
-				sfx_id = sfx_mario7;
-				break;
-			case sfx_pop:
-				sfx_id = sfx_mario5;
-				break;
-			case sfx_jump:
-				sfx_id = sfx_mario6;
-				break;
-			case sfx_shield:
-			case sfx_wirlsg:
-			case sfx_forcsg:
-			case sfx_elemsg:
-			case sfx_armasg:
-			case sfx_attrsg:
-			case sfx_s3k3e:
-			case sfx_s3k3f:
-			case sfx_s3k41:
-				sfx_id = sfx_mario3;
-				break;
-			case sfx_itemup:
-				sfx_id = sfx_mario4;
-				break;
-//			case sfx_tink:
-//				sfx_id = sfx_mario1;
-//				break;
-//			case sfx_cgot:
-//				sfx_id = sfx_mario9;
-//				break;
-//			case sfx_lose:
-//				sfx_id = sfx_mario2;
-//				break;
-			default:
-				break;
+			//			case sfx_altow1:
+			//			case sfx_altow2:
+			//			case sfx_altow3:
+			//			case sfx_altow4:
+			//				sfx_id = sfx_mario8;
+			//				break;
+		case sfx_thok:
+		case sfx_wepfir:
+			sfx_id = sfx_mario7;
+			break;
+		case sfx_pop:
+			sfx_id = sfx_mario5;
+			break;
+		case sfx_jump:
+			sfx_id = sfx_mario6;
+			break;
+		case sfx_shield:
+		case sfx_wirlsg:
+		case sfx_forcsg:
+		case sfx_elemsg:
+		case sfx_armasg:
+		case sfx_attrsg:
+		case sfx_s3k3e:
+		case sfx_s3k3f:
+		case sfx_s3k41:
+			sfx_id = sfx_mario3;
+			break;
+		case sfx_itemup:
+			sfx_id = sfx_mario4;
+			break;
+			//			case sfx_tink:
+			//				sfx_id = sfx_mario1;
+			//				break;
+			//			case sfx_cgot:
+			//				sfx_id = sfx_mario9;
+			//				break;
+			//			case sfx_lose:
+			//				sfx_id = sfx_mario2;
+			//				break;
+		default:
+			break;
 		}
 	}
 	if (maptol & TOL_XMAS) // Some sounds change for xmas
@@ -844,11 +844,11 @@ void S_UpdateSounds(void)
 
 	// Update sound/music volumes, if changed manually at console
 	if (actualsfxvolume != cv_soundvolume.value)
-		S_SetSfxVolume (cv_soundvolume.value);
+		S_SetSfxVolume(cv_soundvolume.value);
 	if (actualdigmusicvolume != cv_digmusicvolume.value)
-		S_SetDigMusicVolume (cv_digmusicvolume.value);
+		S_SetDigMusicVolume(cv_digmusicvolume.value);
 	if (actualmidimusicvolume != cv_midimusicvolume.value)
-		S_SetMIDIMusicVolume (cv_midimusicvolume.value);
+		S_SetMIDIMusicVolume(cv_midimusicvolume.value);
 
 	// We're done now, if we're not in a level.
 	if (gamestate != GS_LEVEL)
@@ -943,8 +943,8 @@ void S_UpdateSounds(void)
 						const mobj_t *soundmobj = c->origin;
 
 						fixed_t dist1, dist2;
-						dist1 = P_AproxDistance(listener.x-soundmobj->x, listener.y-soundmobj->y);
-						dist2 = P_AproxDistance(listener2.x-soundmobj->x, listener2.y-soundmobj->y);
+						dist1 = P_AproxDistance(listener.x - soundmobj->x, listener.y - soundmobj->y);
+						dist2 = P_AproxDistance(listener2.x - soundmobj->x, listener2.y - soundmobj->y);
 
 						if (dist1 <= dist2)
 						{
@@ -998,7 +998,7 @@ void S_UpdateClosedCaptions(void)
 		if (!closedcaptions[i].s)
 			continue;
 
-		if (i == 0 && (closedcaptions[0].s-S_sfx == sfx_None) && gamestopped)
+		if (i == 0 && (closedcaptions[0].s - S_sfx == sfx_None) && gamestopped)
 			continue;
 
 		if (!(--closedcaptions[i].t))
@@ -1020,14 +1020,14 @@ void S_SetSfxVolume(INT32 volume)
 	if (volume < 0 || volume > 31)
 		CONS_Alert(CONS_WARNING, "sfxvolume should be between 0-31\n");
 
-	CV_SetValue(&cv_soundvolume, volume&0x1F);
+	CV_SetValue(&cv_soundvolume, volume & 0x1F);
 	actualsfxvolume = cv_soundvolume.value; // check for change of var
 
 #ifdef HW3SOUND
-	hws_mode == HWS_DEFAULT_MODE ? I_SetSfxVolume(volume&0x1F) : HW3S_SetSfxVolume(volume&0x1F);
+	hws_mode == HWS_DEFAULT_MODE ? I_SetSfxVolume(volume & 0x1F) : HW3S_SetSfxVolume(volume & 0x1F);
 #else
 	// now hardware volume
-	I_SetSfxVolume(volume&0x1F);
+	I_SetSfxVolume(volume & 0x1F);
 #endif
 }
 
@@ -1067,17 +1067,17 @@ fixed_t S_CalculateSoundDistance(fixed_t sx1, fixed_t sy1, fixed_t sz1, fixed_t 
 	fixed_t approx_dist, adx, ady;
 
 	// calculate the distance to sound origin and clip it if necessary
-	adx = abs((sx1>>FRACBITS) - (sx2>>FRACBITS));
-	ady = abs((sy1>>FRACBITS) - (sy2>>FRACBITS));
+	adx = abs((sx1 >> FRACBITS) - (sx2 >> FRACBITS));
+	ady = abs((sy1 >> FRACBITS) - (sy2 >> FRACBITS));
 
 	// From _GG1_ p.428. Approx. euclidian distance fast.
 	// Take Z into account
-	adx = adx + ady - ((adx < ady ? adx : ady)>>1);
-	ady = abs((sz1>>FRACBITS) - (sz2>>FRACBITS));
-	approx_dist = adx + ady - ((adx < ady ? adx : ady)>>1);
+	adx = adx + ady - ((adx < ady ? adx : ady) >> 1);
+	ady = abs((sz1 >> FRACBITS) - (sz2 >> FRACBITS));
+	approx_dist = adx + ady - ((adx < ady ? adx : ady) >> 1);
 
-	if (approx_dist >= FRACUNIT/2)
-		approx_dist = FRACUNIT/2-1;
+	if (approx_dist >= FRACUNIT / 2)
+		approx_dist = FRACUNIT / 2 - 1;
 
 	approx_dist <<= FRACBITS;
 
@@ -1133,42 +1133,42 @@ INT32 S_AdjustSoundParams(const mobj_t *listener, const mobj_t *source, INT32 *v
 		else
 		{
 			// Essentially check in a 1024 unit radius of the player for an outdoor area.
-			yl = listensource.y - 1024*FRACUNIT;
-			yh = listensource.y + 1024*FRACUNIT;
-			xl = listensource.x - 1024*FRACUNIT;
-			xh = listensource.x + 1024*FRACUNIT;
-			approx_dist = 1024*FRACUNIT;
-			for (y = yl; y <= yh; y += FRACUNIT*64)
-				for (x = xl; x <= xh; x += FRACUNIT*64)
+			yl = listensource.y - 1024 * FRACUNIT;
+			yh = listensource.y + 1024 * FRACUNIT;
+			xl = listensource.x - 1024 * FRACUNIT;
+			xh = listensource.x + 1024 * FRACUNIT;
+			approx_dist = 1024 * FRACUNIT;
+			for (y = yl; y <= yh; y += FRACUNIT * 64)
+			for (x = xl; x <= xh; x += FRACUNIT * 64)
+			{
+				if (R_PointInSubsector(x, y)->sector->ceilingpic == skyflatnum)
 				{
-					if (R_PointInSubsector(x, y)->sector->ceilingpic == skyflatnum)
+					// Found the outdoors!
+					newdist = S_CalculateSoundDistance(listensource.x, listensource.y, 0, x, y, 0);
+					if (newdist < approx_dist)
 					{
-						// Found the outdoors!
-						newdist = S_CalculateSoundDistance(listensource.x, listensource.y, 0, x, y, 0);
-						if (newdist < approx_dist)
-						{
-							approx_dist = newdist;
-						}
+						approx_dist = newdist;
 					}
 				}
+			}
 		}
 	}
 	else
 	{
 		approx_dist = S_CalculateSoundDistance(listensource.x, listensource.y, listensource.z,
-												source->x, source->y, source->z);
+			source->x, source->y, source->z);
 	}
 
 	// Ring loss, deaths, etc, should all be heard louder.
 	if (sfxinfo->pitch & SF_X8AWAYSOUND)
-		approx_dist = FixedDiv(approx_dist,8*FRACUNIT);
+		approx_dist = FixedDiv(approx_dist, 8 * FRACUNIT);
 
 	// Combine 8XAWAYSOUND with 4XAWAYSOUND and get.... 32XAWAYSOUND?
 	if (sfxinfo->pitch & SF_X4AWAYSOUND)
-		approx_dist = FixedDiv(approx_dist,4*FRACUNIT);
+		approx_dist = FixedDiv(approx_dist, 4 * FRACUNIT);
 
 	if (sfxinfo->pitch & SF_X2AWAYSOUND)
-		approx_dist = FixedDiv(approx_dist,2*FRACUNIT);
+		approx_dist = FixedDiv(approx_dist, 2 * FRACUNIT);
 
 	if (approx_dist > S_CLIPPING_DIST)
 		return 0;
@@ -1183,7 +1183,7 @@ INT32 S_AdjustSoundParams(const mobj_t *listener, const mobj_t *source, INT32 *v
 
 #ifdef SURROUND
 	// Produce a surround sound for angle from 105 till 255
-	if (surround.value == 1 && (angle > ANG105 && angle < ANG255 ))
+	if (surround.value == 1 && (angle > ANG105 && angle < ANG255))
 		*sep = SURROUND_SEP;
 	else
 #endif
@@ -1191,7 +1191,7 @@ INT32 S_AdjustSoundParams(const mobj_t *listener, const mobj_t *source, INT32 *v
 		angle >>= ANGLETOFINESHIFT;
 
 		// stereo separation
-		*sep = 128 - (FixedMul(S_STEREO_SWING, FINESINE(angle))>>FRACBITS);
+		*sep = 128 - (FixedMul(S_STEREO_SWING, FINESINE(angle)) >> FRACBITS);
 	}
 
 	// volume calculation
@@ -1199,7 +1199,7 @@ INT32 S_AdjustSoundParams(const mobj_t *listener, const mobj_t *source, INT32 *v
 	if (approx_dist >= S_CLOSE_DIST)
 	{
 		// distance effect
-		INT32 n = (15 * ((S_CLIPPING_DIST - approx_dist)>>FRACBITS));
+		INT32 n = (15 * ((S_CLIPPING_DIST - approx_dist) >> FRACBITS));
 		*vol = FixedMul(*vol * FRACUNIT / 255, n) / S_ATTENUATOR;
 	}
 
@@ -1220,8 +1220,8 @@ INT32 S_OriginPlaying(void *origin)
 #endif
 
 	for (cnum = 0; cnum < numofchannels; cnum++)
-		if (channels[cnum].origin == origin)
-			return 1;
+	if (channels[cnum].origin == origin)
+		return 1;
 	return 0;
 }
 
@@ -1237,8 +1237,8 @@ INT32 S_IdPlaying(sfxenum_t id)
 #endif
 
 	for (cnum = 0; cnum < numofchannels; cnum++)
-		if ((size_t)(channels[cnum].sfxinfo - S_sfx) == (size_t)id)
-			return 1;
+	if ((size_t)(channels[cnum].sfxinfo - S_sfx) == (size_t)id)
+		return 1;
 	return 0;
 }
 
@@ -1258,7 +1258,7 @@ INT32 S_SoundPlaying(void *origin, sfxenum_t id)
 	for (cnum = 0; cnum < numofchannels; cnum++)
 	{
 		if (channels[cnum].origin == origin
-		 && (size_t)(channels[cnum].sfxinfo - S_sfx) == (size_t)id)
+			&& (size_t)(channels[cnum].sfxinfo - S_sfx) == (size_t)id)
 			return 1;
 	}
 	return 0;
@@ -1268,7 +1268,7 @@ INT32 S_SoundPlaying(void *origin, sfxenum_t id)
 // S_StartSoundName
 // Starts a sound using the given name.
 #define MAXNEWSOUNDS 10
-static sfxenum_t newsounds[MAXNEWSOUNDS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static sfxenum_t newsounds[MAXNEWSOUNDS] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 void S_StartSoundName(void *mo, const char *soundname)
 {
@@ -1341,8 +1341,8 @@ void S_InitSfxChannels(INT32 sfxVolume)
 		CONS_Printf(M_GetText("Loading sounds... "));
 
 		for (i = 1; i < NUMSFX; i++)
-			if (S_sfx[i].name)
-				S_sfx[i].data = I_GetSfx(&S_sfx[i]);
+		if (S_sfx[i].name)
+			S_sfx[i].data = I_GetSfx(&S_sfx[i]);
 
 		CONS_Printf(M_GetText(" pre-cached all sound data\n"));
 	}
@@ -1401,26 +1401,26 @@ static UINT16 W_CheckForMusicDefInPwad(UINT16 wadid)
 
 	lump_p = wadfiles[wadid]->lumpinfo;
 	for (i = 0; i < wadfiles[wadid]->numlumps; i++, lump_p++)
-		if (memcmp(lump_p->name, "MUSICDEF", 8) == 0)
-			return i;
+	if (memcmp(lump_p->name, "MUSICDEF", 8) == 0)
+		return i;
 
 	return INT16_MAX; // not found
 }
 
 static void
-MusicDefStrcpy (char *p, const char *s, size_t n, int version)
+MusicDefStrcpy(char *p, const char *s, size_t n, int version)
 {
 	strlcpy(p, s, n);
 	if (version == MUSICDEF_220)
 	{
-		while (( p = strchr(p, '_') ))
+		while ((p = strchr(p, '_')))
 			*p++ = ' '; // turn _ into spaces.
 	}
 }
 
 static boolean
-ReadMusicDefFields (UINT16 wadnum, int line, boolean fields, char *stoken,
-		musicdef_t **defp, int *versionp)
+ReadMusicDefFields(UINT16 wadnum, int line, boolean fields, char *stoken,
+musicdef_t **defp, int *versionp)
 {
 	musicdef_t *def;
 	int version;
@@ -1435,8 +1435,8 @@ ReadMusicDefFields (UINT16 wadnum, int line, boolean fields, char *stoken,
 		if (!value)
 		{
 			CONS_Alert(CONS_WARNING,
-					"MUSICDEF: Field '%s' is missing name. (file %s, line %d)\n",
-					stoken, wadfiles[wadnum]->filename, line);
+				"MUSICDEF: Field '%s' is missing name. (file %s, line %d)\n",
+				stoken, wadfiles[wadnum]->filename, line);
 			return false;
 		}
 		else
@@ -1464,7 +1464,7 @@ ReadMusicDefFields (UINT16 wadnum, int line, boolean fields, char *stoken,
 				def = Z_Calloc(sizeof (musicdef_t), PU_STATIC, NULL);
 				STRBUFCPY(def->name, value);
 				strlwr(def->name);
-				def->bpm = TICRATE<<(FRACBITS-1); // FixedDiv((60*TICRATE)<<FRACBITS, 120<<FRACBITS)
+				def->bpm = TICRATE << (FRACBITS - 1); // FixedDiv((60*TICRATE)<<FRACBITS, 120<<FRACBITS)
 				if (prev != NULL)
 					prev->next = def;
 				//CONS_Printf("S_LoadMusicDefs: Added song '%s'\n", def->name);
@@ -1478,8 +1478,8 @@ ReadMusicDefFields (UINT16 wadnum, int line, boolean fields, char *stoken,
 		if (fields)/* is this not the first field? */
 		{
 			CONS_Alert(CONS_WARNING,
-					"MUSICDEF: Field '%s' must come first. (file %s, line %d)\n",
-					stoken, wadfiles[wadnum]->filename, line);
+				"MUSICDEF: Field '%s' must come first. (file %s, line %d)\n",
+				stoken, wadfiles[wadnum]->filename, line);
 			return false;
 		}
 		else
@@ -1488,8 +1488,8 @@ ReadMusicDefFields (UINT16 wadnum, int line, boolean fields, char *stoken,
 			if (!value)
 			{
 				CONS_Alert(CONS_WARNING,
-						"MUSICDEF: Field '%s' is missing version. (file %s, line %d)\n",
-						stoken, wadfiles[wadnum]->filename, line);
+					"MUSICDEF: Field '%s' is missing version. (file %s, line %d)\n",
+					stoken, wadfiles[wadnum]->filename, line);
 				return false;
 			}
 			else
@@ -1519,8 +1519,8 @@ ReadMusicDefFields (UINT16 wadnum, int line, boolean fields, char *stoken,
 		if (!value)
 		{
 			CONS_Alert(CONS_WARNING,
-					"MUSICDEF: Field '%s' is missing value. (file %s, line %d)\n",
-					stoken, wadfiles[wadnum]->filename, line);
+				"MUSICDEF: Field '%s' is missing value. (file %s, line %d)\n",
+				stoken, wadfiles[wadnum]->filename, line);
 			return false;
 		}
 		else
@@ -1530,8 +1530,8 @@ ReadMusicDefFields (UINT16 wadnum, int line, boolean fields, char *stoken,
 			if (!def)
 			{
 				CONS_Alert(CONS_ERROR,
-						"MUSICDEF: No music definition before field '%s'. (file %s, line %d)\n",
-						stoken, wadfiles[wadnum]->filename, line);
+					"MUSICDEF: No music definition before field '%s'. (file %s, line %d)\n",
+					stoken, wadfiles[wadnum]->filename, line);
 				return false;
 			}
 
@@ -1552,40 +1552,50 @@ ReadMusicDefFields (UINT16 wadnum, int line, boolean fields, char *stoken,
 #if 0 // Ignore for now
 				STRBUFCPY(def->usage, textline);
 #endif
-			} else if (!stricmp(stoken, "source")) {
+			}
+			else if (!stricmp(stoken, "source")) {
 #if 0 // Ignore for now
 				STRBUFCPY(def->source, textline);
 #endif
-			} else if (!stricmp(stoken, "title")) {
+			}
+			else if (!stricmp(stoken, "title")) {
 				MusicDefStrcpy(def->title, textline,
-						sizeof def->title, version);
-			} else if (!stricmp(stoken, "alttitle")) {
+					sizeof def->title, version);
+			}
+			else if (!stricmp(stoken, "alttitle")) {
 				MusicDefStrcpy(def->alttitle, textline,
-						sizeof def->alttitle, version);
-			} else if (!stricmp(stoken, "authors")) {
+					sizeof def->alttitle, version);
+			}
+			else if (!stricmp(stoken, "authors")) {
 				MusicDefStrcpy(def->authors, textline,
-						sizeof def->authors, version);
-			} else if (!stricmp(stoken, "soundtestpage")) {
+					sizeof def->authors, version);
+			}
+			else if (!stricmp(stoken, "soundtestpage")) {
 				def->soundtestpage = (UINT8)i;
-			} else if (!stricmp(stoken, "soundtestcond")) {
+			}
+			else if (!stricmp(stoken, "soundtestcond")) {
 				// Convert to map number
 				if (textline[0] >= 'A' && textline[0] <= 'Z' && textline[2] == '\0')
 					i = M_MapNumber(textline[0], textline[1]);
 				def->soundtestcond = (INT16)i;
-			} else if (!stricmp(stoken, "stoppingtime")) {
+			}
+			else if (!stricmp(stoken, "stoppingtime")) {
 				double stoppingtime = atof(textline)*TICRATE;
 				def->stoppingtics = (tic_t)stoppingtime;
-			} else if (!stricmp(stoken, "bpm")) {
+			}
+			else if (!stricmp(stoken, "bpm")) {
 				double bpm = atof(textline);
 				fixed_t bpmf = FLOAT_TO_FIXED(bpm);
 				if (bpmf > 0)
-					def->bpm = FixedDiv((60*TICRATE)<<FRACBITS, bpmf);
-			} else if (!stricmp(stoken, "loopms")) {
+					def->bpm = FixedDiv((60 * TICRATE) << FRACBITS, bpmf);
+			}
+			else if (!stricmp(stoken, "loopms")) {
 				def->loop_ms = atoi(textline);
-			} else {
+			}
+			else {
 				CONS_Alert(CONS_WARNING,
-						"MUSICDEF: Invalid field '%s'. (file %s, line %d)\n",
-						stoken, wadfiles[wadnum]->filename, line);
+					"MUSICDEF: Invalid field '%s'. (file %s, line %d)\n",
+					stoken, wadfiles[wadnum]->filename, line);
 			}
 		}
 	}
@@ -1619,7 +1629,7 @@ void S_LoadMusicDefs(UINT16 wadnum)
 	size = W_LumpLengthPwad(wadnum, lumpnum);
 
 	// Null-terminated MUSICDEF lump.
-	musdeftext = malloc(size+1);
+	musdeftext = malloc(size + 1);
 	if (!musdeftext)
 		I_Error("S_LoadMusicDefs: No more free memory for the parser\n");
 	M_Memcpy(musdeftext, lump, size);
@@ -1642,8 +1652,8 @@ void S_LoadMusicDefs(UINT16 wadnum)
 		stoken = strtok(stoken, " ");
 		if (stoken)
 		{
-			if (! ReadMusicDefFields(wadnum, line, fields, stoken,
-						&def, &version))
+			if (!ReadMusicDefFields(wadnum, line, fields, stoken,
+				&def, &version))
 				break;
 			fields = true;
 		}
@@ -1657,8 +1667,7 @@ void S_LoadMusicDefs(UINT16 wadnum)
 				lf += ncr;
 				nlf = strspn(lf, "\n");
 				lf += nlf;
-			}
-			while (nlf || ncr) ;
+			} while (nlf || ncr);
 
 			stoken = lf;/* now the next nonempty line */
 		}
@@ -1718,9 +1727,9 @@ boolean S_PrepareSoundTest(void)
 		if (!(def->soundtestpage & soundtestpage))
 			continue;
 		soundtestdefs[pos++] = def;
-		if (def->soundtestcond > 0 && !(data->mapvisited[def->soundtestcond-1] & MV_BEATEN))
+		if (def->soundtestcond > 0 && !(data->mapvisited[def->soundtestcond - 1] & MV_BEATEN))
 			continue;
-		if (def->soundtestcond < 0 && !M_Achieved(-1-def->soundtestcond, data))
+		if (def->soundtestcond < 0 && !M_Achieved(-1 - def->soundtestcond, data))
 			continue;
 		def->allowed = true;
 	}
@@ -1761,8 +1770,8 @@ boolean S_MusicPaused(void)
 boolean S_MusicNotInFocus(void)
 {
 	return (
-			( window_notinfocus && ! cv_playmusicifunfocused.value )
-	);
+		(window_notinfocus && !cv_playmusicifunfocused.value)
+		);
 }
 
 musictype_t S_MusicType(void)
@@ -1780,7 +1789,7 @@ boolean S_MusicExists(const char *mname, boolean checkMIDI, boolean checkDigi)
 	return (
 		(checkDigi ? W_CheckNumForName(va("O_%s", mname)) != LUMPERROR : false)
 		|| (checkMIDI ? W_CheckNumForName(va("D_%s", mname)) != LUMPERROR : false)
-	);
+		);
 }
 
 /// ------------------------
@@ -1910,7 +1919,7 @@ static void S_AddMusicStackEntry(const char *mname, UINT16 mflags, boolean loopi
 	if (!music_stacks)
 	{
 		music_stacks = Z_Calloc(sizeof (*mst), PU_MUSIC, NULL);
-		strncpy(music_stacks->musname, (status == JT_MASTER ? mname : (S_CheckQueue() ? queue_name : mapmusname)), sizeof(music_stacks->musname)-1);
+		strncpy(music_stacks->musname, (status == JT_MASTER ? mname : (S_CheckQueue() ? queue_name : mapmusname)), sizeof(music_stacks->musname) - 1);
 		music_stacks->musflags = (status == JT_MASTER ? mflags : (S_CheckQueue() ? queue_flags : mapmusflags));
 		music_stacks->looping = (status == JT_MASTER ? looping : (S_CheckQueue() ? queue_looping : true));
 		music_stacks->position = (status == JT_MASTER ? position : (S_CheckQueue() ? queue_position : S_GetMusicPosition()));
@@ -2088,7 +2097,7 @@ boolean S_RecallMusic(UINT16 status, boolean fromfirst)
 				// to check if we can get the song's length. Otherwise, if the lapsed resume time goes
 				// over a LOOPPOINT, mixer_sound.c will be unable to calculate the new resume position.
 				if (S_GetMusicLength())
-					poslapse = (UINT32)((float)(gametic - entry->tic)/(float)TICRATE*(float)MUSICRATE);
+					poslapse = (UINT32)((float)(gametic - entry->tic) / (float)TICRATE*(float)MUSICRATE);
 
 				newpos = entry->position + poslapse;
 			}
@@ -2122,9 +2131,9 @@ static lumpnum_t S_GetMusicLumpNum(const char *mname)
 	boolean midipref = cv_musicpref.value;
 
 	if (S_PrefAvailable(midipref, mname))
-		return W_GetNumForName(va(midipref ? "d_%s":"o_%s", mname));
+		return W_GetNumForName(va(midipref ? "d_%s" : "o_%s", mname));
 	else if (S_PrefAvailable(!midipref, mname))
-		return W_GetNumForName(va(midipref ? "o_%s":"d_%s", mname));
+		return W_GetNumForName(va(midipref ? "o_%s" : "d_%s", mname));
 	else
 		return LUMPERROR;
 }
@@ -2303,7 +2312,7 @@ void S_ChangeMusicEx(const char *mmusic, UINT16 mflags, boolean looping, UINT32 
 	{
 		I_SetSongPosition(position);
 		I_FadeSong(100, fadeinms, NULL);
-}
+	}
 	else // reset volume to 100 with same music
 	{
 		I_StopFadingSong();
@@ -2325,7 +2334,7 @@ void S_StopMusic(void)
 
 	if (cv_closedcaptioning.value)
 	{
-		if (closedcaptions[0].s-S_sfx == sfx_None)
+		if (closedcaptions[0].s - S_sfx == sfx_None)
 		{
 			if (gamestate != wipegamestate)
 			{
@@ -2371,25 +2380,25 @@ void S_SetMusicVolume(INT32 digvolume, INT32 seqvolume)
 
 	if (digvolume < 0 || digvolume > 31)
 		CONS_Alert(CONS_WARNING, "digmusicvolume should be between 0-31\n");
-	CV_SetValue(&cv_digmusicvolume, digvolume&31);
+	CV_SetValue(&cv_digmusicvolume, digvolume & 31);
 	actualdigmusicvolume = cv_digmusicvolume.value;   //check for change of var
 
 	if (seqvolume < 0 || seqvolume > 31)
 		CONS_Alert(CONS_WARNING, "midimusicvolume should be between 0-31\n");
-	CV_SetValue(&cv_midimusicvolume, seqvolume&31);
+	CV_SetValue(&cv_midimusicvolume, seqvolume & 31);
 	actualmidimusicvolume = cv_midimusicvolume.value;   //check for change of var
 
-	switch(I_SongType())
+	switch (I_SongType())
 	{
-		case MU_MID:
-		case MU_MID_EX:
+	case MU_MID:
+	case MU_MID_EX:
 		//case MU_MOD:
 		//case MU_GME:
-			I_SetMusicVolume(seqvolume&31);
-			break;
-		default:
-			I_SetMusicVolume(digvolume&31);
-			break;
+		I_SetMusicVolume(seqvolume & 31);
+		break;
+	default:
+		I_SetMusicVolume(digvolume & 31);
+		break;
 	}
 }
 
@@ -2433,10 +2442,10 @@ void S_StartEx(boolean reset)
 {
 	if (mapmusflags & MUSIC_RELOADRESET)
 	{
-		strncpy(mapmusname, mapheaderinfo[gamemap-1]->musname, 7);
+		strncpy(mapmusname, mapheaderinfo[gamemap - 1]->musname, 7);
 		mapmusname[6] = 0;
-		mapmusflags = (mapheaderinfo[gamemap-1]->mustrack & MUSIC_TRACKMASK);
-		mapmusposition = mapheaderinfo[gamemap-1]->muspos;
+		mapmusflags = (mapheaderinfo[gamemap - 1]->mustrack & MUSIC_TRACKMASK);
+		mapmusposition = mapheaderinfo[gamemap - 1]->muspos;
 	}
 
 	if (RESETMUSIC || reset)
@@ -2483,15 +2492,15 @@ static void Command_Tunes_f(void)
 	}
 	else if (!strcasecmp(tunearg, "-default"))
 	{
-		tunearg = mapheaderinfo[gamemap-1]->musname;
-		track = mapheaderinfo[gamemap-1]->mustrack;
+		tunearg = mapheaderinfo[gamemap - 1]->musname;
+		track = mapheaderinfo[gamemap - 1]->mustrack;
 	}
 
 	if (strlen(tunearg) > 6) // This is automatic -- just show the error just in case
 		CONS_Alert(CONS_NOTICE, M_GetText("Music name too long - truncated to six characters.\n"));
 
 	if (argc > 2)
-		track = (UINT16)atoi(COM_Argv(2))-1;
+		track = (UINT16)atoi(COM_Argv(2)) - 1;
 
 	strncpy(mapmusname, tunearg, 7);
 	mapmusname[6] = 0;
@@ -2521,7 +2530,7 @@ static void Command_RestartAudio_f(void)
 	I_StartupSound();
 	I_InitMusic();
 
-// These must be called or no sound and music until manually set.
+	// These must be called or no sound and music until manually set.
 
 	I_SetSfxVolume(cv_soundvolume.value);
 	S_SetMusicVolume(cv_digmusicvolume.value, cv_midimusicvolume.value);
@@ -2562,7 +2571,10 @@ void GameDigiMusic_OnChange(void)
 		I_InitMusic();
 
 		if (Playing())
+		{
+			music_stack_noposition = true;
 			P_RestoreMusic(&players[consoleplayer]);
+		}
 		else if ((!cv_musicpref.value || midi_disabled) && S_DigExists("_clear"))
 			S_ChangeMusicInternal("_clear", false);
 	}

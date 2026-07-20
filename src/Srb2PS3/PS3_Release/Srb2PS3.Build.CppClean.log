@@ -38,7 +38,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\deh_tables.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_cdmus.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_main.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_net.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_sound.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_system.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\sdl_stub.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\d_main.o
@@ -154,7 +153,6 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\snake.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\sounds.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\string.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\st_stuff.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\s_sound.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\tables.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\taglist.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\u_list.o
@@ -193,6 +191,8 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\inftrees.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\trees.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\uncompr.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\zutil.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_sound.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\s_sound.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.command.1.tlog
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.read.1.tlog
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.write.1.tlog
