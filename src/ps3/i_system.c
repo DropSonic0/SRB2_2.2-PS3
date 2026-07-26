@@ -213,9 +213,52 @@ static char returnWadPath[256];
 #include "endtxt.h"
 #else
 #include <cell/pad.h>
+#include <cell/keyboard.h>
 #include <sys/memory.h>
 #include <sysutil/sysutil_common.h>
 #include <sys/process.h>
+#include "../keys.h"
+#include "../d_main.h"
+
+#ifndef CELL_KB_MAX_KEYCODES
+#define CELL_KB_MAX_KEYCODES 62
+#endif
+
+#ifndef CELL_KB_CODETYPE_RAW
+#define CELL_KB_CODETYPE_RAW 0
+#endif
+
+#ifndef CELL_KB_RMODE_PACKET
+#define CELL_KB_RMODE_PACKET 1
+#endif
+
+#ifndef CELL_KB_MKEY_L_SHIFT
+#define CELL_KB_MKEY_L_SHIFT  (1<<1)
+#endif
+#ifndef CELL_KB_MKEY_R_SHIFT
+#define CELL_KB_MKEY_R_SHIFT  (1<<5)
+#endif
+#ifndef CELL_KB_MKEY_L_CTRL
+#define CELL_KB_MKEY_L_CTRL   (1<<0)
+#endif
+#ifndef CELL_KB_MKEY_R_CTRL
+#define CELL_KB_MKEY_R_CTRL   (1<<4)
+#endif
+#ifndef CELL_KB_MKEY_L_ALT
+#define CELL_KB_MKEY_L_ALT    (1<<2)
+#endif
+#ifndef CELL_KB_MKEY_R_ALT
+#define CELL_KB_MKEY_R_ALT    (1<<6)
+#endif
+#ifndef CELL_KB_MKEY_L_GUI
+#define CELL_KB_MKEY_L_GUI    (1<<3)
+#endif
+#ifndef CELL_KB_MKEY_R_GUI
+#define CELL_KB_MKEY_R_GUI    (1<<7)
+#endif
+
+extern int cellKbSetCodeType(uint32_t port_no, uint32_t type);
+extern int cellKbSetReadMode(uint32_t port_no, uint32_t mode);
 
 static volatile int ps3_exit_requested = 0;
 
@@ -227,6 +270,317 @@ static void PS3_SysutilCallback(uint64_t status, uint64_t param, void *data)
 	{
 		ps3_exit_requested = 1;
 	}
+}
+
+static struct {
+	uint32_t mask;
+	INT32 srb2_key;
+} ps3_modifiers_map[8] = {
+	{ CELL_KB_MKEY_L_SHIFT, KEY_LSHIFT },
+	{ CELL_KB_MKEY_R_SHIFT, KEY_RSHIFT },
+	{ CELL_KB_MKEY_L_CTRL,  KEY_LCTRL },
+	{ CELL_KB_MKEY_R_CTRL,  KEY_RCTRL },
+	{ CELL_KB_MKEY_L_ALT,   KEY_LALT },
+	{ CELL_KB_MKEY_R_ALT,   KEY_RALT },
+	{ CELL_KB_MKEY_L_GUI,   KEY_LEFTWIN },
+	{ CELL_KB_MKEY_R_GUI,   KEY_RIGHTWIN }
+};
+
+#define PS3_KB_MAX 2
+static uint8_t ps3_kb_connected[PS3_KB_MAX] = {0};
+static uint8_t ps3_keyboard_state[256] = {0};
+static uint32_t ps3_keyboard_modifiers = 0;
+static uint8_t ps3_kb_initialized = 0;
+static CellKbData ps3_last_kb_state[PS3_KB_MAX];
+
+static INT32 PS3_HID_To_Keycode(uint8_t code)
+{
+	if (code >= 0x04 && code <= 0x1D) // A-Z
+	{
+		return 'a' + (code - 0x04);
+	}
+	if (code >= 0x1E && code <= 0x26) // 1-9
+	{
+		return '1' + (code - 0x1E);
+	}
+	if (code == 0x27) // 0
+	{
+		return '0';
+	}
+	if (code >= 0x3A && code <= 0x43) // F1-F10
+	{
+		return KEY_F1 + (code - 0x3A);
+	}
+	if (code == 0x44) return KEY_F11;
+	if (code == 0x45) return KEY_F12;
+
+	switch (code)
+	{
+		case 0x28: return KEY_ENTER;
+		case 0x29: return KEY_ESCAPE;
+		case 0x2A: return KEY_BACKSPACE;
+		case 0x2B: return KEY_TAB;
+		case 0x2C: return KEY_SPACE;
+		case 0x2D: return KEY_MINUS;
+		case 0x2E: return KEY_EQUALS;
+		case 0x2F: return '[';
+		case 0x30: return ']';
+		case 0x31: return '\\';
+		case 0x33: return ';';
+		case 0x34: return '\'';
+		case 0x35: return '`';
+		case 0x36: return ',';
+		case 0x37: return '.';
+		case 0x38: return '/';
+		case 0x39: return KEY_CAPSLOCK;
+		case 0x47: return KEY_SCROLLLOCK;
+		case 0x48: return KEY_PAUSE;
+		case 0x49: return KEY_INS;
+		case 0x4A: return KEY_HOME;
+		case 0x4B: return KEY_PGUP;
+		case 0x4C: return KEY_DEL;
+		case 0x4D: return KEY_END;
+		case 0x4E: return KEY_PGDN;
+		case 0x4F: return KEY_RIGHTARROW;
+		case 0x50: return KEY_LEFTARROW;
+		case 0x51: return KEY_DOWNARROW;
+		case 0x52: return KEY_UPARROW;
+		case 0x53: return KEY_NUMLOCK;
+		case 0x54: return KEY_KPADSLASH;
+		case 0x55: return '*';
+		case 0x56: return KEY_MINUSPAD;
+		case 0x57: return KEY_PLUSPAD;
+		case 0x58: return KEY_ENTER; // KP Enter
+		case 0x59: return KEY_KEYPAD1;
+		case 0x5A: return KEY_KEYPAD2;
+		case 0x5B: return KEY_KEYPAD3;
+		case 0x5C: return KEY_KEYPAD4;
+		case 0x5D: return KEY_KEYPAD5;
+		case 0x5E: return KEY_KEYPAD6;
+		case 0x5F: return KEY_KEYPAD7;
+		case 0x60: return KEY_KEYPAD8;
+		case 0x61: return KEY_KEYPAD9;
+		case 0x62: return KEY_KEYPAD0;
+		case 0x63: return KEY_KPADDEL;
+		default:   break;
+	}
+	return 0;
+}
+
+static INT32 PS3_Get_Text_Char(INT32 key, boolean shift_held)
+{
+	if (key >= 'a' && key <= 'z')
+	{
+		return shift_held ? (key - 'a' + 'A') : key;
+	}
+	if (!shift_held)
+		return key;
+
+	switch (key)
+	{
+		case '1': return '!';
+		case '2': return '@';
+		case '3': return '#';
+		case '4': return '$';
+		case '5': return '%';
+		case '6': return '^';
+		case '7': return '&';
+		case '8': return '*';
+		case '9': return '(';
+		case '0': return ')';
+		case '-': return '_';
+		case '=': return '+';
+		case '[': return '{';
+		case ']': return '}';
+		case '\\': return '|';
+		case ';': return ':';
+		case '\'': return '"';
+		case '`': return '~';
+		case ',': return '<';
+		case '.': return '>';
+		case '/': return '?';
+		default:  break;
+	}
+	return key;
+}
+
+static void I_InitPS3Keyboard(void)
+{
+	if (!ps3_kb_initialized)
+	{
+		int ret = cellKbInit(PS3_KB_MAX);
+		if (ret == 0)
+		{
+			CONS_Printf("[PS3] cellKbInit(%d) successful\n", PS3_KB_MAX);
+			ps3_kb_initialized = 1;
+			keyboard_started = true;
+			memset(ps3_keyboard_state, 0, sizeof(ps3_keyboard_state));
+			ps3_keyboard_modifiers = 0;
+			memset(ps3_kb_connected, 0, sizeof(ps3_kb_connected));
+			memset(ps3_last_kb_state, 0, sizeof(ps3_last_kb_state));
+		}
+		else
+		{
+			CONS_Printf("[PS3] cellKbInit failed: %d\n", ret);
+		}
+	}
+}
+
+static void I_GetKeyboardEvents(void)
+{
+	CellKbInfo kbInfo;
+	CellKbData kbData;
+	uint8_t current_held[256];
+	uint32_t current_modifiers = 0;
+	int i, k, m;
+
+	if (!ps3_kb_initialized)
+	{
+		I_InitPS3Keyboard();
+		if (!ps3_kb_initialized)
+			return;
+	}
+
+	if (cellKbGetInfo(&kbInfo) != 0)
+		return;
+
+	memset(current_held, 0, sizeof(current_held));
+
+	for (i = 0; i < PS3_KB_MAX; i++)
+	{
+		if (i < (int)kbInfo.max_connect && kbInfo.status[i] != 0)
+		{
+			if (!ps3_kb_connected[i])
+			{
+				cellKbSetCodeType(i, CELL_KB_CODETYPE_RAW);
+				cellKbSetReadMode(i, CELL_KB_RMODE_PACKET);
+				ps3_kb_connected[i] = 1;
+				memset(&ps3_last_kb_state[i], 0, sizeof(CellKbData));
+			}
+
+			// Drain queue to get latest state, but limit to avoid freezes
+			int safety = 0;
+			while (safety < 64)
+			{
+				kbData.len = 0xFFFFFFFF;
+				kbData.mkey = 0xFFFFFFFF;
+
+				int readRes = cellKbRead(i, &kbData);
+				if (readRes == CELL_KB_ERROR_NO_DEVICE || readRes == CELL_KB_ERROR_UNINITIALIZED)
+				{
+					memset(&ps3_last_kb_state[i], 0, sizeof(CellKbData));
+					ps3_kb_connected[i] = 0;
+					break;
+				}
+				if (readRes != 0)
+				{
+					break;
+				}
+
+				// Check if kbData was actually written to (sentinel check)
+				if (kbData.len == 0xFFFFFFFF || kbData.mkey == 0xFFFFFFFF)
+				{
+					break;
+				}
+
+				ps3_last_kb_state[i] = kbData;
+				safety++;
+			}
+		}
+		else
+		{
+			if (ps3_kb_connected[i])
+			{
+				memset(&ps3_last_kb_state[i], 0, sizeof(CellKbData));
+				ps3_kb_connected[i] = 0;
+			}
+		}
+
+		// Merge held keys and modifiers from this keyboard if connected
+		if (ps3_kb_connected[i])
+		{
+			int len = ps3_last_kb_state[i].len;
+			if (len > CELL_KB_MAX_KEYCODES)
+			{
+				len = CELL_KB_MAX_KEYCODES;
+			}
+			for (k = 0; k < len; k++)
+			{
+				uint8_t code = ps3_last_kb_state[i].keycode[k] & 0xFF;
+				if (code > 0)
+				{
+					current_held[code] = 1;
+				}
+			}
+			// Only merge valid modifiers
+			if (ps3_last_kb_state[i].mkey != 0xFFFFFFFF)
+			{
+				current_modifiers |= ps3_last_kb_state[i].mkey;
+			}
+		}
+	}
+
+	// Post events for standard keys transitions
+	for (i = 0; i < 256; i++)
+	{
+		if (current_held[i] && !ps3_keyboard_state[i])
+		{
+			INT32 srb2_key = PS3_HID_To_Keycode(i);
+			if (srb2_key != 0)
+			{
+				event_t ev;
+				memset(&ev, 0, sizeof(ev));
+				ev.type = ev_keydown;
+				ev.key = srb2_key;
+				D_PostEvent(&ev);
+
+				// Also post ev_text event for printable characters to enable console/chat typing
+				if ((srb2_key >= 'a' && srb2_key <= 'z') ||
+					(srb2_key >= '0' && srb2_key <= '9') ||
+					srb2_key == ' ' || srb2_key == '-' || srb2_key == '=' ||
+					srb2_key == '[' || srb2_key == ']' || srb2_key == '\\' ||
+					srb2_key == ';' || srb2_key == '\'' || srb2_key == '`' ||
+					srb2_key == ',' || srb2_key == '.' || srb2_key == '/')
+				{
+					boolean shift_held = (current_modifiers & (CELL_KB_MKEY_L_SHIFT | CELL_KB_MKEY_R_SHIFT)) ? true : false;
+					event_t text_ev;
+					memset(&text_ev, 0, sizeof(text_ev));
+					text_ev.type = ev_text;
+					text_ev.key = PS3_Get_Text_Char(srb2_key, shift_held);
+					D_PostEvent(&text_ev);
+				}
+			}
+		}
+		else if (!current_held[i] && ps3_keyboard_state[i])
+		{
+			INT32 srb2_key = PS3_HID_To_Keycode(i);
+			if (srb2_key != 0)
+			{
+				event_t ev;
+				memset(&ev, 0, sizeof(ev));
+				ev.type = ev_keyup;
+				ev.key = srb2_key;
+				D_PostEvent(&ev);
+			}
+		}
+		ps3_keyboard_state[i] = current_held[i];
+	}
+
+	// Post events for modifier keys transitions
+	for (m = 0; m < 8; m++)
+	{
+		uint8_t new_state = (current_modifiers & ps3_modifiers_map[m].mask) ? 1 : 0;
+		uint8_t old_state = (ps3_keyboard_modifiers & ps3_modifiers_map[m].mask) ? 1 : 0;
+		if (new_state != old_state)
+		{
+			event_t ev;
+			memset(&ev, 0, sizeof(ev));
+			ev.type = new_state ? ev_keydown : ev_keyup;
+			ev.key = ps3_modifiers_map[m].srb2_key;
+			D_PostEvent(&ev);
+		}
+	}
+	ps3_keyboard_modifiers = current_modifiers;
 }
 #endif
 #include "sdlmain.h"
@@ -308,6 +662,7 @@ void I_OsPolling(void)
 {
 	I_GetJoystickEvents();
 	I_GetJoystick2Events();
+	I_GetKeyboardEvents();
 #ifdef __CELLOS_LV2__
 	cellSysutilCheckCallback();
 	if (ps3_exit_requested)
@@ -2008,6 +2363,12 @@ static void I_ShutdownInput(void)
 		cellPadEnd();
 		ps3_pads_initialized = 0;
 	}
+	if (ps3_kb_initialized)
+	{
+		cellKbEnd();
+		ps3_kb_initialized = 0;
+		keyboard_started = false;
+	}
 #endif
 
 	if (SDL_WasInit(SDL_INIT_JOYSTICK) == SDL_INIT_JOYSTICK)
@@ -2769,6 +3130,7 @@ INT32 I_StartupSystem(void)
 	I_StartupConsole();
 #ifdef __CELLOS_LV2__
 	cellSysutilRegisterCallback(0, PS3_SysutilCallback, NULL);
+	I_InitPS3Keyboard();
 #endif
 #ifdef NEWSIGNALHANDLER
 	// This is useful when debugging. It lets GDB attach to
