@@ -61,7 +61,7 @@ static UINT32 gl_palette[256];
 /* Libgcm variables */
 extern CellGcmContextData gCellGcmContext;
 
-#define COMMAND_BUFFER_SIZE (4 * 1024 * 1024)
+#define COMMAND_BUFFER_SIZE (16 * 1024 * 1024)
 static void* host_addr = NULL;
 static uint8_t* host_free_ptr = NULL;
 static uint8_t* vram_free_ptr = NULL;
@@ -72,6 +72,9 @@ static uint32_t display_width = 0;
 static uint32_t display_height = 0;
 static uint32_t display_pitch = 0;
 static int current_buffer_idx = 0;
+
+static void* host_convert_buffer = NULL;
+static uint32_t host_convert_offset = 0;
 
 static void* host_alloc(uint32_t size, uint32_t alignment)
 {
@@ -292,6 +295,10 @@ void I_StartupGraphics(void)
 		uint32_t src_pitch = 640 * sizeof(UINT32);
 		uint32_t src_size = src_pitch * 400;
 
+		// Allocate Host-side conversion buffer
+		host_convert_buffer = host_alloc(src_size, 1024 * 1024);
+		cellGcmAddressToOffset(host_convert_buffer, &host_convert_offset);
+
 		int i;
 		for (i = 0; i < 2; i++)
 		{
@@ -299,6 +306,7 @@ void I_StartupGraphics(void)
 			cellGcmAddressToOffset(display_buffer[i], &display_offset[i]);
 
 			CellRescSrc src;
+			memset(&src, 0, sizeof(src));
 			src.format = CELL_GCM_TEXTURE_A8R8G8B8 | CELL_GCM_TEXTURE_LN | CELL_GCM_TEXTURE_NR;
 			src.pitch = src_pitch;
 			src.width = 640;
@@ -562,14 +570,41 @@ void I_FinishUpdate(void)
 			if (cv_showping.value && netgame && consoleplayer != serverplayer)
 				SCR_DisplayLocalPing();
 
-			if (display_buffer[0] && display_buffer[1])
+			if (display_buffer[0] && display_buffer[1] && host_convert_buffer)
 			{
+				static UINT64 accum_wait_flip = 0;
+				static UINT64 accum_convert = 0;
+				static UINT64 accum_sync = 0;
+				static UINT64 accum_gcm = 0;
+				static UINT64 accum_overall = 0;
+				static int profile_frame_count = 0;
+
+				UINT64 t_start = I_GetPreciseTime();
+				UINT64 t0;
+
 				current_buffer_idx = (current_buffer_idx + 1) % 2;
 
+				t0 = I_GetPreciseTime();
 				cellRescSetWaitFlip(gCellGcmCurrentContext);
+				accum_wait_flip += (I_GetPreciseTime() - t0);
 
-				uint32_t* dst = (uint32_t*)display_buffer[current_buffer_idx];
-				convert_palette_1to1(dst, screens[0], vid.width * vid.height, gl_palette);
+				t0 = I_GetPreciseTime();
+				// Convert palette into the fast Host-side conversion buffer (CPU L1/L2 cached)
+				convert_palette_1to1((uint32_t*)host_convert_buffer, screens[0], vid.width * vid.height, gl_palette);
+				accum_convert += (I_GetPreciseTime() - t0);
+
+				t0 = I_GetPreciseTime();
+				// Ensure all CPU writes to the host buffer are fully completed and synchronized
+				// before the RSX (GPU) DMA reads it.
+				__asm__("sync");
+				accum_sync += (I_GetPreciseTime() - t0);
+
+				t0 = I_GetPreciseTime();
+				// Perform high-speed RSX hardware DMA copy from Host Memory to local VRAM
+				cellGcmSetTransferData(gCellGcmCurrentContext, CELL_GCM_TRANSFER_MAIN_TO_LOCAL,
+					display_offset[current_buffer_idx], 2560,
+					host_convert_offset, 2560,
+					2560, 400);
 
 				cellRescSetConvertAndFlip(gCellGcmCurrentContext, current_buffer_idx);
 				cellGcmFlush(gCellGcmCurrentContext);
