@@ -2979,6 +2979,15 @@ EXPORT void HWRAPI(DrawScreenTexture)(int tex, FSurfaceInfo *surf, FBITFIELD pol
 	while (texsize < screen_width || texsize < screen_height)
 		texsize <<= 1;
 
+#ifdef __CELLOS_LV2__
+	static int draw_count = 0;
+	if (draw_count < 10)
+	{
+		I_OutputMsg("[PS3 GL] DrawScreenFinalTexture(tex=%d): screen=%dx%d, texsize=%d\n", tex, (int)screen_width, (int)screen_height, texsize);
+		draw_count++;
+	}
+#endif
+
 	xfix = 1 / ((float)(texsize) / ((float)((screen_width))));
 	yfix = 1 / ((float)(texsize) / ((float)((screen_height))));
 
@@ -3126,6 +3135,15 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 	while (texsize < screen_width || texsize < screen_height)
 		texsize <<= 1;
 
+#ifdef __CELLOS_LV2__
+	static int make_count = 0;
+	if (make_count < 10)
+	{
+		I_OutputMsg("[PS3 GL] MakeScreenTexture(tex=%d): firstTime=%d, texsize=%d, screen=%dx%d\n", tex, firstTime, texsize, (int)screen_width, (int)screen_height);
+		make_count++;
+	}
+#endif
+
 	// Create screen texture
 	if (firstTime)
 		pglGenTextures(1, &screenTextures[tex]);
@@ -3137,10 +3155,20 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 		pglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		Clamp2D(GL_TEXTURE_WRAP_S);
 		Clamp2D(GL_TEXTURE_WRAP_T);
+#ifdef __CELLOS_LV2__
+		pglTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texsize, texsize, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+#else
 		pglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, texsize, texsize, 0);
+#endif
 	}
+#ifndef __CELLOS_LV2__
 	else
 		pglCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, texsize, texsize);
+#endif
+
+#ifdef __CELLOS_LV2__
+	pglCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, screen_width, screen_height);
+#endif
 
 	tex_downloaded = screenTextures[tex];
 }
@@ -3323,9 +3351,21 @@ EXPORT void HWRAPI(SetScreenPalette)(RGBA_t *palette)
 #ifdef __CELLOS_LV2__
 #include <string.h>
 
+EXPORT void HWRAPI(SetTexturePalette) (RGBA_t *palette)
+{
+	size_t palsize = (sizeof(RGBA_t) * 256);
+	// on a palette change, you have to reload all of the textures
+	if (memcmp(&myPaletteData, palette, palsize))
+	{
+		memcpy(&myPaletteData, palette, palsize);
+		Flush();
+	}
+}
+
 void *PS3_GetGLFunc(const char *name)
 {
 	if (strcmp(name, "Init") == 0) return (void *)Init;
+	if (strcmp(name, "SetTexturePalette") == 0) return (void *)SetTexturePalette;
 	if (strcmp(name, "Draw2DLine") == 0) return (void *)Draw2DLine;
 	if (strcmp(name, "DrawPolygon") == 0) return (void *)DrawPolygon;
 	if (strcmp(name, "DrawIndexedTriangles") == 0) return (void *)DrawIndexedTriangles;

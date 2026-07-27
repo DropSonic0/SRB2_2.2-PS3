@@ -1047,20 +1047,37 @@ void I_FinishUpdate(void)
 	}
 	else if (rendermode == render_opengl)
 	{
+		static int frame_count = 0;
+		if (frame_count < 10)
+		{
+			CONS_Printf("[PS3 GL] I_FinishUpdate: frame %d starting\n", frame_count);
+		}
+
 		if (HWR_ShouldUsePaletteRendering())
 		{
+			if (frame_count < 10) { CONS_Printf("[PS3 GL] Palette rendering enabled, copying HWD_SCREENTEXTURE_GENERIC2\n"); }
 			HWD.pfnMakeScreenTexture(HWD_SCREENTEXTURE_GENERIC2);
 			HWD.pfnSetShader(HWR_GetShaderFromTarget(SHADER_PALETTE_POSTPROCESS));
 			HWD.pfnDrawScreenTexture(HWD_SCREENTEXTURE_GENERIC2, NULL, 0);
 			HWD.pfnUnSetShader();
 		}
 
+		if (frame_count < 10) { CONS_Printf("[PS3 GL] Calling HWR_MakeScreenFinalTexture\n"); }
 		HWR_MakeScreenFinalTexture();
+		if (frame_count < 10) { CONS_Printf("[PS3 GL] Calling HWR_DrawScreenFinalTexture\n"); }
 		HWR_DrawScreenFinalTexture(display_width > 0 ? display_width : 1280, display_height > 0 ? display_height : 720);
 
+		if (frame_count < 10) { CONS_Printf("[PS3 GL] Calling psglSwap\n"); }
 		psglSwap();
 
+		if (frame_count < 10) { CONS_Printf("[PS3 GL] Calling GClipRect\n"); }
 		HWD.pfnGClipRect(0, 0, vid.width, vid.height, NZCLIP_PLANE);
+
+		if (frame_count < 10)
+		{
+			CONS_Printf("[PS3 GL] I_FinishUpdate: frame %d completed\n", frame_count);
+			frame_count++;
+		}
 	}
 #endif
 }
