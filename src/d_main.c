@@ -160,7 +160,7 @@ boolean dedicated = false;
 void D_PostEvent(const event_t *ev)
 {
 	events[eventhead] = *ev;
-	eventhead = (eventhead+1) & (MAXEVENTS-1);
+	eventhead = (eventhead + 1) & (MAXEVENTS - 1);
 }
 
 // modifier keys
@@ -183,10 +183,10 @@ void D_ProcessEvents(void)
 	// Reset possibly stale mouse info
 	G_SetMouseDeltas(0, 0, 1);
 	G_SetMouseDeltas(0, 0, 2);
-	mouse.buttons &= ~(MB_SCROLLUP|MB_SCROLLDOWN);
-	mouse2.buttons &= ~(MB_SCROLLUP|MB_SCROLLDOWN);
+	mouse.buttons &= ~(MB_SCROLLUP | MB_SCROLLDOWN);
+	mouse2.buttons &= ~(MB_SCROLLUP | MB_SCROLLDOWN);
 
-	for (; eventtail != eventhead; eventtail = (eventtail+1) & (MAXEVENTS-1))
+	for (; eventtail != eventhead; eventtail = (eventtail + 1) & (MAXEVENTS - 1))
 	{
 		boolean hooked = false;
 
@@ -212,18 +212,18 @@ void D_ProcessEvents(void)
 			}
 			// Scroll (has no keyup event)
 			else switch (ev->key) {
-				case KEY_MOUSEWHEELUP:
-					mouse.buttons |= MB_SCROLLUP;
-					break;
-				case KEY_MOUSEWHEELDOWN:
-					mouse.buttons |= MB_SCROLLDOWN;
-					break;
-				case KEY_2MOUSEWHEELUP:
-					mouse2.buttons |= MB_SCROLLUP;
-					break;
-				case KEY_2MOUSEWHEELDOWN:
-					mouse2.buttons |= MB_SCROLLDOWN;
-					break;
+			case KEY_MOUSEWHEELUP:
+				mouse.buttons |= MB_SCROLLUP;
+				break;
+			case KEY_MOUSEWHEELDOWN:
+				mouse.buttons |= MB_SCROLLDOWN;
+				break;
+			case KEY_2MOUSEWHEELUP:
+				mouse2.buttons |= MB_SCROLLUP;
+				break;
+			case KEY_2MOUSEWHEELDOWN:
+				mouse2.buttons |= MB_SCROLLDOWN;
+				break;
 			}
 		}
 
@@ -372,10 +372,10 @@ static void D_Display(void)
 		{
 			// Fade to black first
 			if ((wipegamestate == (gamestate_t)FORCEWIPE ||
-			        (wipegamestate != (gamestate_t)FORCEWIPEOFF
-						&& !(gamestate == GS_LEVEL || (gamestate == GS_TITLESCREEN && titlemapinaction)))
-					) // fades to black on its own timing, always
-			 && wipetypepre != UINT8_MAX)
+				(wipegamestate != (gamestate_t)FORCEWIPEOFF
+				&& !(gamestate == GS_LEVEL || (gamestate == GS_TITLESCREEN && titlemapinaction)))
+				) // fades to black on its own timing, always
+				&& wipetypepre != UINT8_MAX)
 			{
 				F_WipeStartScreen();
 				// Check for Mega Genesis fade
@@ -399,71 +399,71 @@ static void D_Display(void)
 	// do buffered drawing
 	switch (gamestate)
 	{
-		case GS_TITLESCREEN:
-			if (!titlemapinaction || !curbghide) {
-				F_TitleScreenDrawer();
-				break;
-			}
-			/* FALLTHRU */
-		case GS_LEVEL:
-			if (!gametic)
-				break;
-			AM_Drawer();
+	case GS_TITLESCREEN:
+		if (!titlemapinaction || !curbghide) {
+			F_TitleScreenDrawer();
 			break;
+		}
+		/* FALLTHRU */
+	case GS_LEVEL:
+		if (!gametic)
+			break;
+		AM_Drawer();
+		break;
 
-		case GS_INTERMISSION:
-			Y_IntermissionDrawer();
+	case GS_INTERMISSION:
+		Y_IntermissionDrawer();
+		HU_Drawer();
+		break;
+
+	case GS_TIMEATTACK:
+		break;
+
+	case GS_INTRO:
+		F_IntroDrawer();
+		if (wipegamestate == (gamestate_t)-1)
+			wipe = true;
+		break;
+
+	case GS_ENDING:
+		F_EndingDrawer();
+		HU_Drawer();
+		break;
+
+	case GS_CUTSCENE:
+		F_CutsceneDrawer();
+		HU_Drawer();
+		break;
+
+	case GS_GAMEEND:
+		F_GameEndDrawer();
+		break;
+
+	case GS_EVALUATION:
+		F_GameEvaluationDrawer();
+		HU_Drawer();
+		break;
+
+	case GS_CONTINUING:
+		F_ContinueDrawer();
+		break;
+
+	case GS_CREDITS:
+		F_CreditDrawer();
+		HU_Drawer();
+		break;
+
+	case GS_WAITINGPLAYERS:
+		// The clientconnect drawer is independent...
+		if (netgame)
+		{
+			// I don't think HOM from nothing drawing is independent...
+			F_WaitingPlayersDrawer();
 			HU_Drawer();
-			break;
-
-		case GS_TIMEATTACK:
-			break;
-
-		case GS_INTRO:
-			F_IntroDrawer();
-			if (wipegamestate == (gamestate_t)-1)
-				wipe = true;
-			break;
-
-		case GS_ENDING:
-			F_EndingDrawer();
-			HU_Drawer();
-			break;
-
-		case GS_CUTSCENE:
-			F_CutsceneDrawer();
-			HU_Drawer();
-			break;
-
-		case GS_GAMEEND:
-			F_GameEndDrawer();
-			break;
-
-		case GS_EVALUATION:
-			F_GameEvaluationDrawer();
-			HU_Drawer();
-			break;
-
-		case GS_CONTINUING:
-			F_ContinueDrawer();
-			break;
-
-		case GS_CREDITS:
-			F_CreditDrawer();
-			HU_Drawer();
-			break;
-
-		case GS_WAITINGPLAYERS:
-			// The clientconnect drawer is independent...
-			if (netgame)
-			{
-				// I don't think HOM from nothing drawing is independent...
-				F_WaitingPlayersDrawer();
-				HU_Drawer();
-			}
-		case GS_DEDICATEDSERVER:
-		case GS_NULL:
-			break;
+		}
+	case GS_DEDICATEDSERVER:
+	case GS_NULL:
+		break;
 	}
 
 	// STUPID race condition...
@@ -497,11 +497,11 @@ static void D_Display(void)
 				{
 					topleft = screens[0] + viewwindowy*vid.width + viewwindowx;
 					objectsdrawn = 0;
-	#ifdef HWRENDER
+#ifdef HWRENDER
 					if (rendermode != render_soft)
 						HWR_RenderPlayerView(0, &players[displayplayer]);
 					else
-	#endif
+#endif
 					if (rendermode != render_none)
 						R_RenderPlayerView(&players[displayplayer]);
 				}
@@ -585,11 +585,11 @@ static void D_Display(void)
 		else
 			py = viewwindowy + 4;
 		patch = W_CachePatchName("M_PAUSE", PU_PATCH);
-		V_DrawScaledPatch(viewwindowx + (BASEVIDWIDTH - patch->width)/2, py, 0, patch);
+		V_DrawScaledPatch(viewwindowx + (BASEVIDWIDTH - patch->width) / 2, py, 0, patch);
 #else
-		INT32 y = ((automapactive) ? (32) : (BASEVIDHEIGHT/2));
-		M_DrawTextBox((BASEVIDWIDTH/2) - (60), y - (16), 13, 2);
-		V_DrawCenteredString(BASEVIDWIDTH/2, y - (4), V_YELLOWMAP, "Game Paused");
+		INT32 y = ((automapactive) ? (32) : (BASEVIDHEIGHT / 2));
+		M_DrawTextBox((BASEVIDWIDTH / 2) - (60), y - (16), 13, 2);
+		V_DrawCenteredString(BASEVIDWIDTH / 2, y - (4), V_YELLOWMAP, "Game Paused");
 #endif
 	}
 
@@ -679,13 +679,13 @@ static void D_Display(void)
 			s[sizeof s - 1] = '\0';
 
 			snprintf(s, sizeof s - 1, "get %d b/s", getbps);
-			V_DrawRightAlignedString(BASEVIDWIDTH, BASEVIDHEIGHT-40, V_YELLOWMAP, s);
+			V_DrawRightAlignedString(BASEVIDWIDTH, BASEVIDHEIGHT - 40, V_YELLOWMAP, s);
 			snprintf(s, sizeof s - 1, "send %d b/s", sendbps);
-			V_DrawRightAlignedString(BASEVIDWIDTH, BASEVIDHEIGHT-30, V_YELLOWMAP, s);
+			V_DrawRightAlignedString(BASEVIDWIDTH, BASEVIDHEIGHT - 30, V_YELLOWMAP, s);
 			snprintf(s, sizeof s - 1, "GameMiss %.2f%%", gamelostpercent);
-			V_DrawRightAlignedString(BASEVIDWIDTH, BASEVIDHEIGHT-20, V_YELLOWMAP, s);
+			V_DrawRightAlignedString(BASEVIDWIDTH, BASEVIDHEIGHT - 20, V_YELLOWMAP, s);
 			snprintf(s, sizeof s - 1, "SysMiss %.2f%%", lostpercent);
-			V_DrawRightAlignedString(BASEVIDWIDTH, BASEVIDHEIGHT-10, V_YELLOWMAP, s);
+			V_DrawRightAlignedString(BASEVIDWIDTH, BASEVIDHEIGHT - 10, V_YELLOWMAP, s);
 		}
 
 		if (cv_perfstats.value)
@@ -741,11 +741,11 @@ void D_SRB2Loop(void)
 	// Check and print which version is executed.
 	// Use this as the border between setup and the main game loop being entered.
 	CONS_Printf(
-	"===========================================================================\n"
-	"                   We hope you enjoy this game as\n"
-	"                     much as we did making it!\n"
-	"                            ...wait. =P\n"
-	"===========================================================================\n");
+		"===========================================================================\n"
+		"                   We hope you enjoy this game as\n"
+		"                     much as we did making it!\n"
+		"                            ...wait. =P\n"
+		"===========================================================================\n");
 
 	// hack to start on a nice clear console screen.
 	COM_ImmedExecute("cls;version");
@@ -772,9 +772,17 @@ void D_SRB2Loop(void)
 		precise_t finishprecise = enterprecise;
 
 		{
-			// Casting the return value of a function is bad practice (apparently)
-			double budget = round((1.0 / R_GetFramerateCap()) * I_GetPrecisePrecision());
-			capbudget = (precise_t) budget;
+			UINT32 cap = R_GetFramerateCap();
+			if (cap > 0)
+			{
+				// Casting the return value of a function is bad practice (apparently)
+				double budget = round((1.0 / cap) * I_GetPrecisePrecision());
+				capbudget = (precise_t)budget;
+			}
+			else
+			{
+				capbudget = 0;
+			}
 		}
 
 		I_UpdateTime(cv_timescale.value);
@@ -798,8 +806,8 @@ void D_SRB2Loop(void)
 
 #ifdef DEBUGFILE
 		if (!realtics)
-			if (debugload)
-				debugload--;
+		if (debugload)
+			debugload--;
 #endif
 
 		interp = R_UsingFrameInterpolation() && !dedicated;
@@ -824,7 +832,7 @@ void D_SRB2Loop(void)
 			if (lastdraw || singletics || gametic > rendergametic)
 			{
 				rendergametic = gametic;
-				rendertimeout = entertic + TICRATE/17;
+				rendertimeout = entertic + TICRATE / 17;
 
 				doDisplay = true;
 			}
@@ -860,7 +868,7 @@ void D_SRB2Loop(void)
 			// I looked at the possibility of putting in a float drawer for
 			// perfstats and it's very complicated, so we'll just do this instead...
 			ps_interp_frac.value.p = (precise_t)((FIXED_TO_FLOAT(g_time.timefrac)) * 1000.0f);
-			ps_interp_lag.value.p = (precise_t)((deltasecs) * 1000.0f);
+			ps_interp_lag.value.p = (precise_t)((deltasecs)* 1000.0f);
 
 			renderdeltatics = FLOAT_TO_FIXED(deltatics);
 
@@ -1022,18 +1030,18 @@ void D_StartTitle(void)
 }
 
 #define REALLOC_FILE_LIST \
-	if (list->files == NULL) \
-	{ \
-		list->files = calloc(2, sizeof(list->files)); \
-		list->numfiles = 1; \
-	} \
+if (list->files == NULL) \
+{ \
+	list->files = calloc(2, sizeof(list->files)); \
+	list->numfiles = 1; \
+} \
 	else \
-	{ \
-		index = list->numfiles; \
-		list->files = realloc(list->files, sizeof(list->files) * ((++list->numfiles) + 1)); \
-		if (list->files == NULL) \
-			I_Error("%s: No more free memory to add file %s", __FUNCTION__, file); \
-	}
+{ \
+	index = list->numfiles; \
+	list->files = realloc(list->files, sizeof(list->files) * ((++list->numfiles) + 1)); \
+if (list->files == NULL) \
+	I_Error("%s: No more free memory to add file %s", __FUNCTION__, file); \
+}
 
 static void D_AddFile(addfilelist_t *list, const char *file)
 {
@@ -1042,7 +1050,7 @@ static void D_AddFile(addfilelist_t *list, const char *file)
 
 	REALLOC_FILE_LIST
 
-	newfile = malloc(strlen(file) + 1);
+		newfile = malloc(strlen(file) + 1);
 	if (!newfile)
 		I_Error("D_AddFile: No more free memory to add file %s", file);
 
@@ -1057,7 +1065,7 @@ static void D_AddFolder(addfilelist_t *list, const char *file)
 
 	REALLOC_FILE_LIST
 
-	newfile = malloc(strlen(file) + 2); // Path delimiter + NULL terminator
+		newfile = malloc(strlen(file) + 2); // Path delimiter + NULL terminator
 	if (!newfile)
 		I_Error("D_AddFolder: No more free memory to add folder %s", file);
 
@@ -1099,7 +1107,7 @@ static void ChangeDirForUrlHandler(void)
 		strlcpy(srb2path, myargv[0], sizeof(srb2path));
 
 		// Get just the directory, minus the EXE name
-		for (i = strlen(srb2path)-1; i > 0; i--)
+		for (i = strlen(srb2path) - 1; i > 0; i--)
 		{
 			if (srb2path[i] == '/' || srb2path[i] == '\\')
 			{
@@ -1136,7 +1144,7 @@ static void IdentifyVersion(void)
 	// get the current directory (possible problem on NT with "." as current dir)
 	if (srb2waddir)
 	{
-		strlcpy(srb2path,srb2waddir,sizeof (srb2path));
+		strlcpy(srb2path, srb2waddir, sizeof (srb2path));
 	}
 	else
 	{
@@ -1154,7 +1162,7 @@ static void IdentifyVersion(void)
 		srb2waddir = I_GetWadDir();
 #endif
 	// Commercial.
-	srb2wad = malloc(strlen(srb2waddir)+1+8+1);
+	srb2wad = malloc(strlen(srb2waddir) + 1 + 8 + 1);
 	if (srb2wad == NULL)
 		I_Error("No more free memory to look in %s", srb2waddir);
 	else
@@ -1177,36 +1185,36 @@ static void IdentifyVersion(void)
 	// checking in D_SRB2Main
 
 	// Add the maps
-	D_AddFile(&startupwadfiles, va(pandf,srb2waddir, "zones.pk3"));
+	D_AddFile(&startupwadfiles, va(pandf, srb2waddir, "zones.pk3"));
 
 	// Add the characters
-	D_AddFile(&startupwadfiles, va(pandf,srb2waddir, "characters.pk3"));
+	D_AddFile(&startupwadfiles, va(pandf, srb2waddir, "characters.pk3"));
 
 #ifdef USE_PATCH_DTA
 	// Add our crappy patches to fix our bugs
-	D_AddFile(&startupwadfiles, va(pandf,srb2waddir, "patch.pk3"));
+	D_AddFile(&startupwadfiles, va(pandf, srb2waddir, "patch.pk3"));
 #endif
 
 #if !defined (HAVE_SDL) || defined (HAVE_MIXER)
 	{
 #define MUSICTEST(str) \
-		{\
-			const char *musicpath = va(pandf,srb2waddir,str);\
-			int ms = W_VerifyNMUSlumps(musicpath, false); \
-			if (ms == 1) \
-				D_AddFile(&startupwadfiles, musicpath); \
-			else if (ms == 0) \
-				I_Error("File "str" has been modified with non-music/sound lumps"); \
-		}
+		{ \
+		const char *musicpath = va(pandf, srb2waddir, str); \
+		int ms = W_VerifyNMUSlumps(musicpath, false); \
+		if (ms == 1) \
+		D_AddFile(&startupwadfiles, musicpath); \
+	else if (ms == 0) \
+	I_Error("File "str" has been modified with non-music/sound lumps"); \
+	}
 
 		MUSICTEST("music.pk3")
-		//MUSICTEST("patch_music.pk3")
+			//MUSICTEST("patch_music.pk3")
 	}
 #endif
 }
 
 static void
-D_ConvertVersionNumbers (void)
+D_ConvertVersionNumbers(void)
 {
 	/* leave at defaults (0) under DEVELOP */
 #ifndef DEVELOP
@@ -1216,7 +1224,7 @@ D_ConvertVersionNumbers (void)
 	sscanf(SRB2VERSION, "%d.%d.%d", &major, &minor, &SUBVERSION);
 
 	/* this is stupid */
-	VERSION = ( major * 100 ) + minor;
+	VERSION = (major * 100) + minor;
 #endif
 }
 
@@ -1249,17 +1257,17 @@ void D_SRB2Main(void)
 
 	// Print GPL notice for our console users (Linux)
 	CONS_Printf(
-	"\n\nSonic Robo Blast 2\n"
-	"Copyright (C) 1998-2025 by Sonic Team Junior\n\n"
-	"This program comes with ABSOLUTELY NO WARRANTY.\n\n"
-	"This is free software, and you are welcome to redistribute it\n"
-	"and/or modify it under the terms of the GNU General Public License\n"
-	"as published by the Free Software Foundation; either version 2 of\n"
-	"the License, or (at your option) any later version.\n"
-	"See the 'LICENSE.txt' file for details.\n\n"
-	"Sonic the Hedgehog and related characters are trademarks of SEGA.\n"
-	"We do not claim ownership of SEGA's intellectual property used\n"
-	"in this program.\n\n");
+		"\n\nSonic Robo Blast 2\n"
+		"Copyright (C) 1998-2025 by Sonic Team Junior\n\n"
+		"This program comes with ABSOLUTELY NO WARRANTY.\n\n"
+		"This is free software, and you are welcome to redistribute it\n"
+		"and/or modify it under the terms of the GNU General Public License\n"
+		"as published by the Free Software Foundation; either version 2 of\n"
+		"the License, or (at your option) any later version.\n"
+		"See the 'LICENSE.txt' file for details.\n\n"
+		"Sonic the Hedgehog and related characters are trademarks of SEGA.\n"
+		"We do not claim ownership of SEGA's intellectual property used\n"
+		"in this program.\n\n");
 
 	// keep error messages until the final flush(stderr)
 #if !defined(NOTERMIOS)
@@ -1531,7 +1539,7 @@ void D_SRB2Main(void)
 	{
 		const char *word = M_GetNextParm();
 		pstartmap = G_FindMapByNameOrCode(word, 0);
-		if (! pstartmap)
+		if (!pstartmap)
 			I_Error("Cannot find a map remotely named '%s'\n", word);
 		else
 		{
@@ -1579,11 +1587,11 @@ void D_SRB2Main(void)
 				digital_disabled = true; // WARNING: DOS version initmusic in I_StartupSound
 		}
 	}
-	if (!( sound_disabled && digital_disabled
+	if (!(sound_disabled && digital_disabled
 #ifndef NO_MIDI
-				&& midi_disabled
+		&& midi_disabled
 #endif
-	 ))
+		))
 	{
 		CONS_Printf("S_InitSfxChannels(): Setting up sound channels.\n");
 		I_StartupSound();

@@ -91,18 +91,46 @@ static void* vram_alloc(uint32_t size, uint32_t alignment)
 
 static void convert_palette_1to1(uint32_t* dst, const uint8_t* src, uint32_t num_pixels, const uint32_t* palette)
 {
-	uint32_t i;
-	// Unrolled pixel conversion loop by 8 for maximum performance on PS3 PPU
-	for (i = 0; i < num_pixels; i += 8)
+	uint32_t i = 0;
+
+	// Process 16 pixels at a time using perfectly aligned 32-bit reads (4 pixels per 32-bit word).
+	// Because screens[0] (src) is always 4-byte (or even 8/16-byte) aligned from its allocation,
+	// and we increment by 16 (which is a multiple of 4), (src + i + offset) is guaranteed to be 
+	// 4-byte aligned. This completely avoids hardware alignment exceptions (traps) on PowerPC 
+	// while avoiding the massive function call overhead of memcpy, allowing the compiler to 
+	// generate highly optimized pipelined PPU instructions and yielding highly stable frame rates.
+	for (; i + 15 < num_pixels; i += 16)
+	{
+		uint32_t w0 = *(const uint32_t*)(src + i);
+		uint32_t w1 = *(const uint32_t*)(src + i + 4);
+		uint32_t w2 = *(const uint32_t*)(src + i + 8);
+		uint32_t w3 = *(const uint32_t*)(src + i + 12);
+
+		dst[i] = palette[(w0 >> 24) & 0xFF];
+		dst[i + 1] = palette[(w0 >> 16) & 0xFF];
+		dst[i + 2] = palette[(w0 >> 8) & 0xFF];
+		dst[i + 3] = palette[w0 & 0xFF];
+
+		dst[i + 4] = palette[(w1 >> 24) & 0xFF];
+		dst[i + 5] = palette[(w1 >> 16) & 0xFF];
+		dst[i + 6] = palette[(w1 >> 8) & 0xFF];
+		dst[i + 7] = palette[w1 & 0xFF];
+
+		dst[i + 8] = palette[(w2 >> 24) & 0xFF];
+		dst[i + 9] = palette[(w2 >> 16) & 0xFF];
+		dst[i + 10] = palette[(w2 >> 8) & 0xFF];
+		dst[i + 11] = palette[w2 & 0xFF];
+
+		dst[i + 12] = palette[(w3 >> 24) & 0xFF];
+		dst[i + 13] = palette[(w3 >> 16) & 0xFF];
+		dst[i + 14] = palette[(w3 >> 8) & 0xFF];
+		dst[i + 15] = palette[w3 & 0xFF];
+	}
+
+	// Fallback loop for any remaining pixels (if any)
+	for (; i < num_pixels; i++)
 	{
 		dst[i] = palette[src[i]];
-		dst[i + 1] = palette[src[i + 1]];
-		dst[i + 2] = palette[src[i + 2]];
-		dst[i + 3] = palette[src[i + 3]];
-		dst[i + 4] = palette[src[i + 4]];
-		dst[i + 5] = palette[src[i + 5]];
-		dst[i + 6] = palette[src[i + 6]];
-		dst[i + 7] = palette[src[i + 7]];
 	}
 }
 #endif
@@ -505,7 +533,7 @@ const char *VID_GetModeName(INT32 modenum)
 	return "640x400";
 }
 
-UINT32 I_GetRefreshRate(void) { return 35; }
+UINT32 I_GetRefreshRate(void) { return 60; }
 
 void I_UpdateNoBlit(void){}
 

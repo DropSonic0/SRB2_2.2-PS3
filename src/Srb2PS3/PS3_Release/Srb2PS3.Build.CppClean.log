@@ -39,9 +39,7 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_cdmus.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_main.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_net.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_sound.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_system.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\sdl_stub.o
-c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\d_main.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\filesrch.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\f_finale.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\f_wipe.o
@@ -192,7 +190,9 @@ c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\inftrees.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\trees.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\uncompr.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\zutil.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_system.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\i_video.o
+c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\d_main.o
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.command.1.tlog
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.read.1.tlog
 c:\srb2_2.2-ps3\src\srb2ps3\ps3_release\srb2ps3.tlog\ps3ppuld64.write.1.tlog
