@@ -1137,7 +1137,16 @@ INT32 isExtAvailable(const char *extension, const GLubyte *start)
 // -----------------+
 EXPORT boolean HWRAPI(Init) (void)
 {
-	return LoadGL();
+#ifdef __CELLOS_LV2__
+	printf("[PS3] HWRAPI(Init): Initializing OpenGL/PSGL interface...\n");
+	fflush(stdout);
+#endif
+	boolean ret = LoadGL();
+#ifdef __CELLOS_LV2__
+	printf("[PS3] HWRAPI(Init): LoadGL returned %d\n", ret);
+	fflush(stdout);
+#endif
+	return ret;
 }
 
 
@@ -1801,6 +1810,7 @@ static void Shader_SetUniforms(FSurfaceInfo *Surface, GLRGBAFloat *poly, GLRGBAF
 #endif
 }
 
+#ifdef GL_SHADERS
 static boolean Shader_CompileProgram(gl_shader_t *shader, GLint i)
 {
 	GLuint gl_vertShader = 0;
@@ -1952,6 +1962,7 @@ static void Shader_CompileError(const char *message, GLuint program, INT32 shade
 	if (infoLog)
 		free(infoLog);
 }
+#endif
 
 // code that is common between DrawPolygon and DrawIndexedTriangles
 // DrawScreenTexture also can use this function for fancier screen texture drawing
@@ -3308,5 +3319,51 @@ EXPORT void HWRAPI(SetScreenPalette)(RGBA_t *palette)
 		pglActiveTexture(GL_TEXTURE0);
 	}
 }
+
+#ifdef __CELLOS_LV2__
+#include <string.h>
+
+void *PS3_GetGLFunc(const char *name)
+{
+	if (strcmp(name, "Init") == 0) return (void *)Init;
+	if (strcmp(name, "Draw2DLine") == 0) return (void *)Draw2DLine;
+	if (strcmp(name, "DrawPolygon") == 0) return (void *)DrawPolygon;
+	if (strcmp(name, "DrawIndexedTriangles") == 0) return (void *)DrawIndexedTriangles;
+	if (strcmp(name, "RenderSkyDome") == 0) return (void *)RenderSkyDome;
+	if (strcmp(name, "SetBlend") == 0) return (void *)SetBlend;
+	if (strcmp(name, "ClearBuffer") == 0) return (void *)ClearBuffer;
+	if (strcmp(name, "SetTexture") == 0) return (void *)SetTexture;
+	if (strcmp(name, "UpdateTexture") == 0) return (void *)UpdateTexture;
+	if (strcmp(name, "DeleteTexture") == 0) return (void *)DeleteTexture;
+	if (strcmp(name, "ReadScreenTexture") == 0) return (void *)ReadScreenTexture;
+	if (strcmp(name, "GClipRect") == 0) return (void *)GClipRect;
+	if (strcmp(name, "ClearMipMapCache") == 0) return (void *)ClearMipMapCache;
+	if (strcmp(name, "SetSpecialState") == 0) return (void *)SetSpecialState;
+	if (strcmp(name, "GetTextureUsed") == 0) return (void *)GetTextureUsed;
+	if (strcmp(name, "DrawModel") == 0) return (void *)DrawModel;
+	if (strcmp(name, "CreateModelVBOs") == 0) return (void *)CreateModelVBOs;
+	if (strcmp(name, "SetTransform") == 0) return (void *)SetTransform;
+	if (strcmp(name, "PostImgRedraw") == 0) return (void *)PostImgRedraw;
+	if (strcmp(name, "FlushScreenTextures") == 0) return (void *)FlushScreenTextures;
+	if (strcmp(name, "DoScreenWipe") == 0) return (void *)DoScreenWipe;
+	if (strcmp(name, "DrawScreenTexture") == 0) return (void *)DrawScreenTexture;
+	if (strcmp(name, "MakeScreenTexture") == 0) return (void *)MakeScreenTexture;
+	if (strcmp(name, "DrawScreenFinalTexture") == 0) return (void *)DrawScreenFinalTexture;
+#ifdef GL_SHADERS
+	if (strcmp(name, "InitShaders") == 0) return (void *)InitShaders;
+	if (strcmp(name, "LoadShader") == 0) return (void *)LoadShader;
+	if (strcmp(name, "CompileShader") == 0) return (void *)CompileShader;
+	if (strcmp(name, "SetShader") == 0) return (void *)SetShader;
+	if (strcmp(name, "UnSetShader") == 0) return (void *)UnSetShader;
+	if (strcmp(name, "SetShaderInfo") == 0) return (void *)SetShaderInfo;
+#endif
+	if (strcmp(name, "SetPaletteLookup") == 0) return (void *)SetPaletteLookup;
+	if (strcmp(name, "CreateLightTable") == 0) return (void *)CreateLightTable;
+	if (strcmp(name, "UpdateLightTable") == 0) return (void *)UpdateLightTable;
+	if (strcmp(name, "ClearLightTables") == 0) return (void *)ClearLightTables;
+	if (strcmp(name, "SetScreenPalette") == 0) return (void *)SetScreenPalette;
+	return NULL;
+}
+#endif
 
 #endif //HWRENDER

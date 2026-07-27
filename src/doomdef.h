@@ -728,7 +728,9 @@ extern int
 //#define PAPER_COLLISIONCORRECTION
 
 /// OpenGL shaders
+#ifndef __CELLOS_LV2__
 #define GL_SHADERS
+#endif
 
 /// Handle touching sector specials in P_PlayerAfterThink instead of P_PlayerThink.
 /// \note   Required for proper collision with moving sloped surfaces that have sector specials on them.
