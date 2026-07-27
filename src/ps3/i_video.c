@@ -142,25 +142,113 @@ static INT32 windowedModes[1][2] = {
 	{ 640, 400 }
 };
 
+#ifdef __CELLOS_LV2__
+extern char configfile[];
+
+static int PS3_DetectConfigRenderer(const char *filename)
+{
+	FILE *f = fopen(filename, "r");
+	if (!f)
+	{
+		CONS_Printf("[PS3] Could not open config file: %s (will use default Software mode)\n", filename);
+		return -1;
+	}
+
+	char line[256];
+	int detected = -1; // -1 means not found, 1 for Software, 2 for OpenGL
+
+	while (fgets(line, sizeof(line), f))
+	{
+		// Skip empty lines or comments
+		char *start = line;
+		while (*start == ' ' || *start == '\t')
+			start++;
+		if (*start == '\0' || *start == '\n' || *start == '\r' || *start == '#' || (start[0] == '/' && start[1] == '/'))
+			continue;
+
+		char *p = strstr(line, "renderer");
+		if (p)
+		{
+			// Verify it is indeed the 'renderer' variable and not a substring of something else
+			if (p > line && *(p - 1) != ' ' && *(p - 1) != '\t' && *(p - 1) != '\n' && *(p - 1) != '\r' && *(p - 1) != '"')
+				continue;
+
+			p += 8; // length of "renderer"
+			while (*p == ' ' || *p == '\t')
+				p++;
+
+			if (*p == '"')
+			{
+				p++;
+				if (strncasecmp(p, "Software", 8) == 0)
+				{
+					detected = 1;
+				}
+				else if (strncasecmp(p, "OpenGL", 6) == 0)
+				{
+					detected = 2;
+				}
+			}
+			else
+			{
+				if (strncasecmp(p, "Software", 8) == 0)
+				{
+					detected = 1;
+				}
+				else if (strncasecmp(p, "OpenGL", 6) == 0)
+				{
+					detected = 2;
+				}
+			}
+		}
+	}
+	fclose(f);
+	return detected;
+}
+#endif
+
 void I_StartupGraphics(void)
 {
 #ifdef __CELLOS_LV2__
 	// Guarantee vid.buffer is NULL on startup to prevent freeing uninitialized memory
 	vid.buffer = NULL;
 
+	boolean cmd_override = false;
 #ifdef HWRENDER
 	if (M_CheckParm("-opengl"))
 	{
 		rendermode = render_opengl;
 		chosenrendermode = render_opengl;
-		CONS_Printf("[PS3] Initializing in Hardware OpenGL/PSGL mode (-opengl parameter detected)\n");
+		cmd_override = true;
+		CONS_Printf("[PS3] Command-line -opengl parameter detected. Forcing Hardware OpenGL/PSGL mode.\n");
 	}
-	else
-#endif
+	else if (M_CheckParm("-software"))
 	{
 		rendermode = render_soft;
 		chosenrendermode = render_soft;
-		CONS_Printf("[PS3] Initializing in Software mode (default)\n");
+		cmd_override = true;
+		CONS_Printf("[PS3] Command-line -software parameter detected. Forcing Software mode.\n");
+	}
+#endif
+
+	if (!cmd_override)
+	{
+		int config_renderer = PS3_DetectConfigRenderer(configfile);
+		if (config_renderer == 2) // render_opengl
+		{
+			rendermode = render_opengl;
+			chosenrendermode = render_none;
+			CONS_Printf("[PS3] Active renderer 'OpenGL' detected in config.cfg. Initializing in Hardware OpenGL/PSGL mode.\n");
+		}
+		else
+		{
+			rendermode = render_soft;
+			chosenrendermode = render_none;
+			if (config_renderer == 1)
+				CONS_Printf("[PS3] Active renderer 'Software' detected in config.cfg. Initializing in Software mode.\n");
+			else
+				CONS_Printf("[PS3] No active renderer detected in config.cfg. Initializing in Software mode (default).\n");
+		}
 	}
 
 	if (rendermode == render_soft)
@@ -507,6 +595,16 @@ INT32 VID_SetMode(INT32 modenum)
 
 boolean VID_CheckRenderer(void)
 {
+#ifdef __CELLOS_LV2__
+	if (setrenderneeded && setrenderneeded != (UINT8)rendermode)
+	{
+		CONS_Alert(CONS_NOTICE, "[PS3] Renderer change to %s will be applied on next restart.\n",
+			setrenderneeded == render_opengl ? "OpenGL" : "Software");
+		setrenderneeded = 0;
+		return false;
+	}
+#endif
+
 	boolean rendererchanged = false;
 	if (setrenderneeded)
 	{
