@@ -10,7 +10,6 @@
 /// \brief Handles the shaders used by the game.
 
 #ifdef HWRENDER
-#ifdef GL_SHADERS
 
 #include "hw_glob.h"
 #include "hw_drv.h"
@@ -734,10 +733,5 @@ const char *HWR_GetShaderName(INT32 shader)
 
 	return "Unknown";
 }
-
-#else // GL_SHADERS
-extern int ps3_dummy_shaders_symbol;
-int ps3_dummy_shaders_symbol = 0;
-#endif // GL_SHADERS
 
 #endif // HWRENDER

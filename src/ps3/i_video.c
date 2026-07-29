@@ -10,7 +10,6 @@
 
 #ifdef HWRENDER
 #include "../hardware/hw_main.h"
-#include "../hardware/hw_drv.h"
 #endif
 
 #ifdef __CELLOS_LV2__
@@ -34,74 +33,9 @@ boolean LoadGL(void)
 	return true;
 }
 
-#ifdef __CELLOS_LV2__
-typedef char GLchar;
-
-extern void glActiveTexture(GLenum texture);
-extern void glClientActiveTexture(GLenum texture);
-extern void glGenBuffers(GLsizei n, GLuint *buffers);
-extern void glBindBuffer(GLenum target, GLuint buffer);
-extern void glBufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
-extern void glDeleteBuffers(GLsizei n, const GLuint *buffers);
-extern void glBlendEquation(GLenum mode);
-
-#ifdef GL_SHADERS
-extern GLuint glCreateShader(GLenum type);
-extern void glShaderSource(GLuint shader, GLsizei count, const GLchar* *string, const GLint *length);
-extern void glCompileShader(GLuint shader);
-extern void glGetShaderiv(GLuint shader, GLenum pname, GLint *params);
-extern void glGetShaderInfoLog(GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
-extern void glDeleteShader(GLuint shader);
-extern GLuint glCreateProgram(void);
-extern void glDeleteProgram(GLuint program);
-extern void glAttachShader(GLuint program, GLuint shader);
-extern void glLinkProgram(GLuint program);
-extern void glGetProgramiv(GLuint program, GLenum pname, GLint *params);
-extern void glUseProgram(GLuint program);
-extern void glUniform1i(GLint location, GLint v0);
-extern void glUniform1f(GLint location, GLfloat v0);
-extern void glUniform2f(GLint location, GLfloat v0, GLfloat v1);
-extern void glUniform3f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
-extern void glUniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
-extern void glUniform1fv(GLint location, GLsizei count, const GLfloat *value);
-extern void glUniform2fv(GLint location, GLsizei count, const GLfloat *value);
-extern void glUniform3fv(GLint location, GLsizei count, const GLfloat *value);
-extern GLint glGetUniformLocation(GLuint program, const GLchar *name);
-#endif
-#endif
-
 void *GetGLFunc(const char *name)
 {
-	if (strcmp(name, "glActiveTexture") == 0) return (void *)glActiveTexture;
-	if (strcmp(name, "glClientActiveTexture") == 0) return (void *)glClientActiveTexture;
-	if (strcmp(name, "glGenBuffers") == 0) return (void *)glGenBuffers;
-	if (strcmp(name, "glBindBuffer") == 0) return (void *)glBindBuffer;
-	if (strcmp(name, "glBufferData") == 0) return (void *)glBufferData;
-	if (strcmp(name, "glDeleteBuffers") == 0) return (void *)glDeleteBuffers;
-	if (strcmp(name, "glBlendEquation") == 0) return (void *)glBlendEquation;
-#ifdef GL_SHADERS
-	if (strcmp(name, "glCreateShader") == 0) return (void *)glCreateShader;
-	if (strcmp(name, "glShaderSource") == 0) return (void *)glShaderSource;
-	if (strcmp(name, "glCompileShader") == 0) return (void *)glCompileShader;
-	if (strcmp(name, "glGetShaderiv") == 0) return (void *)glGetShaderiv;
-	if (strcmp(name, "glGetShaderInfoLog") == 0) return (void *)glGetShaderInfoLog;
-	if (strcmp(name, "glDeleteShader") == 0) return (void *)glDeleteShader;
-	if (strcmp(name, "glCreateProgram") == 0) return (void *)glCreateProgram;
-	if (strcmp(name, "glDeleteProgram") == 0) return (void *)glDeleteProgram;
-	if (strcmp(name, "glAttachShader") == 0) return (void *)glAttachShader;
-	if (strcmp(name, "glLinkProgram") == 0) return (void *)glLinkProgram;
-	if (strcmp(name, "glGetProgramiv") == 0) return (void *)glGetProgramiv;
-	if (strcmp(name, "glUseProgram") == 0) return (void *)glUseProgram;
-	if (strcmp(name, "glUniform1i") == 0) return (void *)glUniform1i;
-	if (strcmp(name, "glUniform1f") == 0) return (void *)glUniform1f;
-	if (strcmp(name, "glUniform2f") == 0) return (void *)glUniform2f;
-	if (strcmp(name, "glUniform3f") == 0) return (void *)glUniform3f;
-	if (strcmp(name, "glUniform4f") == 0) return (void *)glUniform4f;
-	if (strcmp(name, "glUniform1fv") == 0) return (void *)glUniform1fv;
-	if (strcmp(name, "glUniform2fv") == 0) return (void *)glUniform2fv;
-	if (strcmp(name, "glUniform3fv") == 0) return (void *)glUniform3fv;
-	if (strcmp(name, "glGetUniformLocation") == 0) return (void *)glGetUniformLocation;
-#endif
+	(void)name;
 	return NULL;
 }
 #endif
@@ -501,34 +435,6 @@ void I_StartupGraphics(void)
 		PSGLinitOptions options;
 		PSGLdeviceParameters params;
 
-		printf("[PS3] Querying primary video output state for PSGL...\n");
-		CONS_Printf("[PS3] Querying primary video output state for PSGL...\n");
-		fflush(stdout);
-		CellVideoOutState videoState;
-		if (cellVideoOutGetState(CELL_VIDEO_OUT_PRIMARY, 0, &videoState) == 0)
-		{
-			CellVideoOutResolution resolution;
-			if (cellVideoOutGetResolution(videoState.displayMode.resolutionId, &resolution) == 0)
-			{
-				display_width = resolution.width;
-				display_height = resolution.height;
-				display_pitch = display_width * sizeof(UINT32);
-			}
-		}
-		if (display_width == 0 || display_height == 0)
-		{
-			display_width = 1280;
-			display_height = 720;
-			display_pitch = display_width * sizeof(UINT32);
-		}
-		printf("[PS3] Target PSGL Display Resolution: %dx%d\n", display_width, display_height);
-		CONS_Printf("[PS3] Target PSGL Display Resolution: %dx%d\n", display_width, display_height);
-		fflush(stdout);
-
-		printf("[PS3] Initializing PSGL options...\n");
-		CONS_Printf("[PS3] Initializing PSGL options...\n");
-		fflush(stdout);
-
 		memset(&options, 0, sizeof(options));
 		options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_HOST_MEMORY_SIZE;
 		options.maxSPUs = 2;
@@ -539,15 +445,7 @@ void I_StartupGraphics(void)
 		options.fifoSize = 0;
 		options.hostMemorySize = 16 * 1024 * 1024;
 
-		printf("[PS3] Calling psglInit...\n");
-		CONS_Printf("[PS3] Calling psglInit...\n");
-		fflush(stdout);
-
 		psglInit(&options);
-
-		printf("[PS3] psglInit completed successfully.\n");
-		CONS_Printf("[PS3] psglInit completed successfully.\n");
-		fflush(stdout);
 
 		memset(&params, 0, sizeof(params));
 		params.enable = PSGL_DEVICE_PARAMETERS_COLOR_FORMAT | PSGL_DEVICE_PARAMETERS_DEPTH_FORMAT | PSGL_DEVICE_PARAMETERS_MULTISAMPLING_MODE | PSGL_DEVICE_PARAMETERS_BUFFERING_MODE | PSGL_DEVICE_PARAMETERS_RESC_ADJUST_ASPECT_RATIO;
@@ -558,55 +456,16 @@ void I_StartupGraphics(void)
 		params.enable |= PSGL_DEVICE_PARAMETERS_RESC_RATIO_MODE;
 		params.rescRatioMode = RESC_RATIO_MODE_FULLSCREEN;
 
-		printf("[PS3] Calling psglCreateDeviceExtended...\n");
-		CONS_Printf("[PS3] Calling psglCreateDeviceExtended...\n");
-		fflush(stdout);
-
 		psgl_device = psglCreateDeviceExtended(&params);
-
-		printf("[PS3] psglCreateDeviceExtended returned: %p\n", psgl_device);
-		CONS_Printf("[PS3] psglCreateDeviceExtended returned: %p\n", psgl_device);
-		fflush(stdout);
-
-		printf("[PS3] Calling psglCreateContext...\n");
-		CONS_Printf("[PS3] Calling psglCreateContext...\n");
-		fflush(stdout);
-
 		psgl_context = psglCreateContext();
-
-		printf("[PS3] psglCreateContext returned: %p\n", psgl_context);
-		CONS_Printf("[PS3] psglCreateContext returned: %p\n", psgl_context);
-		fflush(stdout);
-
-		printf("[PS3] Calling psglMakeCurrent...\n");
-		CONS_Printf("[PS3] Calling psglMakeCurrent...\n");
-		fflush(stdout);
-
 		psglMakeCurrent(psgl_context, psgl_device);
 
-		printf("[PS3] psglMakeCurrent completed successfully.\n");
-		CONS_Printf("[PS3] psglMakeCurrent completed successfully.\n");
-		fflush(stdout);
-
-		printf("[PS3] Generating %d screen textures...\n", NUM_SCREEN_TEXS);
-		CONS_Printf("[PS3] Generating %d screen textures...\n", NUM_SCREEN_TEXS);
-		fflush(stdout);
-
 		glGenTextures(NUM_SCREEN_TEXS, screen_textures);
-
-		printf("[PS3] Generating %d screen VBOs...\n", NUM_SCREEN_TEXS);
-		CONS_Printf("[PS3] Generating %d screen VBOs...\n", NUM_SCREEN_TEXS);
-		fflush(stdout);
-
 		glGenBuffers(NUM_SCREEN_TEXS, vbo_retro);
 		{
 			int t;
 			for (t = 0; t < NUM_SCREEN_TEXS; t++)
 			{
-				printf("[PS3] Configuring screen texture/VBO index %d...\n", t);
-				CONS_Printf("[PS3] Configuring screen texture/VBO index %d...\n", t);
-				fflush(stdout);
-
 				glBindTexture(GL_TEXTURE_2D, screen_textures[t]);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -619,25 +478,12 @@ void I_StartupGraphics(void)
 			glBindBuffer(GL_TEXTURE_REFERENCE_BUFFER_SCE, 0);
 		}
 		current_tex_idx = 0;
-
-		printf("[PS3] PSGL Hardware presentation layer initialized successfully.\n");
-		CONS_Printf("[PS3] PSGL Hardware presentation layer initialized successfully.\n");
-		fflush(stdout);
 	}
 
 	CV_RegisterVar(&cv_vidwait);
 
 	// Automatically set default resolution mode
 	VID_SetMode(0);
-
-#ifdef HWRENDER
-	if (rendermode == render_opengl)
-	{
-		printf("[PS3] I_StartupGraphics: calling VID_StartupOpenGL...\n");
-		fflush(stdout);
-		VID_StartupOpenGL();
-	}
-#endif
 
 	graphics_started = true;
 #endif
@@ -687,99 +533,7 @@ void I_ShutdownGraphics(void)
 #endif
 }
 
-#ifdef __CELLOS_LV2__
-extern void *PS3_GetGLFunc(const char *name);
-extern void SetupGLFunc4(void);
-#endif
-
-void VID_StartupOpenGL(void)
-{
-#ifdef HWRENDER
-	static boolean glstartup = false;
-	if (!glstartup)
-	{
-		printf("[PS3] VID_StartupOpenGL: starting...\n");
-		CONS_Printf("VID_StartupOpenGL()...\n");
-		fflush(stdout);
-
-		printf("[PS3] VID_StartupOpenGL: assigning HWD function pointers via PS3_GetGLFunc...\n");
-		fflush(stdout);
-
-		HWD.pfnInit             = (Init)PS3_GetGLFunc("Init");
-		HWD.pfnFinishUpdate     = NULL;
-		HWD.pfnDraw2DLine       = (Draw2DLine)PS3_GetGLFunc("Draw2DLine");
-		HWD.pfnDrawPolygon      = (DrawPolygon)PS3_GetGLFunc("DrawPolygon");
-		HWD.pfnDrawIndexedTriangles = (DrawIndexedTriangles)PS3_GetGLFunc("DrawIndexedTriangles");
-		HWD.pfnRenderSkyDome    = (RenderSkyDome)PS3_GetGLFunc("RenderSkyDome");
-		HWD.pfnSetBlend         = (SetBlend)PS3_GetGLFunc("SetBlend");
-		HWD.pfnClearBuffer      = (ClearBuffer)PS3_GetGLFunc("ClearBuffer");
-		HWD.pfnSetTexture       = (SetTexture)PS3_GetGLFunc("SetTexture");
-		HWD.pfnUpdateTexture    = (UpdateTexture)PS3_GetGLFunc("UpdateTexture");
-		HWD.pfnDeleteTexture    = (DeleteTexture)PS3_GetGLFunc("DeleteTexture");
-		HWD.pfnReadScreenTexture= (ReadScreenTexture)PS3_GetGLFunc("ReadScreenTexture");
-		HWD.pfnGClipRect        = (GClipRect)PS3_GetGLFunc("GClipRect");
-		HWD.pfnClearMipMapCache = (ClearMipMapCache)PS3_GetGLFunc("ClearMipMapCache");
-		HWD.pfnSetSpecialState  = (SetSpecialState)PS3_GetGLFunc("SetSpecialState");
-		HWD.pfnSetTexturePalette= (SetTexturePalette)PS3_GetGLFunc("SetTexturePalette");
-		HWD.pfnGetTextureUsed   = (GetTextureUsed)PS3_GetGLFunc("GetTextureUsed");
-		HWD.pfnDrawModel        = (DrawModel)PS3_GetGLFunc("DrawModel");
-		HWD.pfnCreateModelVBOs  = (CreateModelVBOs)PS3_GetGLFunc("CreateModelVBOs");
-		HWD.pfnSetTransform     = (SetTransform)PS3_GetGLFunc("SetTransform");
-		HWD.pfnPostImgRedraw    = (PostImgRedraw)PS3_GetGLFunc("PostImgRedraw");
-		HWD.pfnFlushScreenTextures= (FlushScreenTextures)PS3_GetGLFunc("FlushScreenTextures");
-		HWD.pfnDoScreenWipe     = (DoScreenWipe)PS3_GetGLFunc("DoScreenWipe");
-		HWD.pfnDrawScreenTexture= (DrawScreenTexture)PS3_GetGLFunc("DrawScreenTexture");
-		HWD.pfnMakeScreenTexture= (MakeScreenTexture)PS3_GetGLFunc("MakeScreenTexture");
-		HWD.pfnDrawScreenFinalTexture= (DrawScreenFinalTexture)PS3_GetGLFunc("DrawScreenFinalTexture");
-
-#ifdef GL_SHADERS
-		HWD.pfnInitShaders      = (InitShaders)PS3_GetGLFunc("InitShaders");
-		HWD.pfnLoadShader       = (LoadShader)PS3_GetGLFunc("LoadShader");
-		HWD.pfnCompileShader    = (CompileShader)PS3_GetGLFunc("CompileShader");
-		HWD.pfnSetShader        = (SetShader)PS3_GetGLFunc("SetShader");
-		HWD.pfnUnSetShader      = (UnSetShader)PS3_GetGLFunc("UnSetShader");
-
-		HWD.pfnSetShaderInfo    = (SetShaderInfo)PS3_GetGLFunc("SetShaderInfo");
-#else
-		HWD.pfnInitShaders      = NULL;
-		HWD.pfnLoadShader       = NULL;
-		HWD.pfnCompileShader    = NULL;
-		HWD.pfnSetShader        = NULL;
-		HWD.pfnUnSetShader      = NULL;
-
-		HWD.pfnSetShaderInfo    = NULL;
-#endif
-
-		HWD.pfnSetPaletteLookup = (SetPaletteLookup)PS3_GetGLFunc("SetPaletteLookup");
-		HWD.pfnCreateLightTable = (CreateLightTable)PS3_GetGLFunc("CreateLightTable");
-		HWD.pfnUpdateLightTable = (UpdateLightTable)PS3_GetGLFunc("UpdateLightTable");
-		HWD.pfnClearLightTables = (ClearLightTables)PS3_GetGLFunc("ClearLightTables");
-		HWD.pfnSetScreenPalette = (SetScreenPalette)PS3_GetGLFunc("SetScreenPalette");
-
-		printf("[PS3] VID_StartupOpenGL: calling SetupGLFunc4 to load extensions...\n");
-		fflush(stdout);
-		SetupGLFunc4();
-
-		printf("[PS3] VID_StartupOpenGL: HWD functions assigned. Calling HWD.pfnInit...\n");
-		fflush(stdout);
-
-		vid.glstate = HWD.pfnInit() ? VID_GL_LIBRARY_LOADED : VID_GL_LIBRARY_ERROR;
-
-		printf("[PS3] VID_StartupOpenGL: HWD.pfnInit returned. vid.glstate = %d\n", vid.glstate);
-		fflush(stdout);
-
-		if (vid.glstate == VID_GL_LIBRARY_ERROR)
-		{
-			rendermode = render_soft;
-			setrenderneeded = 0;
-		}
-		else
-		{
-			glstartup = true;
-		}
-	}
-#endif
-}
+void VID_StartupOpenGL(void){}
 
 void I_SetPalette(RGBA_t *palette)
 {
@@ -834,12 +588,6 @@ INT32 VID_SetMode(INT32 modenum)
 	if (!vid.buffer)
 	{
 		printf("Error: Not enough memory for video buffer\n");
-	}
-
-	if (rendermode == render_opengl)
-	{
-		extern void SetModelView(INT32 w, INT32 h);
-		SetModelView(vid.width, vid.height);
 	}
 
 	return 0;
@@ -1047,37 +795,7 @@ void I_FinishUpdate(void)
 	}
 	else if (rendermode == render_opengl)
 	{
-		static int frame_count = 0;
-		if (frame_count < 10)
-		{
-			CONS_Printf("[PS3 GL] I_FinishUpdate: frame %d starting\n", frame_count);
-		}
-
-		if (HWR_ShouldUsePaletteRendering())
-		{
-			if (frame_count < 10) { CONS_Printf("[PS3 GL] Palette rendering enabled, copying HWD_SCREENTEXTURE_GENERIC2\n"); }
-			HWD.pfnMakeScreenTexture(HWD_SCREENTEXTURE_GENERIC2);
-			HWD.pfnSetShader(HWR_GetShaderFromTarget(SHADER_PALETTE_POSTPROCESS));
-			HWD.pfnDrawScreenTexture(HWD_SCREENTEXTURE_GENERIC2, NULL, 0);
-			HWD.pfnUnSetShader();
-		}
-
-		if (frame_count < 10) { CONS_Printf("[PS3 GL] Calling HWR_MakeScreenFinalTexture\n"); }
-		HWR_MakeScreenFinalTexture();
-		if (frame_count < 10) { CONS_Printf("[PS3 GL] Calling HWR_DrawScreenFinalTexture\n"); }
-		HWR_DrawScreenFinalTexture(display_width > 0 ? display_width : 1280, display_height > 0 ? display_height : 720);
-
-		if (frame_count < 10) { CONS_Printf("[PS3 GL] Calling psglSwap\n"); }
 		psglSwap();
-
-		if (frame_count < 10) { CONS_Printf("[PS3 GL] Calling GClipRect\n"); }
-		HWD.pfnGClipRect(0, 0, vid.width, vid.height, NZCLIP_PLANE);
-
-		if (frame_count < 10)
-		{
-			CONS_Printf("[PS3 GL] I_FinishUpdate: frame %d completed\n", frame_count);
-			frame_count++;
-		}
 	}
 #endif
 }

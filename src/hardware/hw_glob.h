@@ -148,7 +148,6 @@ extern INT32 textureformat;
 // --------
 // hw_shaders.c
 // --------
-#ifdef GL_SHADERS
 boolean HWR_InitShaders(void);
 void HWR_CompileShaders(void);
 
@@ -159,13 +158,5 @@ void HWR_LoadCustomShadersFromFile(UINT16 wadnum, boolean PK3);
 const char *HWR_GetShaderName(INT32 shader);
 
 extern customshaderxlat_t shaderxlat[];
-#else
-#define HWR_GetShaderFromTarget(x) (x)
-#define HWR_InitShaders() (false)
-#define HWR_CompileShaders() ((void)0)
-#define HWR_LoadAllCustomShaders() ((void)0)
-#define HWR_LoadCustomShadersFromFile(w, p) ((void)0)
-#define HWR_GetShaderName(s) ("None")
-#endif
 
 #endif //_HW_GLOB_

@@ -127,6 +127,8 @@ typedef struct
 	FLOAT       t;            // t texture ordinate (t over w)
 } FOutVector;
 
+#ifdef GL_SHADERS
+
 // Shader targets used to render specific types of geometry.
 // A shader target is resolved to an actual shader with HWR_GetShaderFromTarget.
 // The shader returned may be a base shader or a custom shader.
@@ -152,13 +154,13 @@ enum
 // Must be at least NUMSHADERTARGETS*2 to fit base and custom shaders for each shader target.
 #define HWR_MAXSHADERS NUMSHADERTARGETS*2
 
-#ifdef GL_SHADERS
 // Custom shader reference table
 typedef struct
 {
 	const char *type;
 	INT32 id;
 } customshaderxlat_t;
+
 #endif
 
 typedef struct vbo_vertex_s
