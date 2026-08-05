@@ -21,6 +21,7 @@
 
 #include <stdarg.h>
 #include <math.h>
+#include <stdio.h>
 #include "../../r_local.h" // For rendertimefrac, used for the leveltime shader uniform
 #include "r_opengl.h"
 #include "r_vbo.h"
@@ -948,6 +949,10 @@ void SetModelView(GLint w, GLint h)
 {
 	//	GL_DBG_Printf("SetModelView(): %dx%d\n", (int)w, (int)h);
 
+#ifdef __CELLOS_LV2__
+	if (vid.glstate == VID_GL_LIBRARY_LOADED)
+	{
+#endif
 	// The screen textures need to be flushed if the width or height change so that they be remade for the correct size
 	if (screen_width != w || screen_height != h)
 		FlushScreenTextures();
@@ -969,6 +974,14 @@ void SetModelView(GLint w, GLint h)
 	// added for new coronas' code (without depth buffer)
 	pglGetIntegerv(GL_VIEWPORT, viewport);
 	pglGetFloatv(GL_PROJECTION_MATRIX, projMatrix);
+#ifdef __CELLOS_LV2__
+	}
+	else
+	{
+		screen_width = w;
+		screen_height = h;
+	}
+#endif
 }
 
 
@@ -1137,6 +1150,27 @@ INT32 isExtAvailable(const char *extension, const GLubyte *start)
 // -----------------+
 EXPORT boolean HWRAPI(Init) (void)
 {
+#ifdef __CELLOS_LV2__
+	CONS_Printf("[PS3] HWRAPI(Init) starting, querying extensions...\n");
+	fflush(stdout);
+	gl_version = pglGetString(GL_VERSION);
+	gl_renderer = pglGetString(GL_RENDERER);
+	gl_extensions = pglGetString(GL_EXTENSIONS);
+	CONS_Printf("[PS3] OpenGL Version: %s\n", gl_version ? (const char *)gl_version : "NULL");
+	CONS_Printf("[PS3] OpenGL Renderer: %s\n", gl_renderer ? (const char *)gl_renderer : "NULL");
+	fflush(stdout);
+
+	maximumAnisotropy = 1;
+	supportMipMap = false;
+
+	CONS_Printf("[PS3] Calling SetupGLFunc4...\n");
+	fflush(stdout);
+	SetupGLFunc4();
+
+	textureformatGL = GL_RGBA_FORMAT;
+	CONS_Printf("[PS3] HWRAPI(Init) complete, textureformatGL=0x%x\n", textureformatGL);
+	fflush(stdout);
+#endif
 	return LoadGL();
 }
 
@@ -1534,10 +1568,18 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 				}
 				else
 				{
+#ifdef __CELLOS_LV2__
+					// Pack as ARGB for GL_ARGB_SCE on Big Endian PS3
+					tex[w*j + i].s.red = myPaletteData[*pImgData].s.alpha;
+					tex[w*j + i].s.green = myPaletteData[*pImgData].s.red;
+					tex[w*j + i].s.blue = myPaletteData[*pImgData].s.green;
+					tex[w*j + i].s.alpha = myPaletteData[*pImgData].s.blue;
+#else
 					tex[w*j + i].s.red = myPaletteData[*pImgData].s.red;
 					tex[w*j + i].s.green = myPaletteData[*pImgData].s.green;
 					tex[w*j + i].s.blue = myPaletteData[*pImgData].s.blue;
 					tex[w*j + i].s.alpha = myPaletteData[*pImgData].s.alpha;
+#endif
 				}
 
 				pImgData++;
@@ -1545,7 +1587,14 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 				if (pTexInfo->format == GL_TEXFMT_AP_88)
 				{
 					if (!(pTexInfo->flags & TF_CHROMAKEYED))
+					{
+#ifdef __CELLOS_LV2__
+						// On Big Endian, red represents alpha in our ARGB packing
+						tex[w*j + i].s.red = *pImgData;
+#else
 						tex[w*j + i].s.alpha = *pImgData;
+#endif
+					}
 					pImgData++;
 				}
 			}
@@ -1565,12 +1614,21 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 		{
 			for (i = 0; i < w; i++)
 			{
+#ifdef __CELLOS_LV2__
+				// LUMINANCE_ALPHA on Big Endian (swapped)
+				tex[w*j + i].s.red = pImgData[1]; // alpha
+				tex[w*j + i].s.green = pImgData[0]; // intensity
+				tex[w*j + i].s.blue = pImgData[0];
+				tex[w*j + i].s.alpha = pImgData[0];
+				pImgData += 2;
+#else
 				tex[w*j + i].s.red = *pImgData;
 				tex[w*j + i].s.green = *pImgData;
 				tex[w*j + i].s.blue = *pImgData;
 				pImgData++;
 				tex[w*j + i].s.alpha = *pImgData;
 				pImgData++;
+#endif
 			}
 		}
 	}
@@ -1583,10 +1641,17 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 		{
 			for (i = 0; i < w; i++)
 			{
+#ifdef __CELLOS_LV2__
+				tex[w*j + i].s.red = *pImgData; // alpha
+				tex[w*j + i].s.green = 255;
+				tex[w*j + i].s.blue = 255;
+				tex[w*j + i].s.alpha = 255;
+#else
 				tex[w*j + i].s.red = 255; // 255 because the fade mask is modulated with the screen texture, so alpha affects it while the colours don't
 				tex[w*j + i].s.green = 255;
 				tex[w*j + i].s.blue = 255;
 				tex[w*j + i].s.alpha = *pImgData;
+#endif
 				pImgData++;
 			}
 		}
@@ -2854,6 +2919,10 @@ EXPORT INT32  HWRAPI(GetTextureUsed) (void)
 
 EXPORT void HWRAPI(PostImgRedraw) (float points[SCREENVERTS][SCREENVERTS][2])
 {
+#ifdef __CELLOS_LV2__
+	if (screen_width <= 0) screen_width = 640;
+	if (screen_height <= 0) screen_height = 400;
+#endif
 	INT32 x, y;
 	float float_x, float_y, float_nextx, float_nexty;
 	float xfix, yfix;
@@ -2869,7 +2938,12 @@ EXPORT void HWRAPI(PostImgRedraw) (float points[SCREENVERTS][SCREENVERTS][2])
 
 	// look for power of two that is large enough for the screen
 	while (texsize < screen_width || texsize < screen_height)
+	{
+#ifdef __CELLOS_LV2__
+		if (texsize > 4096 || texsize <= 0) { texsize = 4096; break; }
+#endif
 		texsize <<= 1;
+	}
 
 	// X/Y stretch fix for all resolutions(!)
 	xfix = (float)(texsize) / ((float)((screen_width) / (float)(SCREENVERTS - 1)));
@@ -2951,6 +3025,10 @@ EXPORT void HWRAPI(FlushScreenTextures) (void)
 
 EXPORT void HWRAPI(DrawScreenTexture)(int tex, FSurfaceInfo *surf, FBITFIELD polyflags)
 {
+#ifdef __CELLOS_LV2__
+	if (screen_width <= 0) screen_width = 640;
+	if (screen_height <= 0) screen_height = 400;
+#endif
 	float xfix, yfix;
 	INT32 texsize = 512;
 
@@ -2966,7 +3044,12 @@ EXPORT void HWRAPI(DrawScreenTexture)(int tex, FSurfaceInfo *surf, FBITFIELD pol
 
 	// look for power of two that is large enough for the screen
 	while (texsize < screen_width || texsize < screen_height)
+	{
+#ifdef __CELLOS_LV2__
+		if (texsize > 4096 || texsize <= 0) { texsize = 4096; break; }
+#endif
 		texsize <<= 1;
+	}
 
 	xfix = 1 / ((float)(texsize) / ((float)((screen_width))));
 	yfix = 1 / ((float)(texsize) / ((float)((screen_height))));
@@ -3001,6 +3084,10 @@ EXPORT void HWRAPI(DrawScreenTexture)(int tex, FSurfaceInfo *surf, FBITFIELD pol
 EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 	FBITFIELD polyFlags)
 {
+#ifdef __CELLOS_LV2__
+	if (screen_width <= 0) screen_width = 640;
+	if (screen_height <= 0) screen_height = 400;
+#endif
 	INT32 texsize = 512;
 	float xfix, yfix;
 
@@ -3032,7 +3119,12 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 
 	// look for power of two that is large enough for the screen
 	while (texsize < screen_width || texsize < screen_height)
+	{
+#ifdef __CELLOS_LV2__
+		if (texsize > 4096 || texsize <= 0) { texsize = 4096; break; }
+#endif
 		texsize <<= 1;
+	}
 
 	xfix = 1 / ((float)(texsize) / ((float)((screen_width))));
 	yfix = 1 / ((float)(texsize) / ((float)((screen_height))));
@@ -3113,7 +3205,12 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 
 	// look for power of two that is large enough for the screen
 	while (texsize < screen_width || texsize < screen_height)
+	{
+#ifdef __CELLOS_LV2__
+		if (texsize > 4096 || texsize <= 0) { texsize = 4096; break; }
+#endif
 		texsize <<= 1;
+	}
 
 	// Create screen texture
 	if (firstTime)
@@ -3126,16 +3223,44 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 		pglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		Clamp2D(GL_TEXTURE_WRAP_S);
 		Clamp2D(GL_TEXTURE_WRAP_T);
+#ifdef __CELLOS_LV2__
+		// PSGL does not support GL_ARGB_SCE as an internal format for glCopyTexSubImage2D,
+		// and passing NULL to pglTexImage2D causes driver hang/freeze.
+		// Allocate a temporary zero-initialized buffer with strict 128-byte alignment, pass it, and immediately free it.
+		extern void *memalign(size_t boundary, size_t size);
+		size_t temp_buf_size = texsize * texsize * sizeof(UINT32);
+		void *temp_buf = memalign(128, temp_buf_size);
+		if (temp_buf)
+		{
+			memset(temp_buf, 0, temp_buf_size);
+			pglTexImage2D(GL_TEXTURE_2D, 0, textureformatGL, texsize, texsize, 0, GL_RGBA_FORMAT, GL_UNSIGNED_BYTE, temp_buf);
+			free(temp_buf);
+		}
+#else
 		pglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, texsize, texsize, 0);
+#endif
 	}
-	else
+
+#ifdef __CELLOS_LV2__
+	// Copy only the screen-bounded active rendering region to prevent RSX freeze/hang
+	if (screen_width > 0 && screen_height > 0)
+	{
+		pglCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, screen_width, screen_height);
+	}
+#else
+	if (!firstTime)
 		pglCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, texsize, texsize);
+#endif
 
 	tex_downloaded = screenTextures[tex];
 }
 
 EXPORT void HWRAPI(DrawScreenFinalTexture)(int tex, int width, int height)
 {
+#ifdef __CELLOS_LV2__
+	if (screen_width <= 0) screen_width = 640;
+	if (screen_height <= 0) screen_height = 400;
+#endif
 	float xfix, yfix;
 	float origaspect, newaspect;
 	float xoff = 1, yoff = 1; // xoffset and yoffset for the polygon to have black bars around the screen
@@ -3147,7 +3272,12 @@ EXPORT void HWRAPI(DrawScreenFinalTexture)(int tex, int width, int height)
 
 	// look for power of two that is large enough for the screen
 	while (texsize < screen_width || texsize < screen_height)
+	{
+#ifdef __CELLOS_LV2__
+		if (texsize > 4096 || texsize <= 0) { texsize = 4096; break; }
+#endif
 		texsize <<= 1;
+	}
 
 	xfix = 1 / ((float)(texsize) / ((float)((screen_width))));
 	yfix = 1 / ((float)(texsize) / ((float)((screen_height))));
@@ -3308,5 +3438,62 @@ EXPORT void HWRAPI(SetScreenPalette)(RGBA_t *palette)
 		pglActiveTexture(GL_TEXTURE0);
 	}
 }
+
+#ifdef __CELLOS_LV2__
+EXPORT void HWRAPI(SetTexturePalette) (RGBA_t *palette)
+{
+	size_t palsize = (sizeof(RGBA_t) * 256);
+	if (memcmp(&myPaletteData, palette, palsize))
+	{
+		memcpy(&myPaletteData, palette, palsize);
+		Flush();
+	}
+}
+
+void *PS3_GetGLSym(const char *name)
+{
+	if (0 == strcmp("Init", name)) return (void *)&Init;
+	if (0 == strcmp("Draw2DLine", name)) return (void *)&Draw2DLine;
+	if (0 == strcmp("DrawPolygon", name)) return (void *)&DrawPolygon;
+	if (0 == strcmp("DrawIndexedTriangles", name)) return (void *)&DrawIndexedTriangles;
+	if (0 == strcmp("RenderSkyDome", name)) return (void *)&RenderSkyDome;
+	if (0 == strcmp("SetBlend", name)) return (void *)&SetBlend;
+	if (0 == strcmp("ClearBuffer", name)) return (void *)&ClearBuffer;
+	if (0 == strcmp("SetTexture", name)) return (void *)&SetTexture;
+	if (0 == strcmp("UpdateTexture", name)) return (void *)&UpdateTexture;
+	if (0 == strcmp("DeleteTexture", name)) return (void *)&DeleteTexture;
+	if (0 == strcmp("ReadScreenTexture", name)) return (void *)&ReadScreenTexture;
+	if (0 == strcmp("GClipRect", name)) return (void *)&GClipRect;
+	if (0 == strcmp("ClearMipMapCache", name)) return (void *)&ClearMipMapCache;
+	if (0 == strcmp("SetSpecialState", name)) return (void *)&SetSpecialState;
+	if (0 == strcmp("SetTexturePalette", name)) return (void *)&SetTexturePalette;
+	if (0 == strcmp("GetTextureUsed", name)) return (void *)&GetTextureUsed;
+	if (0 == strcmp("DrawModel", name)) return (void *)&DrawModel;
+	if (0 == strcmp("CreateModelVBOs", name)) return (void *)&CreateModelVBOs;
+	if (0 == strcmp("SetTransform", name)) return (void *)&SetTransform;
+	if (0 == strcmp("PostImgRedraw", name)) return (void *)&PostImgRedraw;
+	if (0 == strcmp("FlushScreenTextures", name)) return (void *)&FlushScreenTextures;
+	if (0 == strcmp("DoScreenWipe", name)) return (void *)&DoScreenWipe;
+	if (0 == strcmp("DrawScreenTexture", name)) return (void *)&DrawScreenTexture;
+	if (0 == strcmp("MakeScreenTexture", name)) return (void *)&MakeScreenTexture;
+	if (0 == strcmp("DrawScreenFinalTexture", name)) return (void *)&DrawScreenFinalTexture;
+
+	if (0 == strcmp("InitShaders", name)) return (void *)&InitShaders;
+	if (0 == strcmp("LoadShader", name)) return (void *)&LoadShader;
+	if (0 == strcmp("CompileShader", name)) return (void *)&CompileShader;
+	if (0 == strcmp("SetShader", name)) return (void *)&SetShader;
+	if (0 == strcmp("UnSetShader", name)) return (void *)&UnSetShader;
+
+	if (0 == strcmp("SetShaderInfo", name)) return (void *)&SetShaderInfo;
+
+	if (0 == strcmp("SetPaletteLookup", name)) return (void *)&SetPaletteLookup;
+	if (0 == strcmp("CreateLightTable", name)) return (void *)&CreateLightTable;
+	if (0 == strcmp("UpdateLightTable", name)) return (void *)&UpdateLightTable;
+	if (0 == strcmp("ClearLightTables", name)) return (void *)&ClearLightTables;
+	if (0 == strcmp("SetScreenPalette", name)) return (void *)&SetScreenPalette;
+
+	return NULL;
+}
+#endif
 
 #endif //HWRENDER

@@ -47,6 +47,17 @@ static boolean Z_calloc = false;
 
 #define ZONEID 0xa441d13d
 
+#ifdef __CELLOS_LV2__
+extern void *I_PS3_Malloc(size_t size);
+extern void I_PS3_Free(void *ptr);
+extern void *I_PS3_Realloc(void *ptr, size_t size);
+extern void *I_PS3_Calloc(size_t nmemb, size_t size);
+#define malloc(x) I_PS3_Malloc(x)
+#define free(x) I_PS3_Free(x)
+#define realloc(x, y) I_PS3_Realloc(x, y)
+#define calloc(x, y) I_PS3_Calloc(x, y)
+#endif
+
 #ifdef ZDEBUG
 //#define ZDEBUG2
 #endif
@@ -646,6 +657,10 @@ size_t Z_TagsUsage(INT32 lowtag, INT32 hightag)
 static void Command_Memfree_f(void)
 {
 	size_t freebytes, totalbytes;
+
+#ifdef __CELLOS_LV2__
+	Z_FreeTags(PU_PURGELEVEL, INT32_MAX);
+#endif
 
 	Z_CheckHeap(-1);
 	CONS_Printf("\x82%s", M_GetText("Memory Info\n"));

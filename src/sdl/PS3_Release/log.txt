@@ -21,7 +21,7 @@ in this program.
 
 M_StartupLocale...
 Z_Init(): Init zone memory allocation daemon. 
-System memory: 213MB - Free: 195MB
+System memory: 160MB - Free: 159MB
 I_InitializeTime()...
 W_InitMultipleFiles(): Adding IWAD and main PWADs.
 Added file /dev_hdd0/game/SRB222PS3/USRDIR/srb2.pk3 (12614 lumps)
@@ -36,4 +36,235 @@ Added file /dev_hdd0/game/SRB222PS3/USRDIR/characters.pk3 (2054 lumps)
 Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/characters.pk3|SOC/Characters.txt
 Added file /dev_hdd0/game/SRB222PS3/USRDIR/music.pk3 (215 lumps)
 I_StartupGraphics()...
-[PS3] Active renderer 'OpenGL' detected in config.cfg. Initializing in Hardware OpenGL/PSGL mode.
+[PS3] Active renderer 'Software' detected in config.cfg. Initializing in Software mode.
+[PS3] Loading GCM & RESC system modules...
+[PS3] Allocating GCM host command buffer...
+[PS3] Initializing GCM library (256KB command buffer)...
+[PS3] cellGcmInit returned: 0
+[PS3] Querying GCM configurations...
+[PS3] Querying primary video output state...
+[PS3] cellVideoOutGetState returned: 0
+[PS3] Querying video output resolution...
+[PS3] cellVideoOutGetResolution returned: 0
+[PS3] Target Display Resolution: 1920x1080
+[PS3] Configuring video output to 1920x1080 (X8R8G8B8)...
+[PS3] cellVideoOutConfigure returned: 0
+[PS3] Resolving RESC buffer mode...
+[PS3] cellRescVideoOutResolutionId2RescBufferMode returned: 0
+[PS3] Initializing RESC library...
+[PS3] cellRescInit returned: 0
+[PS3] Querying RESC required buffer sizes...
+[PS3] cellRescGetBufferSize returned: 0
+[PS3] Allocating RESC buffer allocations in VRAM...
+[PS3] Registering RESC buffer addresses...
+[PS3] cellRescSetBufferAddress returned: 0
+[PS3] Setting RESC destination structures...
+[PS3] cellRescSetDsts returned: 0
+[PS3] Applying RESC display mode configuration...
+[PS3] cellRescSetDisplayMode returned: 0
+[PS3] Allocating and registering dual 640x400 source buffers in GCM mapped VRAM...
+[PS3] Populating RESC src 0: format=0xa5, pitch=2560, width=640, height=400, offset=0x1100000
+[PS3] cellRescSetSrc(0) returned: 0
+[PS3] Populating RESC src 1: format=0xa5, pitch=2560, width=640, height=400, offset=0x1200000
+[PS3] cellRescSetSrc(1) returned: 0
+[PS3] Queuing initial Conversion and Flip...
+[PS3] cellRescSetConvertAndFlip returned: 0
+[PS3] Flushing GCM command buffer...
+[PS3] Waiting for initial Flip event...
+[PS3] Native Libgcm video output and Hardware cellResc scaling initialized successfully.
+Number of console HUD lines is now 5
+[PS3] cellPadInit(7) successful
+HU_LoadGraphics()...
+Executing /dev_hdd0/game/SRB222PS3/USRDIR/config.cfg
+Default resolution: 1280 x 800
+Windowed resolution: 640 x 400
+Default bit depth: 16 bits
+M_Init(): Init miscellaneous info.
+R_Init(): Init SRB2 refresh daemon.
+R_LoadParsedTranslations()...
+R_LoadTextures()...
+P_InitPicAnims()...
+R_InitSprites()...
+srb2.pk3 added 5261 frames in 391 sprites
+R_InitColormaps()...
+S_InitSfxChannels(): Setting up sound channels.
+ST_Init(): Init status bar.
+D_CheckNetGame(): Checking network game status.
+Logfile: /dev_hdd0/game/SRB222PS3/USRDIR/log.txt
+Entering main game loop...
+===========================================================================
+                   We hope you enjoy this game as
+                     much as we did making it!
+                            ...wait. =P
+===========================================================================
+Sonic Robo Blast 2 v2.2.15 (Aug  4 2026 19:05:58 illegal Unknown) PlayStation 3 32-bit 
+[PS3][MEMSTATS] ---- Nivel 99 ----
+[PS3][MEMSTATS] Total   : 34143 KB
+[PS3][MEMSTATS] Static  : 32945 KB
+[PS3][MEMSTATS] Sound   : 0 KB
+[PS3][MEMSTATS] Music   : 247 KB
+[PS3][MEMSTATS] Level   : 8 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 1 KB
+[PS3][MEMSTATS] SysFreeMem: 129084 KB
+Starting Server....
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 1 ----
+[PS3][MEMSTATS] Total   : 46217 KB
+[PS3][MEMSTATS] Static  : 34091 KB
+[PS3][MEMSTATS] Sound   : 18 KB
+[PS3][MEMSTATS] Music   : 419 KB
+[PS3][MEMSTATS] Level   : 4191 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 116991 KB
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 2 ----
+[PS3][MEMSTATS] Total   : 62240 KB
+[PS3][MEMSTATS] Static  : 41279 KB
+[PS3][MEMSTATS] Sound   : 825 KB
+[PS3][MEMSTATS] Music   : 54 KB
+[PS3][MEMSTATS] Level   : 12740 KB
+[PS3][MEMSTATS] LevSpec : 9 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 100769 KB
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 3 ----
+[PS3][MEMSTATS] Total   : 70370 KB
+[PS3][MEMSTATS] Static  : 41367 KB
+[PS3][MEMSTATS] Sound   : 1202 KB
+[PS3][MEMSTATS] Music   : 54 KB
+[PS3][MEMSTATS] Level   : 17895 KB
+[PS3][MEMSTATS] LevSpec : 28 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 92450 KB
+[PS3][MEMSTATS] ---- Nivel 3 ----
+[PS3][MEMSTATS] Total   : 57958 KB
+[PS3][MEMSTATS] Static  : 41393 KB
+[PS3][MEMSTATS] Sound   : 342 KB
+[PS3][MEMSTATS] Music   : 657 KB
+[PS3][MEMSTATS] Level   : 7105 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 105155 KB
+[PS3][MEMSTATS] ---- Nivel 3 ----
+[PS3][MEMSTATS] Total   : 62930 KB
+[PS3][MEMSTATS] Static  : 41416 KB
+[PS3][MEMSTATS] Sound   : 445 KB
+[PS3][MEMSTATS] Music   : 657 KB
+[PS3][MEMSTATS] Level   : 11339 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 100123 KB
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 3 ----
+[PS3][MEMSTATS] Total   : 63172 KB
+[PS3][MEMSTATS] Static  : 41438 KB
+[PS3][MEMSTATS] Sound   : 699 KB
+[PS3][MEMSTATS] Music   : 54 KB
+[PS3][MEMSTATS] Level   : 10230 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 99848 KB
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 4 ----
+[PS3][MEMSTATS] Total   : 64753 KB
+[PS3][MEMSTATS] Static  : 41460 KB
+[PS3][MEMSTATS] Sound   : 476 KB
+[PS3][MEMSTATS] Music   : 54 KB
+[PS3][MEMSTATS] Level   : 10589 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 98294 KB
+[PS3][MEMSTATS] ---- Nivel 99 ----
+[PS3][MEMSTATS] Total   : 78959 KB
+[PS3][MEMSTATS] Static  : 41683 KB
+[PS3][MEMSTATS] Sound   : 1 KB
+[PS3][MEMSTATS] Music   : 247 KB
+[PS3][MEMSTATS] Level   : 19746 KB
+[PS3][MEMSTATS] LevSpec : 41 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 83509 KB
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 11 ----
+[PS3][MEMSTATS] Total   : 63494 KB
+[PS3][MEMSTATS] Static  : 41700 KB
+[PS3][MEMSTATS] Sound   : 18 KB
+[PS3][MEMSTATS] Music   : 419 KB
+[PS3][MEMSTATS] Level   : 4190 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 99588 KB
+[PS3][MEMSTATS] ---- Nivel 99 ----
+[PS3][MEMSTATS] Total   : 119210 KB
+[PS3][MEMSTATS] Static  : 43184 KB
+[PS3][MEMSTATS] Sound   : 1 KB
+[PS3][MEMSTATS] Music   : 247 KB
+[PS3][MEMSTATS] Level   : 36929 KB
+[PS3][MEMSTATS] LevSpec : 11 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 42457 KB
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 11 ----
+[PS3][MEMSTATS] Total   : 72904 KB
+[PS3][MEMSTATS] Static  : 43198 KB
+[PS3][MEMSTATS] Sound   : 1 KB
+[PS3][MEMSTATS] Music   : 419 KB
+[PS3][MEMSTATS] Level   : 4190 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 90141 KB
+[PS3][MEMSTATS] ---- Nivel 99 ----
+[PS3][MEMSTATS] Total   : 118842 KB
+[PS3][MEMSTATS] Static  : 43298 KB
+[PS3][MEMSTATS] Sound   : 1 KB
+[PS3][MEMSTATS] Music   : 247 KB
+[PS3][MEMSTATS] Level   : 36929 KB
+[PS3][MEMSTATS] LevSpec : 11 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 42818 KB
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 11 ----
+[PS3][MEMSTATS] Total   : 73403 KB
+[PS3][MEMSTATS] Static  : 43313 KB
+[PS3][MEMSTATS] Sound   : 1 KB
+[PS3][MEMSTATS] Music   : 419 KB
+[PS3][MEMSTATS] Level   : 4190 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 89639 KB
+[PS3][MEMSTATS] ---- Nivel 99 ----
+[PS3][MEMSTATS] Total   : 119365 KB
+[PS3][MEMSTATS] Static  : 43412 KB
+[PS3][MEMSTATS] Sound   : 1 KB
+[PS3][MEMSTATS] Music   : 247 KB
+[PS3][MEMSTATS] Level   : 36928 KB
+[PS3][MEMSTATS] LevSpec : 11 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 42290 KB
+Starting Server....
+Connecting to: SRB2 server
+Gametype: Co-op
+Version: 2.2.15
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 1 ----
+[PS3][MEMSTATS] Total   : 73944 KB
+[PS3][MEMSTATS] Static  : 43427 KB
+[PS3][MEMSTATS] Sound   : 18 KB
+[PS3][MEMSTATS] Music   : 419 KB
+[PS3][MEMSTATS] Level   : 4190 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 89091 KB

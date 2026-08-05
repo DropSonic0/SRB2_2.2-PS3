@@ -153,6 +153,10 @@ size_t Z_TagsUsage(INT32 lowtag, INT32 hightag);
 // Miscellaneous functions
 //
 char *Z_StrDup(const char *in);
+#ifdef __CELLOS_LV2__
+#define Z_Unlock(p) Z_ChangeTag(p, PU_CACHE_UNLOCKED)
+#else
 #define Z_Unlock(p) (void)p // TODO: remove this now that NDS code has been removed
+#endif
 
 #endif

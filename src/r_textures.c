@@ -550,8 +550,12 @@ UINT8 *R_GenerateTexture(size_t texnum)
 	columns = (column_t *)(block + (sizeof(UINT8) * total_pixels));
 	posts = (post_t *)(block + (sizeof(UINT8) * total_pixels) + (sizeof(column_t) * texture->width));
 
-	memcpy(columns, temp_columns, sizeof(column_t) * texture->width);
-	memcpy(posts, temp_posts, sizeof(post_t) * total_posts);
+	memcpy(columns, temp_columns, sizeof(column_t)* texture->width);
+	memcpy(posts, temp_posts, sizeof(post_t)* total_posts);
+
+	Z_Free(opaque_pixels);
+	Z_Free(temp_columns);
+	Z_Free(temp_posts);
 
 	texturecolumns[texnum] = columns;
 
@@ -593,7 +597,7 @@ UINT8 *R_GetFlatForTexture(size_t texnum)
 		else
 #endif
 		{
-			texture->flat = Z_Malloc(lumplength, PU_STATIC, NULL);
+			texture->flat = Z_Malloc(lumplength, PU_LEVEL, NULL);
 			memcpy(texture->flat, pdata, lumplength);
 		}
 

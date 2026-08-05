@@ -7849,6 +7849,16 @@ boolean P_LoadLevel(boolean fromnetsave, boolean reloadinggamestate)
 	sector_t *ss;
 	levelloading = true;
 
+	CONS_Printf("[PS3][MEMSTATS] ---- Nivel %d ----\n", gamemap);
+	CONS_Printf("[PS3][MEMSTATS] Total   : %s KB\n", sizeu1(Z_TotalUsage() >> 10));
+	CONS_Printf("[PS3][MEMSTATS] Static  : %s KB\n", sizeu1(Z_TagUsage(PU_STATIC) >> 10));
+	CONS_Printf("[PS3][MEMSTATS] Sound   : %s KB\n", sizeu1(Z_TagUsage(PU_SOUND) >> 10));
+	CONS_Printf("[PS3][MEMSTATS] Music   : %s KB\n", sizeu1(Z_TagUsage(PU_MUSIC) >> 10));
+	CONS_Printf("[PS3][MEMSTATS] Level   : %s KB\n", sizeu1(Z_TagUsage(PU_LEVEL) >> 10));
+	CONS_Printf("[PS3][MEMSTATS] LevSpec : %s KB\n", sizeu1(Z_TagUsage(PU_LEVSPEC) >> 10));
+	CONS_Printf("[PS3][MEMSTATS] Purgable: %s KB\n", sizeu1(Z_TagsUsage(PU_PURGELEVEL, INT32_MAX) >> 10));
+	CONS_Printf("[PS3][MEMSTATS] SysFreeMem: %s KB\n", sizeu1(I_GetFreeMem(NULL) >> 10));
+
 	// This is needed. Don't touch.
 	maptol = mapheaderinfo[gamemap-1]->typeoflevel;
 	gametyperules = gametypedefaultrules[gametype];
@@ -8014,6 +8024,10 @@ boolean P_LoadLevel(boolean fromnetsave, boolean reloadinggamestate)
 	Patch_FreeTag(PU_PATCH_LOWPRIORITY);
 	Patch_FreeTag(PU_PATCH_ROTATED);
 	Z_FreeTags(PU_LEVEL, PU_PURGELEVEL - 1);
+#ifdef __CELLOS_LV2__
+	Z_FreeTags(PU_HWRCACHE, PU_CACHE);
+	Z_FreeTags(PU_PURGELEVEL, INT32_MAX);
+#endif
 	mobjcache = NULL;
 
 	R_InitializeLevelInterpolators();
