@@ -1727,8 +1727,11 @@ static void ST_drawFirstPersonHUD(void)
 
 	// Display the countdown drown numbers!
 	if (p && !F_GetPromptHideHud(60 - p->topoffset))
-		V_DrawScaledPatch((BASEVIDWIDTH/2) - (p->width / 2) + SHORT(p->leftoffset), 60 - SHORT(p->topoffset),
-			V_PERPLAYER|V_PERPLAYER|V_TRANSLUCENT, p);
+		V_DrawScaledPatch((BASEVIDWIDTH / 2) - (p->width / 2) + SHORT(p->leftoffset), 60 - SHORT(p->topoffset),
+		V_PERPLAYER | V_PERPLAYER | V_TRANSLUCENT, p);
+
+	if (p)
+		Z_Unlock(p);
 }
 
 static void ST_drawNightsRecords(void)

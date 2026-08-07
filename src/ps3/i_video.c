@@ -138,9 +138,15 @@ static void convert_palette_1to1(uint32_t* dst, const uint8_t* src, uint32_t num
 }
 #endif
 
-static INT32 windowedModes[1][2] = {
-	{ 640, 400 }
+static INT32 windowedModes[][2] = {
+	{ 800, 450 },
+	{ 640, 400 },
+	{ 640, 360 },
+	{ 320, 200 }
 };
+#define NUM_WINDOWED_MODES (sizeof(windowedModes) / sizeof(windowedModes[0]))
+#define MAX_SRC_WIDTH  800
+#define MAX_SRC_HEIGHT 600
 
 #ifdef __CELLOS_LV2__
 extern char configfile[];
@@ -378,27 +384,31 @@ void I_StartupGraphics(void)
 		CONS_Printf("[PS3] cellRescSetDisplayMode returned: %d\n", ret);
 		fflush(stdout);
 
-		CONS_Printf("[PS3] Allocating and registering dual 640x400 source buffers in GCM mapped VRAM...\n");
+		CONS_Printf("[PS3] Allocating and registering dual maximum-sized source buffers in GCM mapped VRAM...\n");
 		fflush(stdout);
-		uint32_t src_pitch = 640 * sizeof(UINT32);
-		uint32_t src_size = src_pitch * 400;
+		uint32_t max_src_pitch = MAX_SRC_WIDTH * sizeof(UINT32);
+		uint32_t max_src_size = max_src_pitch * MAX_SRC_HEIGHT;
 
 		// Allocate Host-side conversion buffer
-		host_convert_buffer = host_alloc(src_size, 1024 * 1024);
+		host_convert_buffer = host_alloc(max_src_size, 1024 * 1024);
 		cellGcmAddressToOffset(host_convert_buffer, &host_convert_offset);
+
+		uint32_t init_width = windowedModes[0][0];
+		uint32_t init_height = windowedModes[0][1];
+		uint32_t init_pitch = init_width * sizeof(UINT32);
 
 		int i;
 		for (i = 0; i < 2; i++)
 		{
-			display_buffer[i] = vram_alloc(src_size, 1024 * 1024);
+			display_buffer[i] = vram_alloc(max_src_size, 1024 * 1024);
 			cellGcmAddressToOffset(display_buffer[i], &display_offset[i]);
 
 			CellRescSrc src;
 			memset(&src, 0, sizeof(src));
 			src.format = CELL_GCM_TEXTURE_A8R8G8B8 | CELL_GCM_TEXTURE_LN | CELL_GCM_TEXTURE_NR;
-			src.pitch = src_pitch;
-			src.width = 640;
-			src.height = 400;
+			src.pitch = init_pitch;
+			src.width = init_width;
+			src.height = init_height;
 			src.offset = display_offset[i];
 
 			CONS_Printf("[PS3] Populating RESC src %d: format=0x%x, pitch=%d, width=%d, height=%d, offset=0x%x\n",
@@ -499,9 +509,13 @@ void I_ShutdownGraphics(void)
 	}
 	if (host_addr)
 	{
+		// Wait for any pending presentation/rendering to finish before shutting down
+		cellGcmFinish(gCellGcmCurrentContext, 0);
 		cellRescExit();
 		free(host_addr);
 		host_addr = NULL;
+		cellSysmoduleUnloadModule(CELL_SYSMODULE_RESC);
+		cellSysmoduleUnloadModule(CELL_SYSMODULE_GCM);
 	}
 	if (psgl_context)
 	{
@@ -553,13 +567,17 @@ void I_SetPalette(RGBA_t *palette)
 
 INT32 VID_NumModes(void)
 {
-	return 1;
+	return NUM_WINDOWED_MODES;
 }
 
 INT32 VID_GetModeForSize(INT32 w, INT32 h)
 {
-	(void)w;
-	(void)h;
+	INT32 i;
+	for (i = 0; i < (INT32)NUM_WINDOWED_MODES; i++)
+	{
+		if (windowedModes[i][0] == w && windowedModes[i][1] == h)
+			return i;
+	}
 	return 0;
 }
 
@@ -567,14 +585,26 @@ void VID_PrepareModeList(void){}
 
 INT32 VID_SetMode(INT32 modenum)
 {
-	if (modenum < 0)
-		modenum = 0;
+#ifdef __CELLOS_LV2__
+	if (rendermode == render_opengl)
+	{
+		// Force 640x400 mode for OpenGL to prevent VRAM exhaustion and GPU hangs/freezes
+		modenum = VID_GetModeForSize(640, 400);
+	}
+#endif
+
+	if (modenum < 0 || modenum >= (INT32)NUM_WINDOWED_MODES)
+	{
+		modenum = VID_GetModeForSize(640, 400);
+		if (modenum < 0 || modenum >= (INT32)NUM_WINDOWED_MODES)
+			modenum = 0;
+	}
 
 	vid.recalc = 1;
 	vid.bpp = 1;
-	vid.width = windowedModes[0][0];
-	vid.height = windowedModes[0][1];
-	vid.modenum = 0;
+	vid.width = windowedModes[modenum][0];
+	vid.height = windowedModes[modenum][1];
+	vid.modenum = modenum;
 
 	// Set up game's software render buffer
 	vid.rowbytes = vid.width * vid.bpp;
@@ -589,6 +619,35 @@ INT32 VID_SetMode(INT32 modenum)
 	{
 		printf("Error: Not enough memory for video buffer\n");
 	}
+
+#ifdef __CELLOS_LV2__
+	if (rendermode == render_soft && display_buffer[0] != NULL)
+	{
+		int i;
+		uint32_t src_pitch = vid.width * sizeof(UINT32);
+		for (i = 0; i < 2; i++)
+		{
+			CellRescSrc src;
+			memset(&src, 0, sizeof(src));
+			src.format = CELL_GCM_TEXTURE_A8R8G8B8 | CELL_GCM_TEXTURE_LN | CELL_GCM_TEXTURE_NR;
+			src.pitch = src_pitch;
+			src.width = vid.width;
+			src.height = vid.height;
+			src.offset = display_offset[i];
+
+			CONS_Printf("[PS3] Updating RESC src %d for mode %d (%dx%d): pitch=%d\n",
+				i, modenum, vid.width, vid.height, src_pitch);
+			fflush(stdout);
+
+			int32_t ret = cellRescSetSrc(i, &src);
+			if (ret != 0)
+			{
+				CONS_Printf("[PS3] cellRescSetSrc(%d) failed: %d\n", i, ret);
+				fflush(stdout);
+			}
+		}
+	}
+#endif
 
 	return 0;
 }
@@ -635,8 +694,11 @@ void VID_CheckGLLoaded(rendermode_t oldrender)
 
 const char *VID_GetModeName(INT32 modenum)
 {
-	(void)modenum;
-	return "640x400";
+	static char vidModeName[32][32];
+	if (modenum < 0 || modenum >= (INT32)NUM_WINDOWED_MODES || modenum >= 32)
+		return "Unknown";
+	sprintf(vidModeName[modenum], "%dx%d", windowedModes[modenum][0], windowedModes[modenum][1]);
+	return vidModeName[modenum];
 }
 
 UINT32 I_GetRefreshRate(void) { return 60; }
@@ -699,10 +761,11 @@ void I_FinishUpdate(void)
 
 				t0 = I_GetPreciseTime();
 				// Perform high-speed RSX hardware DMA copy from Host Memory to local VRAM
+				uint32_t pitch_bytes = vid.width * sizeof(UINT32);
 				cellGcmSetTransferData(gCellGcmCurrentContext, CELL_GCM_TRANSFER_MAIN_TO_LOCAL,
-					display_offset[current_buffer_idx], 2560,
-					host_convert_offset, 2560,
-					2560, 400);
+					display_offset[current_buffer_idx], pitch_bytes,
+					host_convert_offset, pitch_bytes,
+					pitch_bytes, vid.height);
 
 				cellRescSetConvertAndFlip(gCellGcmCurrentContext, current_buffer_idx);
 				cellGcmFlush(gCellGcmCurrentContext);

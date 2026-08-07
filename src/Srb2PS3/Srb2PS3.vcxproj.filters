@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="A_Asm">
@@ -60,6 +60,12 @@
     </Filter>
     <Filter Include="PS3App">
       <UniqueIdentifier>{49b700a3-becd-45f6-bb45-3483920a4ed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="O_Others">
+      <UniqueIdentifier>{9ec40d88-5f7f-43ab-be2a-9f6571fcb1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="O_Others\Loaders">
+      <UniqueIdentifier>{1318ce85-88a6-471b-9038-0a54dcae337f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1167,6 +1173,123 @@
     </ClCompile>
     <ClCompile Include="..\ps3\i_video.c">
       <Filter>PS3App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\control.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\dataio.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\effects.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\extras.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\far_extras.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\filter.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\flow.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\flt_extras.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\format.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\hio.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\hmn_extras.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\lfo.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\load.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\load_helpers.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\med_extras.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\memio.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\miniz_tinfl.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\misc.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\mix_all.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\mix_paula.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\path.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\period.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\player.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\read_event.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\rng.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\scan.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\smix.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\tempfile.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\virtual.c">
+      <Filter>O_Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\common.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\iff.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\it_load.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\itsex.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\lzw.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\mod_load.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\s3m_load.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\sample.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\voltable.c">
+      <Filter>O_Others\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\xmp\loaders\xm_load.c">
+      <Filter>O_Others\Loaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

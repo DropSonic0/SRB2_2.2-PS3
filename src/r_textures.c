@@ -347,7 +347,7 @@ UINT8 *R_GenerateTexture(size_t texnum)
 			blocksize = (sizeof(column_t) * texture->width) + (sizeof(post_t) * total_posts) + (sizeof(UINT8) * total_pixels);
 			texturememory += blocksize;
 
-			block = Z_Calloc(blocksize, PU_STATIC, &texturecache[texnum]);
+			block = Z_Calloc(blocksize, PU_LEVEL, &texturecache[texnum]);
 			blocktex = block;
 
 			columns = (column_t *)(block + (sizeof(UINT8) * total_pixels));
@@ -479,6 +479,8 @@ UINT8 *R_GenerateTexture(size_t texnum)
 
 		if (free_patch)
 			Patch_Free(realpatch);
+
+		Z_Free(pdata);
 	}
 
 	// Now write the columns
@@ -540,7 +542,7 @@ UINT8 *R_GenerateTexture(size_t texnum)
 	blocksize = (sizeof(column_t) * texture->width) + (sizeof(post_t) * total_posts) + (sizeof(UINT8) * total_pixels);
 	texturememory += blocksize;
 
-	block = Z_Calloc(blocksize, PU_STATIC, &texturecache[texnum]);
+	block = Z_Calloc(blocksize, PU_LEVEL, &texturecache[texnum]);
 	blocktex = block;
 
 	memcpy(blocktex, temp_block, total_pixels);
@@ -569,7 +571,7 @@ UINT8 *R_GenerateTexture(size_t texnum)
 
 done:
 	// Now that the texture has been built in column cache, it is purgable from zone memory.
-	Z_ChangeTag(block, PU_CACHE);
+	Z_ChangeTag(block, PU_LEVEL);
 	return blocktex;
 }
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|PS3">
@@ -58,12 +58,14 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
     <ClCompile>
-      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;HAVE_ZLIB;HAVE_PNG;HWRENDER;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;HAVE_ZLIB;HAVE_XMP;HAVE_PNG;HWRENDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <AdditionalOptions>-O3 %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CppLanguageStd>Cpp03</CppLanguageStd>
-      <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\src\ps3;C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\src\ps3;C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\zlib;C:\SRB2_2.2-PS3\libs\xmp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Branchless>Branchless2</Branchless>
+      <UnrollSsa>8</UnrollSsa>
     </ClCompile>
     <Link>
       <OutputFormat>ELFFile</OutputFormat>
@@ -273,6 +275,45 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\libs\xmp\control.c" />
+    <ClCompile Include="..\..\libs\xmp\dataio.c" />
+    <ClCompile Include="..\..\libs\xmp\effects.c" />
+    <ClCompile Include="..\..\libs\xmp\extras.c" />
+    <ClCompile Include="..\..\libs\xmp\far_extras.c" />
+    <ClCompile Include="..\..\libs\xmp\filter.c" />
+    <ClCompile Include="..\..\libs\xmp\flow.c" />
+    <ClCompile Include="..\..\libs\xmp\flt_extras.c" />
+    <ClCompile Include="..\..\libs\xmp\format.c" />
+    <ClCompile Include="..\..\libs\xmp\hio.c" />
+    <ClCompile Include="..\..\libs\xmp\hmn_extras.c" />
+    <ClCompile Include="..\..\libs\xmp\lfo.c" />
+    <ClCompile Include="..\..\libs\xmp\load.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\common.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\iff.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\itsex.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\it_load.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\lzw.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\mod_load.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\s3m_load.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\sample.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\voltable.c" />
+    <ClCompile Include="..\..\libs\xmp\loaders\xm_load.c" />
+    <ClCompile Include="..\..\libs\xmp\load_helpers.c" />
+    <ClCompile Include="..\..\libs\xmp\med_extras.c" />
+    <ClCompile Include="..\..\libs\xmp\memio.c" />
+    <ClCompile Include="..\..\libs\xmp\miniz_tinfl.c" />
+    <ClCompile Include="..\..\libs\xmp\misc.c" />
+    <ClCompile Include="..\..\libs\xmp\mix_all.c" />
+    <ClCompile Include="..\..\libs\xmp\mix_paula.c" />
+    <ClCompile Include="..\..\libs\xmp\path.c" />
+    <ClCompile Include="..\..\libs\xmp\period.c" />
+    <ClCompile Include="..\..\libs\xmp\player.c" />
+    <ClCompile Include="..\..\libs\xmp\read_event.c" />
+    <ClCompile Include="..\..\libs\xmp\rng.c" />
+    <ClCompile Include="..\..\libs\xmp\scan.c" />
+    <ClCompile Include="..\..\libs\xmp\smix.c" />
+    <ClCompile Include="..\..\libs\xmp\tempfile.c" />
+    <ClCompile Include="..\..\libs\xmp\virtual.c" />
     <ClCompile Include="..\am_map.c" />
     <ClCompile Include="..\apng.c" />
     <ClCompile Include="..\blua\lapi.c" />
