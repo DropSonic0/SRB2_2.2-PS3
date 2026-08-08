@@ -58,7 +58,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
     <ClCompile>
-      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;HAVE_ZLIB;HAVE_XMP;HAVE_PNG;HWRENDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;HAVE_ZLIB;HAVE_XMP;LIBXMP_CORE_PLAYER;LIBXMP_NO_PROWIZARD;LIBXMP_NO_DEPACKERS;WORDS_BIGENDIAN;HAVE_PNG;HWRENDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <AdditionalOptions>-O3 %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -278,14 +278,11 @@
     <ClCompile Include="..\..\libs\xmp\control.c" />
     <ClCompile Include="..\..\libs\xmp\dataio.c" />
     <ClCompile Include="..\..\libs\xmp\effects.c" />
-    <ClCompile Include="..\..\libs\xmp\extras.c" />
-    <ClCompile Include="..\..\libs\xmp\far_extras.c" />
+    <ClCompile Include="..\..\libs\xmp\filetype.c" />
     <ClCompile Include="..\..\libs\xmp\filter.c" />
     <ClCompile Include="..\..\libs\xmp\flow.c" />
-    <ClCompile Include="..\..\libs\xmp\flt_extras.c" />
     <ClCompile Include="..\..\libs\xmp\format.c" />
     <ClCompile Include="..\..\libs\xmp\hio.c" />
-    <ClCompile Include="..\..\libs\xmp\hmn_extras.c" />
     <ClCompile Include="..\..\libs\xmp\lfo.c" />
     <ClCompile Include="..\..\libs\xmp\load.c" />
     <ClCompile Include="..\..\libs\xmp\loaders\common.c" />
@@ -299,10 +296,10 @@
     <ClCompile Include="..\..\libs\xmp\loaders\voltable.c" />
     <ClCompile Include="..\..\libs\xmp\loaders\xm_load.c" />
     <ClCompile Include="..\..\libs\xmp\load_helpers.c" />
-    <ClCompile Include="..\..\libs\xmp\med_extras.c" />
     <ClCompile Include="..\..\libs\xmp\memio.c" />
     <ClCompile Include="..\..\libs\xmp\miniz_tinfl.c" />
     <ClCompile Include="..\..\libs\xmp\misc.c" />
+    <ClCompile Include="..\..\libs\xmp\mixer.c" />
     <ClCompile Include="..\..\libs\xmp\mix_all.c" />
     <ClCompile Include="..\..\libs\xmp\mix_paula.c" />
     <ClCompile Include="..\..\libs\xmp\path.c" />

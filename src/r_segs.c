@@ -22,6 +22,8 @@
 #include "p_slopes.h"
 #include "taglist.h"
 
+static size_t maxdrawsegs = 0;
+
 // OPTIMIZE: closed two sided lines as single sided
 
 // True if any of the segs textures might be visible.
@@ -1849,7 +1851,6 @@ void R_StoreWallRange(INT32 start, INT32 stop)
 	INT32 range;
 	vertex_t segleft, segright;
 	fixed_t ceilingfrontslide, floorfrontslide, ceilingbackslide, floorbackslide;
-	static size_t maxdrawsegs = 0;
 
 	maskedtexturecol = NULL;
 	maskedtextureheight = NULL;
@@ -3133,4 +3134,13 @@ void R_StoreWallRange(INT32 start, INT32 stop)
 		ds_p->bsilheight = (sidedef->midtexture > 0 && sidedef->midtexture < numtextures) ? INT32_MAX : INT32_MIN;
 	}
 	ds_p++;
+}
+
+void R_ResetDrawsegs(void)
+{
+	if (drawsegs)
+		Z_Free(drawsegs);
+	drawsegs = NULL;
+	curdrawsegs = NULL;
+	maxdrawsegs = 0;
 }

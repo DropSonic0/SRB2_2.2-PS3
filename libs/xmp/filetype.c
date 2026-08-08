@@ -23,6 +23,13 @@
 #include "common.h"
 #include <errno.h>
 
+#ifndef S_ISDIR
+#define S_ISDIR(m) (((m) & 0170000) == 0040000)
+#endif
+#ifndef S_ISREG
+#define S_ISREG(m) (((m) & 0170000) == 0100000)
+#endif
+
 #if defined(_WIN32)
 
 #ifndef WIN32_LEAN_AND_MEAN

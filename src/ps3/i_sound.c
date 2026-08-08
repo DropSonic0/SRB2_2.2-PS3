@@ -33,6 +33,7 @@
 #include "../w_wad.h"
 #include "../z_zone.h"
 #include "../byteptr.h"
+#include "../console.h"
 
 #define AUDIO_BLOCKS 16
 #define AUDIO_CHANNELS 2
@@ -473,6 +474,14 @@ static boolean music_looping = false;
 static boolean music_paused = false;
 static uint8_t music_volume = 16; // 0 to 31
 
+#ifdef HAVE_XMP
+#define LIBXMP_CORE_PLAYER 1
+#include <xmp.h>
+static xmp_context xmp_ctx = NULL;
+static boolean music_playing_xmp = false;
+static boolean xmp_module_loaded = false;
+#endif
+
 static fifo_buffer_t *music_fifo = NULL;
 static double music_accum = 0.0;
 static uint32_t music_loop_point_ms = 0;
@@ -502,6 +511,50 @@ static inline void seek_music_loop(void)
 
 static void mix_music(Sint16 *stream, int num_frames)
 {
+#ifdef HAVE_XMP
+	if (music_playing_xmp && !music_paused) {
+		int16_t xmp_buf[num_frames * 2];
+		int play_err = xmp_play_buffer(xmp_ctx, xmp_buf, num_frames * 4, music_looping ? 0 : 1);
+		struct xmp_frame_info fi;
+		xmp_get_frame_info(xmp_ctx, &fi);
+		if (play_err != 0 || (!music_looping && fi.loop_count > 0)) {
+			music_playing_xmp = false;
+			music_playing = false;
+			music_eof_reached = true;
+			return;
+		}
+
+		int i;
+		for (i = 0; i < num_frames; i++) {
+			int32_t mixed_r = stream[i * 2];
+			int32_t mixed_l = stream[i * 2 + 1];
+
+			if (music_fade_factor < 1.0f) {
+				music_fade_factor += 1.0f / 24000.0f;
+				if (music_fade_factor > 1.0f) {
+					music_fade_factor = 1.0f;
+				}
+			}
+
+			int32_t vol_r = (int32_t)((((int32_t)xmp_buf[i * 2 + 1] * music_volume / 31) / 2) * music_fade_factor);
+			int32_t vol_l = (int32_t)((((int32_t)xmp_buf[i * 2] * music_volume / 31) / 2) * music_fade_factor);
+
+			mixed_l += vol_l;
+			mixed_r += vol_r;
+
+			if (mixed_l > 32767) mixed_l = 32767;
+			else if (mixed_l < -32768) mixed_l = -32768;
+
+			if (mixed_r > 32767) mixed_r = 32767;
+			else if (mixed_r < -32768) mixed_r = -32768;
+
+			stream[i * 2] = (Sint16)mixed_r;
+			stream[i * 2 + 1] = (Sint16)mixed_l;
+		}
+		return;
+	}
+#endif
+
 	if (!music_playing || music_paused || !music_decoder || !music_fifo)
 		return;
 
@@ -775,6 +828,13 @@ static void cellAudioPortExit(void)
 	aud->quit_thread = true;
 	pthread_join(aud->thread, NULL);
 
+#ifdef HAVE_XMP
+	if (xmp_ctx) {
+		xmp_free_context(xmp_ctx);
+		xmp_ctx = NULL;
+	}
+#endif
+
 	cellAudioPortStop(aud->audio_port);
 	cellAudioPortClose(aud->audio_port);
 	cellAudioQuit();
@@ -1002,6 +1062,14 @@ UINT32 I_GetSongLength(void)
 {
 	pthread_mutex_lock(&aud->lock);
 	UINT32 len = 0;
+#ifdef HAVE_XMP
+	if (music_playing_xmp) {
+		struct xmp_frame_info fi;
+		xmp_get_frame_info(xmp_ctx, &fi);
+		len = fi.total_time;
+	}
+	else
+#endif
 	if (music_decoder) {
 		len = stb_vorbis_stream_length_in_samples(music_decoder) * 1000 / stb_vorbis_get_info(music_decoder).sample_rate;
 	}
@@ -1036,6 +1104,13 @@ boolean I_SetSongPosition(UINT32 position)
 	}
 
 	boolean success = false;
+#ifdef HAVE_XMP
+	if (music_playing_xmp) {
+		xmp_seek_time(xmp_ctx, position);
+		success = true;
+	}
+	else
+#endif
 	if (music_decoder) {
 		stb_vorbis_info info = stb_vorbis_get_info(music_decoder);
 		unsigned int sample_offset = position * info.sample_rate / 1000;
@@ -1064,6 +1139,14 @@ UINT32 I_GetSongPosition(void)
 	}
 
 	UINT32 pos = 0;
+#ifdef HAVE_XMP
+	if (music_playing_xmp) {
+		struct xmp_frame_info fi;
+		xmp_get_frame_info(xmp_ctx, &fi);
+		pos = fi.time;
+	}
+	else
+#endif
 	if (music_decoder) {
 		stb_vorbis_info info = stb_vorbis_get_info(music_decoder);
 		if (info.sample_rate > 0) {
@@ -1089,6 +1172,15 @@ static void I_StopSong_Internal(void)
 			pthread_cond_wait(&aud->cond, &aud->lock);
 		}
 	}
+
+#ifdef HAVE_XMP
+	if (xmp_ctx && xmp_module_loaded) {
+		xmp_end_player(xmp_ctx);
+		xmp_release_module(xmp_ctx);
+		music_playing_xmp = false;
+		xmp_module_loaded = false;
+	}
+#endif
 
 	if (music_decoder) {
 		stb_vorbis_close(music_decoder);
@@ -1154,8 +1246,27 @@ boolean I_PlaySong(boolean looping)
 	int error_code = 0;
 	music_decoder = stb_vorbis_open_memory((unsigned char*)music_data_buf, music_data_len, &error_code, NULL);
 	if (!music_decoder) {
+#ifdef HAVE_XMP
+		if (!xmp_ctx) {
+			xmp_ctx = xmp_create_context();
+		}
+		if (xmp_ctx && xmp_load_module_from_memory(xmp_ctx, music_data_buf, music_data_len) == 0) {
+			xmp_start_player(xmp_ctx, 48000, 0);
+			music_looping = looping;
+			music_playing_xmp = true;
+			xmp_module_loaded = true;
+			music_playing = true;
+			music_paused = false;
+			music_seek_fail_count = 0;
+			music_eof_reached = false;
+			music_fade_factor = 0.0f;
+			pthread_mutex_unlock(&aud->lock);
+			return true;
+		}
+#endif
+		music_playing = false;
 		pthread_mutex_unlock(&aud->lock);
-		return false;
+		return true;
 	}
 
 	stb_vorbis_info info = stb_vorbis_get_info(music_decoder);
@@ -1167,17 +1278,78 @@ boolean I_PlaySong(boolean looping)
 	int i;
 	for (i = 0; i < comment.comment_list_length; i++) {
 		char *c = comment.comment_list[i];
-		if (strncasecmp(c, "LOOPPOINT=", 10) == 0) {
-			music_loop_point_samples = atoi(c + 10);
-			music_loop_point_ms = music_loop_point_samples * 1000 / info.sample_rate;
+		char *eq = strchr(c, '=');
+		if (eq) {
+			size_t tag_len = eq - c;
+			char tag_name[32];
+			if (tag_len < sizeof(tag_name)) {
+				memcpy(tag_name, c, tag_len);
+				tag_name[tag_len] = '\0';
+
+				// Strip trailing spaces from tag name
+				if (tag_len > 0) {
+					char *t_end = tag_name + tag_len - 1;
+					while (t_end > tag_name && *t_end == ' ') {
+						*t_end = '\0';
+						t_end--;
+					}
+				}
+
+				// Skip leading spaces of the value
+				char *val_str = eq + 1;
+				while (*val_str == ' ') {
+					val_str++;
+				}
+
+				if (strcasecmp(tag_name, "LOOPPOINT") == 0 || strcasecmp(tag_name, "LOOP_POINT") == 0 ||
+					strcasecmp(tag_name, "LOOPSTART") == 0 || strcasecmp(tag_name, "LOOP_START") == 0) {
+					music_loop_point_samples = (uint32_t)atof(val_str);
+					music_loop_point_ms = music_loop_point_samples * 1000 / info.sample_rate;
+				}
+				else if (strcasecmp(tag_name, "LOOPMS") == 0 || strcasecmp(tag_name, "LOOP_MS") == 0) {
+					music_loop_point_ms = (uint32_t)atof(val_str);
+					music_loop_point_samples = music_loop_point_ms * info.sample_rate / 1000;
+				}
+			}
 		}
-		else if (strncasecmp(c, "LOOPSTART=", 10) == 0) {
-			music_loop_point_samples = atoi(c + 10);
-			music_loop_point_ms = music_loop_point_samples * 1000 / info.sample_rate;
-		}
-		else if (strncasecmp(c, "LOOPMS=", 7) == 0) {
-			music_loop_point_ms = atoi(c + 7);
-			music_loop_point_samples = music_loop_point_ms * info.sample_rate / 1000;
+	}
+
+	// Fallback raw memory scan (identical to PC/SDL version for 100% compatibility if tags are hidden or malformed)
+	if (music_loop_point_samples == 0 && music_data_buf && music_data_len > 12) {
+		char *p_scan = music_data_buf;
+		size_t len_scan = music_data_len;
+		while ((size_t)(p_scan - music_data_buf) < len_scan - 12) {
+			if (strncasecmp(p_scan, "LOOPPOINT=", 10) == 0) {
+				music_loop_point_samples = (uint32_t)atof(p_scan + 10);
+				music_loop_point_ms = music_loop_point_samples * 1000 / info.sample_rate;
+				break;
+			}
+			else if (strncasecmp(p_scan, "LOOP_POINT=", 11) == 0) {
+				music_loop_point_samples = (uint32_t)atof(p_scan + 11);
+				music_loop_point_ms = music_loop_point_samples * 1000 / info.sample_rate;
+				break;
+			}
+			else if (strncasecmp(p_scan, "LOOPSTART=", 10) == 0) {
+				music_loop_point_samples = (uint32_t)atof(p_scan + 10);
+				music_loop_point_ms = music_loop_point_samples * 1000 / info.sample_rate;
+				break;
+			}
+			else if (strncasecmp(p_scan, "LOOP_START=", 11) == 0) {
+				music_loop_point_samples = (uint32_t)atof(p_scan + 11);
+				music_loop_point_ms = music_loop_point_samples * 1000 / info.sample_rate;
+				break;
+			}
+			else if (strncasecmp(p_scan, "LOOPMS=", 7) == 0) {
+				music_loop_point_ms = (uint32_t)atof(p_scan + 7);
+				music_loop_point_samples = music_loop_point_ms * info.sample_rate / 1000;
+				break;
+			}
+			else if (strncasecmp(p_scan, "LOOP_MS=", 8) == 0) {
+				music_loop_point_ms = (uint32_t)atof(p_scan + 8);
+				music_loop_point_samples = music_loop_point_ms * info.sample_rate / 1000;
+				break;
+			}
+			p_scan++;
 		}
 	}
 

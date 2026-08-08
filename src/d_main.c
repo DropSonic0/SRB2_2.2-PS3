@@ -48,6 +48,7 @@
 #include "m_misc.h"
 #include "p_setup.h"
 #include "p_saveg.h"
+#include "r_bsp.h"
 #include "r_main.h"
 #include "r_local.h"
 #include "r_translation.h"
@@ -948,6 +949,8 @@ void D_AdvanceDemo(void)
 //
 void D_StartTitle(void)
 {
+	R_ResetDrawsegs();
+
 	INT32 i;
 
 	S_StopMusic();

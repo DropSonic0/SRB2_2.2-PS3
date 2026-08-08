@@ -29,6 +29,7 @@ extern INT32 checkcoord[12][4];
 
 extern drawseg_t *curdrawsegs;
 extern drawseg_t *drawsegs;
+void R_ResetDrawsegs(void);
 extern drawseg_t *ds_p;
 
 extern boolean bothceilingssky;

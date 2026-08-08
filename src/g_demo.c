@@ -2648,6 +2648,8 @@ void G_FreeGhosts(void)
 	while (ghosts)
 	{
 		demoghost *next = ghosts->next;
+		if (ghosts->buffer)
+			Z_Free(ghosts->buffer);
 		Z_Free(ghosts);
 		ghosts = next;
 	}

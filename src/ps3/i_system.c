@@ -232,12 +232,12 @@ static char returnWadPath[256];
 #define PS3_NUM_BINS 32
 
 typedef struct ps3_mem_block_s {
-    size_t size;                     // Usable size of this block
-    int free;                        // 1 = free, 0 = allocated
-    struct ps3_mem_block_s *next;    // Next block physically
-    struct ps3_mem_block_s *prev;    // Prev block physically
-    struct ps3_mem_block_s *bin_next; // Next block in the free bin
-    struct ps3_mem_block_s *bin_prev; // Prev block in the free bin
+	size_t size;                     // Usable size of this block
+	int free;                        // 1 = free, 0 = allocated
+	struct ps3_mem_block_s *next;    // Next block physically
+	struct ps3_mem_block_s *prev;    // Prev block physically
+	struct ps3_mem_block_s *bin_next; // Next block in the free bin
+	struct ps3_mem_block_s *bin_prev; // Prev block in the free bin
 } __attribute__((aligned(16))) ps3_mem_block_t;
 
 static sys_addr_t ps3_pool_start = 0;
@@ -250,63 +250,64 @@ static pthread_mutex_t ps3_mem_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int ps3_mem_inited = 0;
 
 static int get_bin_index(size_t size) {
-    if (size <= 16) return 0;
-    if (size <= 32) return 1;
-    if (size <= 64) return 2;
-    if (size <= 128) return 3;
-    if (size <= 256) return 4;
-    if (size <= 512) return 5;
-    if (size <= 1024) return 6;
-    
-    int idx = 7;
-    size_t s = 1024;
-    while (s < size && idx < PS3_NUM_BINS - 1) {
-        s <<= 1;
-        idx++;
-    }
-    return idx;
+	if (size <= 16) return 0;
+	if (size <= 32) return 1;
+	if (size <= 64) return 2;
+	if (size <= 128) return 3;
+	if (size <= 256) return 4;
+	if (size <= 512) return 5;
+	if (size <= 1024) return 6;
+
+	int idx = 7;
+	size_t s = 1024;
+	while (s < size && idx < PS3_NUM_BINS - 1) {
+		s <<= 1;
+		idx++;
+	}
+	return idx;
 }
 
 static void bin_insert(ps3_mem_block_t *block) {
-    int idx = get_bin_index(block->size);
-    block->bin_next = ps3_free_bins[idx];
-    block->bin_prev = NULL;
-    if (ps3_free_bins[idx] != NULL) {
-        ps3_free_bins[idx]->bin_prev = block;
-    }
-    ps3_free_bins[idx] = block;
+	int idx = get_bin_index(block->size);
+	block->bin_next = ps3_free_bins[idx];
+	block->bin_prev = NULL;
+	if (ps3_free_bins[idx] != NULL) {
+		ps3_free_bins[idx]->bin_prev = block;
+	}
+	ps3_free_bins[idx] = block;
 }
 
 static void bin_remove(ps3_mem_block_t *block) {
-    int idx = get_bin_index(block->size);
-    if (block->bin_prev != NULL) {
-        block->bin_prev->bin_next = block->bin_next;
-    } else {
-        ps3_free_bins[idx] = block->bin_next;
-    }
-    if (block->bin_next != NULL) {
-        block->bin_next->bin_prev = block->bin_prev;
-    }
-    block->bin_next = NULL;
-    block->bin_prev = NULL;
+	int idx = get_bin_index(block->size);
+	if (block->bin_prev != NULL) {
+		block->bin_prev->bin_next = block->bin_next;
+	}
+	else {
+		ps3_free_bins[idx] = block->bin_next;
+	}
+	if (block->bin_next != NULL) {
+		block->bin_next->bin_prev = block->bin_prev;
+	}
+	block->bin_next = NULL;
+	block->bin_prev = NULL;
 }
 
 void I_InitPS3Memory(void) {
 	if (ps3_mem_inited) return;
 
 	sys_memory_info_t mem_info;
-	size_t pool_size = 170 * 1024 * 1024; // Default fallback to 170MB for PSGL
+	size_t pool_size = 160 * 1024 * 1024; // Default fallback to 160MB for PSGL
 
 	if (sys_memory_get_user_memory_size(&mem_info) == 0) {
 		size_t avail = mem_info.available_user_memory;
-		if (avail > 32 * 1024 * 1024) {
-			pool_size = avail - (32 * 1024 * 1024);
+		if (avail > 48 * 1024 * 1024) {
+			pool_size = avail - (48 * 1024 * 1024);
 		}
 	}
 
-	// Cap strictly between 32MB and 170MB for PSGL compatibility
+	// Cap strictly between 32MB and 160MB for PSGL compatibility
 	if (pool_size < 32 * 1024 * 1024) pool_size = 32 * 1024 * 1024;
-	if (pool_size > 170 * 1024 * 1024) pool_size = 170 * 1024 * 1024;
+	if (pool_size > 160 * 1024 * 1024) pool_size = 160 * 1024 * 1024;
 
 	// Align to 1MB boundary
 	pool_size = (pool_size / (1024 * 1024)) * (1024 * 1024);
@@ -451,63 +452,63 @@ void I_PS3_Free(void *ptr) {
 }
 
 void *I_PS3_Realloc(void *ptr, size_t size) {
-    if (ptr == NULL) return I_PS3_Malloc(size);
-    if (size == 0) {
-        I_PS3_Free(ptr);
-        return NULL;
-    }
+	if (ptr == NULL) return I_PS3_Malloc(size);
+	if (size == 0) {
+		I_PS3_Free(ptr);
+		return NULL;
+	}
 
-    size_t aligned_size = (size + 15) & ~15;
+	size_t aligned_size = (size + 15) & ~15;
 
-    if (ps3_pool_start == 0 || (uintptr_t)ptr < (uintptr_t)ps3_pool_start || 
-        (uintptr_t)ptr >= (uintptr_t)ps3_pool_start + ps3_pool_size) {
-        void *reallocated = realloc(ptr, size);
-        return reallocated;
-    }
+	if (ps3_pool_start == 0 || (uintptr_t)ptr < (uintptr_t)ps3_pool_start ||
+		(uintptr_t)ptr >= (uintptr_t)ps3_pool_start + ps3_pool_size) {
+		void *reallocated = realloc(ptr, size);
+		return reallocated;
+	}
 
-    pthread_mutex_lock(&ps3_mem_mutex);
-    ps3_mem_block_t *block = (ps3_mem_block_t *)((uintptr_t)ptr - sizeof(ps3_mem_block_t));
-    size_t old_size = block->size;
-    pthread_mutex_unlock(&ps3_mem_mutex);
+	pthread_mutex_lock(&ps3_mem_mutex);
+	ps3_mem_block_t *block = (ps3_mem_block_t *)((uintptr_t)ptr - sizeof(ps3_mem_block_t));
+	size_t old_size = block->size;
+	pthread_mutex_unlock(&ps3_mem_mutex);
 
-    if (old_size >= aligned_size) {
-        return ptr; 
-    }
+	if (old_size >= aligned_size) {
+		return ptr;
+	}
 
-    void *new_ptr = I_PS3_Malloc(size);
-    if (new_ptr != NULL) {
-        memcpy(new_ptr, ptr, old_size);
-        I_PS3_Free(ptr);
-    }
-    return new_ptr;
+	void *new_ptr = I_PS3_Malloc(size);
+	if (new_ptr != NULL) {
+		memcpy(new_ptr, ptr, old_size);
+		I_PS3_Free(ptr);
+	}
+	return new_ptr;
 }
 
 void *I_PS3_Calloc(size_t nmemb, size_t size) {
-    size_t total = nmemb * size;
-    void *ptr = I_PS3_Malloc(total);
-    if (ptr != NULL) {
-        memset(ptr, 0, total);
-    }
-    return ptr;
+	size_t total = nmemb * size;
+	void *ptr = I_PS3_Malloc(total);
+	if (ptr != NULL) {
+		memset(ptr, 0, total);
+	}
+	return ptr;
 }
 
 size_t I_PS3_GetFreeMem(size_t *total) {
-    if (!ps3_mem_inited) {
-        I_InitPS3Memory();
-    }
-    if (ps3_pool_start == 0) {
-        sys_memory_info_t mem_info;
-        if (sys_memory_get_user_memory_size(&mem_info) == 0) {
-            if (total) *total = (size_t)mem_info.total_user_memory;
-            return (size_t)mem_info.available_user_memory;
-        }
-        if (total) *total = 210 << 20;
-        return 48 << 20;
-    }
-    if (total) {
-        *total = ps3_total_pool_bytes;
-    }
-    return (ps3_total_pool_bytes > ps3_allocated_bytes) ? (ps3_total_pool_bytes - ps3_allocated_bytes) : 0;
+	if (!ps3_mem_inited) {
+		I_InitPS3Memory();
+	}
+	if (ps3_pool_start == 0) {
+		sys_memory_info_t mem_info;
+		if (sys_memory_get_user_memory_size(&mem_info) == 0) {
+			if (total) *total = (size_t)mem_info.total_user_memory;
+			return (size_t)mem_info.available_user_memory;
+		}
+		if (total) *total = 210 << 20;
+		return 48 << 20;
+	}
+	if (total) {
+		*total = ps3_total_pool_bytes;
+	}
+	return (ps3_total_pool_bytes > ps3_allocated_bytes) ? (ps3_total_pool_bytes - ps3_allocated_bytes) : 0;
 }
 
 #ifndef CELL_KB_MAX_KEYCODES
