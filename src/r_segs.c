@@ -22,6 +22,15 @@
 #include "p_slopes.h"
 #include "taglist.h"
 
+#ifdef __PS3__
+#define MAXDRAWSEGS_HARDCAP 4096
+#define MAXTEXTURECOLUMNTABLE_HARDCAP 262144
+#define MAXOPENINGS_HARDCAP 524288
+#else
+#define MAXDRAWSEGS_HARDCAP 32768
+#define MAXTEXTURECOLUMNTABLE_HARDCAP 8000000
+#define MAXOPENINGS_HARDCAP 16000000
+#endif
 static size_t maxdrawsegs = 0;
 
 // OPTIMIZE: closed two sided lines as single sided
@@ -1733,13 +1742,16 @@ static INT64 R_CalcSegDist(seg_t* seg, INT64 x2, INT64 y2)
 }
 
 //SoM: Code to remove limits on openings.
-static void R_AllocClippingTables(size_t range)
+static boolean R_AllocClippingTables(size_t range)
 {
 	size_t pos = lastopening - openings;
 	size_t need = range * 2; // for both sprtopclip and sprbottomclip
 
 	if (pos + need < numopenings)
-		return;
+		return true;
+
+	if (numopenings + need > MAXOPENINGS_HARDCAP)
+		return false; // techo alcanzado: no crecer mas
 
 	INT16 *oldopenings = openings;
 	INT16 *oldlast = lastopening;
@@ -1748,11 +1760,13 @@ static void R_AllocClippingTables(size_t range)
 		numopenings = 16384;
 
 	numopenings += need;
+	if (numopenings > MAXOPENINGS_HARDCAP)
+		numopenings = MAXOPENINGS_HARDCAP;
 	openings = Z_Realloc(openings, numopenings * sizeof (*openings), PU_STATIC, NULL);
 	lastopening = openings + pos;
 
 	if (oldopenings == NULL)
-		return;
+		return true;
 
 	// borrowed fix from *cough* zdoom *cough*
 	// [RH] We also need to adjust the openings pointers that
@@ -1765,15 +1779,19 @@ static void R_AllocClippingTables(size_t range)
 		if (ds->sprbottomclip + ds->x1 >= oldopenings && ds->sprbottomclip + ds->x1 <= oldlast)
 			ds->sprbottomclip = (ds->sprbottomclip - oldopenings) + openings;
 	}
+	return true;
 }
 
-static void R_AllocTextureColumnTables(size_t range)
+static boolean R_AllocTextureColumnTables(size_t range)
 {
 	size_t pos = curtexturecolumntable - texturecolumntable;
 	size_t need = range * 4;
 
 	if (pos + need < texturecolumntablesize)
-		return;
+		return true;
+
+	if (texturecolumntablesize + need > MAXTEXTURECOLUMNTABLE_HARDCAP)
+		return false; // techo alcanzado: no crecer más
 
 	fixed_t *oldtable = texturecolumntable;
 	fixed_t *oldlast = curtexturecolumntable;
@@ -1782,11 +1800,13 @@ static void R_AllocTextureColumnTables(size_t range)
 		texturecolumntablesize = 16384;
 
 	texturecolumntablesize += need;
+	if (texturecolumntablesize > MAXTEXTURECOLUMNTABLE_HARDCAP)
+		texturecolumntablesize = MAXTEXTURECOLUMNTABLE_HARDCAP;
 	texturecolumntable = Z_Realloc(texturecolumntable, texturecolumntablesize * sizeof (*texturecolumntable), PU_STATIC, NULL);
 	curtexturecolumntable = texturecolumntable + pos;
 
 	if (oldtable == NULL)
-		return;
+		return true;
 
 	for (drawseg_t *ds = drawsegs; ds < ds_p; ds++)
 	{
@@ -1802,6 +1822,7 @@ static void R_AllocTextureColumnTables(size_t range)
 
 #undef CHECK
 	}
+	return true;
 }
 
 //
@@ -1863,11 +1884,21 @@ void R_StoreWallRange(INT32 start, INT32 stop)
 
 	colfunc = colfuncs[BASEDRAWFUNC];
 
-	if (ds_p == drawsegs+maxdrawsegs)
+	if (ds_p == drawsegs + maxdrawsegs)
 	{
+		if (maxdrawsegs >= MAXDRAWSEGS_HARDCAP)
+		{
+			// Hard cap reached: skip this wall segment instead of growing
+			// further and risking a huge contiguous allocation failing.
+			// Losing masked-texture/silhouette handling on a few extra
+			// walls in an extreme scene beats crashing.
+			return;
+		}
 		size_t curpos = curdrawsegs - drawsegs;
 		size_t pos = ds_p - drawsegs;
-		size_t newmax = maxdrawsegs ? maxdrawsegs*2 : 128;
+		size_t newmax = maxdrawsegs ? maxdrawsegs * 2 : 128;
+		if (newmax > MAXDRAWSEGS_HARDCAP)
+			newmax = MAXDRAWSEGS_HARDCAP;
 		if (firstseg)
 			firstseg = (drawseg_t *)(firstseg - drawsegs);
 		drawsegs = Z_Realloc(drawsegs, newmax*sizeof (*drawsegs), PU_STATIC, NULL);
@@ -2371,9 +2402,7 @@ void R_StoreWallRange(INT32 start, INT32 stop)
 		}
 
 		// allocate space for masked texture tables
-		R_AllocTextureColumnTables(rw_stopx - start);
-
-		texcoltables = true;
+		texcoltables = R_AllocTextureColumnTables(rw_stopx - start);
 
 		if (frontsector && backsector && !Tag_Compare(&frontsector->tags, &backsector->tags) && (backsector->ffloors || frontsector->ffloors))
 		{
@@ -2387,8 +2416,13 @@ void R_StoreWallRange(INT32 start, INT32 stop)
 
 			maskedtexture = true;
 
-			ds_p->thicksidecol = thicksidecol = curtexturecolumntable - rw_x;
-			curtexturecolumntable += rw_stopx - rw_x;
+			if (texcoltables)
+			{
+				ds_p->thicksidecol = thicksidecol = curtexturecolumntable - rw_x;
+				curtexturecolumntable += rw_stopx - rw_x;
+			}
+			else
+				ds_p->thicksidecol = thicksidecol = NULL;
 
 			lowcut = max(worldbottom, worldlow) + viewz;
 			highcut = min(worldtop, worldhigh) + viewz;
@@ -2570,11 +2604,19 @@ void R_StoreWallRange(INT32 start, INT32 stop)
 		// masked midtexture
 		if (sidedef->midtexture > 0 && sidedef->midtexture < numtextures)
 		{
-			ds_p->maskedtexturecol = maskedtexturecol = curtexturecolumntable - rw_x;
-			curtexturecolumntable += rw_stopx - rw_x;
+			if (texcoltables)
+			{
+				ds_p->maskedtexturecol = maskedtexturecol = curtexturecolumntable - rw_x;
+				curtexturecolumntable += rw_stopx - rw_x;
 
-			ds_p->maskedtextureheight = maskedtextureheight = curtexturecolumntable - rw_x;
-			curtexturecolumntable += rw_stopx - rw_x;
+				ds_p->maskedtextureheight = maskedtextureheight = curtexturecolumntable - rw_x;
+				curtexturecolumntable += rw_stopx - rw_x;
+			}
+			else
+			{
+				ds_p->maskedtexturecol = maskedtexturecol = NULL;
+				ds_p->maskedtextureheight = maskedtextureheight = NULL;
+			}
 
 			maskedtexture = true;
 
@@ -2693,8 +2735,13 @@ void R_StoreWallRange(INT32 start, INT32 stop)
 
 	if (maskedtexture)
 	{
-		ds_p->invscale = invscale = curtexturecolumntable - rw_x;
-		curtexturecolumntable += rw_stopx - rw_x;
+		if (texcoltables)
+		{
+			ds_p->invscale = invscale = curtexturecolumntable - rw_x;
+			curtexturecolumntable += rw_stopx - rw_x;
+		}
+		else
+			ds_p->invscale = invscale = NULL;
 	}
 
 	// if a floor / ceiling plane is on the wrong side
@@ -3106,18 +3153,18 @@ void R_StoreWallRange(INT32 start, INT32 stop)
 	// save sprite clipping info
 	if (maskedtexture || (ds_p->silhouette & (SIL_TOP | SIL_BOTTOM)))
 	{
-		R_AllocClippingTables(rw_stopx - start);
+		boolean gotclipping = R_AllocClippingTables(rw_stopx - start);
 
-		if (((ds_p->silhouette & SIL_TOP) || maskedtexture) && !ds_p->sprtopclip)
+		if (gotclipping && ((ds_p->silhouette & SIL_TOP) || maskedtexture) && !ds_p->sprtopclip)
 		{
-			M_Memcpy(lastopening, ceilingclip + start, 2*(rw_stopx - start));
+			M_Memcpy(lastopening, ceilingclip + start, 2 * (rw_stopx - start));
 			ds_p->sprtopclip = lastopening - start;
 			lastopening += rw_stopx - start;
 		}
 
-		if (((ds_p->silhouette & SIL_BOTTOM) || maskedtexture) && !ds_p->sprbottomclip)
+		if (gotclipping && ((ds_p->silhouette & SIL_BOTTOM) || maskedtexture) && !ds_p->sprbottomclip)
 		{
-			M_Memcpy(lastopening, floorclip + start, 2*(rw_stopx - start));
+			M_Memcpy(lastopening, floorclip + start, 2 * (rw_stopx - start));
 			ds_p->sprbottomclip = lastopening - start;
 			lastopening += rw_stopx - start;
 		}

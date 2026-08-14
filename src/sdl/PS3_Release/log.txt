@@ -21,7 +21,7 @@ in this program.
 
 M_StartupLocale...
 Z_Init(): Init zone memory allocation daemon. 
-System memory: 163MB - Free: 162MB
+System memory: 168MB - Free: 167MB
 I_InitializeTime()...
 W_InitMultipleFiles(): Adding IWAD and main PWADs.
 Added file /dev_hdd0/game/SRB222PS3/USRDIR/srb2.pk3 (12614 lumps)
@@ -36,48 +36,13 @@ Added file /dev_hdd0/game/SRB222PS3/USRDIR/characters.pk3 (2054 lumps)
 Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/characters.pk3|SOC/Characters.txt
 Added file /dev_hdd0/game/SRB222PS3/USRDIR/music.pk3 (215 lumps)
 I_StartupGraphics()...
-[PS3] Active renderer 'Software' detected in config.cfg. Initializing in Software mode.
-[PS3] Loading GCM & RESC system modules...
-[PS3] Allocating GCM host command buffer...
-[PS3] Initializing GCM library (256KB command buffer)...
-[PS3] cellGcmInit returned: 0
-[PS3] Querying GCM configurations...
-[PS3] Querying primary video output state...
-[PS3] cellVideoOutGetState returned: 0
-[PS3] Querying video output resolution...
-[PS3] cellVideoOutGetResolution returned: 0
-[PS3] Target Display Resolution: 1920x1080
-[PS3] Configuring video output to 1920x1080 (X8R8G8B8)...
-[PS3] cellVideoOutConfigure returned: 0
-[PS3] Resolving RESC buffer mode...
-[PS3] cellRescVideoOutResolutionId2RescBufferMode returned: 0
-[PS3] Initializing RESC library...
-[PS3] cellRescInit returned: 0
-[PS3] Querying RESC required buffer sizes...
-[PS3] cellRescGetBufferSize returned: 0
-[PS3] Allocating RESC buffer allocations in VRAM...
-[PS3] Registering RESC buffer addresses...
-[PS3] cellRescSetBufferAddress returned: 0
-[PS3] Setting RESC destination structures...
-[PS3] cellRescSetDsts returned: 0
-[PS3] Applying RESC display mode configuration...
-[PS3] cellRescSetDisplayMode returned: 0
-[PS3] Allocating and registering dual maximum-sized source buffers in GCM mapped VRAM...
-[PS3] Populating RESC src 0: format=0xa5, pitch=3200, width=800, height=450, offset=0x1100000
-[PS3] cellRescSetSrc(0) returned: 0
-[PS3] Populating RESC src 1: format=0xa5, pitch=3200, width=800, height=450, offset=0x1300000
-[PS3] cellRescSetSrc(1) returned: 0
-[PS3] Queuing initial Conversion and Flip...
-[PS3] cellRescSetConvertAndFlip returned: 0
-[PS3] Flushing GCM command buffer...
-[PS3] Waiting for initial Flip event...
-[PS3] Native Libgcm video output and Hardware cellResc scaling initialized successfully.
-[PS3] Updating RESC src 0 for mode 0 (800x450): pitch=3200
-[PS3] Updating RESC src 1 for mode 0 (800x450): pitch=3200
+[PS3] Initializing in Software mode (default)
 Number of console HUD lines is now 5
 [PS3] cellPadInit(7) successful
 HU_LoadGraphics()...
 Executing /dev_hdd0/game/SRB222PS3/USRDIR/config.cfg
+Unknown command 'mr_cameraRoll'
+Unknown command 'mr_spriteRoll'
 Default resolution: 800 x 450
 Windowed resolution: 640 x 400
 Default bit depth: 16 bits
@@ -94,595 +59,2232 @@ ST_Init(): Init status bar.
 D_CheckNetGame(): Checking network game status.
 Logfile: /dev_hdd0/game/SRB222PS3/USRDIR/log.txt
 Entering main game loop...
-[PS3] Updating RESC src 0 for mode 0 (800x450): pitch=3200
-[PS3] Updating RESC src 1 for mode 0 (800x450): pitch=3200
 ===========================================================================
                    We hope you enjoy this game as
                      much as we did making it!
                             ...wait. =P
 ===========================================================================
-Sonic Robo Blast 2 v2.2.15 (Aug  6 2026 20:28:19 illegal Unknown) PlayStation 3 32-bit 
+Sonic Robo Blast 2 v2.2.15 (Aug 14 2026 00:31:19 illegal Unknown) PlayStation 3 32-bit 
+I_PlaySong: Playing OGG/Vorbis format (44100 Hz, 2 channels)
+I_PlaySong: Playing OGG/Vorbis format (44100 Hz, 2 channels)
 [PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 37177 KB
-[PS3][MEMSTATS] Static  : 33514 KB
+[PS3][MEMSTATS] Total   : 35282 KB
+[PS3][MEMSTATS] Static  : 33858 KB
 [PS3][MEMSTATS] Sound   : 0 KB
-[PS3][MEMSTATS] Music   : 285 KB
+[PS3][MEMSTATS] Music   : 247 KB
 [PS3][MEMSTATS] Level   : 8 KB
 [PS3][MEMSTATS] LevSpec : 0 KB
 [PS3][MEMSTATS] Purgable: 3 KB
-[PS3][MEMSTATS] SysFreeMem: 130684 KB
-Starting Server....
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 1 ----
-[PS3][MEMSTATS] Total   : 47258 KB
-[PS3][MEMSTATS] Static  : 34657 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 120631 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 62440 KB
-[PS3][MEMSTATS] Static  : 41856 KB
-[PS3][MEMSTATS] Sound   : 429 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 14829 KB
-[PS3][MEMSTATS] LevSpec : 11 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 105722 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 2 ----
-[PS3][MEMSTATS] Total   : 56312 KB
-[PS3][MEMSTATS] Static  : 41870 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 111615 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 71400 KB
-[PS3][MEMSTATS] Static  : 41978 KB
-[PS3][MEMSTATS] Sound   : 618 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 22574 KB
-[PS3][MEMSTATS] LevSpec : 32 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 97020 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 3 ----
-[PS3][MEMSTATS] Total   : 57534 KB
-[PS3][MEMSTATS] Static  : 41993 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 110416 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 59441 KB
-[PS3][MEMSTATS] Static  : 42019 KB
-[PS3][MEMSTATS] Sound   : 411 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 9238 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 108570 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 4 ----
-[PS3][MEMSTATS] Total   : 59290 KB
-[PS3][MEMSTATS] Static  : 42034 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 108678 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 79353 KB
-[PS3][MEMSTATS] Static  : 42283 KB
-[PS3][MEMSTATS] Sound   : 261 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 25768 KB
-[PS3][MEMSTATS] LevSpec : 47 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 89492 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 5 ----
-[PS3][MEMSTATS] Total   : 62561 KB
-[PS3][MEMSTATS] Static  : 42298 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 105446 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 86227 KB
-[PS3][MEMSTATS] Static  : 42583 KB
-[PS3][MEMSTATS] Sound   : 144 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 30610 KB
-[PS3][MEMSTATS] LevSpec : 83 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 82788 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 6 ----
-[PS3][MEMSTATS] Total   : 64916 KB
-[PS3][MEMSTATS] Static  : 42598 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 103123 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 58411 KB
-[PS3][MEMSTATS] Static  : 42607 KB
-[PS3][MEMSTATS] Sound   : 91 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 1912 KB
-[PS3][MEMSTATS] LevSpec : 24 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 109640 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 7 ----
-[PS3][MEMSTATS] Total   : 65881 KB
-[PS3][MEMSTATS] Static  : 42622 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 102168 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 84779 KB
-[PS3][MEMSTATS] Static  : 42884 KB
-[PS3][MEMSTATS] Sound   : 610 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 24589 KB
-[PS3][MEMSTATS] LevSpec : 69 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 84482 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 8 ----
-[PS3][MEMSTATS] Total   : 68403 KB
-[PS3][MEMSTATS] Static  : 42899 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 99666 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 90221 KB
-[PS3][MEMSTATS] Static  : 43139 KB
-[PS3][MEMSTATS] Sound   : 468 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 28732 KB
-[PS3][MEMSTATS] LevSpec : 142 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 79228 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 9 ----
-[PS3][MEMSTATS] Total   : 69997 KB
-[PS3][MEMSTATS] Static  : 43154 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 98085 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 64782 KB
-[PS3][MEMSTATS] Static  : 43166 KB
-[PS3][MEMSTATS] Sound   : 318 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 2624 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 103307 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 10 ----
-[PS3][MEMSTATS] Total   : 71338 KB
-[PS3][MEMSTATS] Static  : 43181 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 96755 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 105549 KB
-[PS3][MEMSTATS] Static  : 43461 KB
-[PS3][MEMSTATS] Sound   : 704 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 37416 KB
-[PS3][MEMSTATS] LevSpec : 6 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 64248 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 11 ----
-[PS3][MEMSTATS] Total   : 76594 KB
-[PS3][MEMSTATS] Static  : 43476 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 91537 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 127872 KB
-[PS3][MEMSTATS] Static  : 44810 KB
-[PS3][MEMSTATS] Sound   : 245 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 54255 KB
-[PS3][MEMSTATS] LevSpec : 15 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 42251 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 12 ----
-[PS3][MEMSTATS] Total   : 82336 KB
-[PS3][MEMSTATS] Static  : 44824 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 85819 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 81391 KB
-[PS3][MEMSTATS] Static  : 44845 KB
-[PS3][MEMSTATS] Sound   : 260 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 6662 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 86871 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 13 ----
-[PS3][MEMSTATS] Total   : 83986 KB
-[PS3][MEMSTATS] Static  : 44860 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 84186 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 104059 KB
-[PS3][MEMSTATS] Static  : 45509 KB
-[PS3][MEMSTATS] Sound   : 561 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 24283 KB
-[PS3][MEMSTATS] LevSpec : 116 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 65108 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 14 ----
-[PS3][MEMSTATS] Total   : 88086 KB
-[PS3][MEMSTATS] Static  : 45524 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 80111 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 108912 KB
-[PS3][MEMSTATS] Static  : 45606 KB
-[PS3][MEMSTATS] Sound   : 494 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 28476 KB
-[PS3][MEMSTATS] LevSpec : 5 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 60507 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 15 ----
-[PS3][MEMSTATS] Total   : 89074 KB
-[PS3][MEMSTATS] Static  : 45621 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 79137 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 83894 KB
-[PS3][MEMSTATS] Static  : 45654 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 3364 KB
-[PS3][MEMSTATS] LevSpec : 7 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 84334 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 16 ----
-[PS3][MEMSTATS] Total   : 89756 KB
-[PS3][MEMSTATS] Static  : 45669 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 78458 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 109551 KB
-[PS3][MEMSTATS] Static  : 45867 KB
-[PS3][MEMSTATS] Sound   : 1111 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 23365 KB
-[PS3][MEMSTATS] LevSpec : 36 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 59459 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 22 ----
-[PS3][MEMSTATS] Total   : 94084 KB
-[PS3][MEMSTATS] Static  : 45881 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 74151 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 114930 KB
-[PS3][MEMSTATS] Static  : 46090 KB
-[PS3][MEMSTATS] Sound   : 249 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 23656 KB
-[PS3][MEMSTATS] LevSpec : 1120 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 54423 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 23 ----
-[PS3][MEMSTATS] Total   : 98936 KB
-[PS3][MEMSTATS] Static  : 46105 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 69318 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 128041 KB
-[PS3][MEMSTATS] Static  : 46238 KB
-[PS3][MEMSTATS] Sound   : 70 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 35347 KB
-[PS3][MEMSTATS] LevSpec : 86 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 41441 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 40 ----
-[PS3][MEMSTATS] Total   : 101098 KB
-[PS3][MEMSTATS] Static  : 46252 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 67185 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 126349 KB
-[PS3][MEMSTATS] Static  : 46370 KB
-[PS3][MEMSTATS] Sound   : 214 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 32146 KB
-[PS3][MEMSTATS] LevSpec : 52 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 43246 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 11 ----
-[PS3][MEMSTATS] Total   : 103517 KB
-[PS3][MEMSTATS] Static  : 46385 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 64784 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 147384 KB
-[PS3][MEMSTATS] Static  : 46486 KB
-[PS3][MEMSTATS] Sound   : 294 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 51791 KB
-[PS3][MEMSTATS] LevSpec : 15 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 22884 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 11 ----
-[PS3][MEMSTATS] Total   : 104247 KB
-[PS3][MEMSTATS] Static  : 46501 KB
-[PS3][MEMSTATS] Sound   : 1 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 64068 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 148418 KB
-[PS3][MEMSTATS] Static  : 46603 KB
-[PS3][MEMSTATS] Sound   : 194 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 52167 KB
-[PS3][MEMSTATS] LevSpec : 15 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 21845 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 10 ----
-[PS3][MEMSTATS] Total   : 105022 KB
-[PS3][MEMSTATS] Static  : 46618 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 63300 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 135301 KB
-[PS3][MEMSTATS] Static  : 46661 KB
-[PS3][MEMSTATS] Sound   : 528 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 38166 KB
-[PS3][MEMSTATS] LevSpec : 6 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 34677 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 11 ----
-[PS3][MEMSTATS] Total   : 105773 KB
-[PS3][MEMSTATS] Static  : 46675 KB
-[PS3][MEMSTATS] Sound   : 18 KB
-[PS3][MEMSTATS] Music   : 457 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 62559 KB
-[PS3][MEMSTATS] ---- Nivel 99 ----
-[PS3][MEMSTATS] Total   : 150223 KB
-[PS3][MEMSTATS] Static  : 46777 KB
-[PS3][MEMSTATS] Sound   : 91 KB
-[PS3][MEMSTATS] Music   : 285 KB
-[PS3][MEMSTATS] Level   : 52161 KB
-[PS3][MEMSTATS] LevSpec : 15 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 20066 KB
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 11 ----
-[PS3][MEMSTATS] Total   : 106919 KB
-[PS3][MEMSTATS] Static  : 46791 KB
-[PS3][MEMSTATS] Sound   : 1 KB
-[PS3][MEMSTATS] Music   : 660 KB
-[PS3][MEMSTATS] Level   : 5523 KB
-[PS3][MEMSTATS] LevSpec : 0 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 61430 KB
-Added ghost Sonic from MAP11-sonic-last.lmp
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 10 ----
-[PS3][MEMSTATS] Total   : 151133 KB
-[PS3][MEMSTATS] Static  : 46894 KB
-[PS3][MEMSTATS] Sound   : 80 KB
-[PS3][MEMSTATS] Music   : 660 KB
-[PS3][MEMSTATS] Level   : 52127 KB
-[PS3][MEMSTATS] LevSpec : 15 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 19160 KB
-Added ghost Sonic from MAP10-sonic-last.lmp
-Starting Server....
-Connecting to: SRB2 server
-Gametype: Co-op
-Version: 2.2.15
-Speeding off to level...
-[PS3][MEMSTATS] ---- Nivel 11 ----
-[PS3][MEMSTATS] Total   : 138610 KB
-[PS3][MEMSTATS] Static  : 46938 KB
-[PS3][MEMSTATS] Sound   : 218 KB
-[PS3][MEMSTATS] Music   : 660 KB
-[PS3][MEMSTATS] Level   : 39152 KB
-[PS3][MEMSTATS] LevSpec : 6 KB
-[PS3][MEMSTATS] Purgable: 0 KB
-[PS3][MEMSTATS] SysFreeMem: 31401 KB
-Added ghost Sonic from MAP11-sonic-last.lmp
+[PS3][MEMSTATS] SysFreeMem: 137699 KB
+NOTICE: Game must be restarted to play Record Attack.
+Added file /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3 (6675 lumps)
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|init.lua
+Pardon me while I initialize the Lua scripting interface...
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/globals.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/freeslot.lua
+MobjType MT_SUPERSPARKLES allocated.
+Sprite SPR_MRCE_HYPERSPARKLE allocated.
+State S_SUPERSPARK allocated.
+Skincolor SKINCOLOR_SUPERSAPPHIRE1 allocated.
+Skincolor SKINCOLOR_SUPERSAPPHIRE2 allocated.
+Skincolor SKINCOLOR_SUPERBUBBLEGUM1 allocated.
+Skincolor SKINCOLOR_SUPERBUBBLEGUM2 allocated.
+Skincolor SKINCOLOR_SUPERMINT1 allocated.
+Skincolor SKINCOLOR_SUPERMINT2 allocated.
+Skincolor SKINCOLOR_SUPERRUBY1 allocated.
+Skincolor SKINCOLOR_SUPERRUBY2 allocated.
+Skincolor SKINCOLOR_SUPERWAVE1 allocated.
+Skincolor SKINCOLOR_SUPERWAVE2 allocated.
+Skincolor SKINCOLOR_SUPERCOPPER1 allocated.
+Skincolor SKINCOLOR_SUPERCOPPER2 allocated.
+Skincolor SKINCOLOR_SUPERAETHER1 allocated.
+Skincolor SKINCOLOR_SUPERAETHER2 allocated.
+Skincolor SKINCOLOR_MRCEHYPER1 allocated.
+Skincolor SKINCOLOR_MRCEHYPER2 allocated.
+Skincolor SKINCOLOR_MR_COMET allocated.
+Skincolor SKINCOLOR_MR_VOID allocated.
+Skincolor SKINCOLOR_BLANK allocated.
+Sprite SPR_MRCE_REBOUNDIMPACT allocated.
+MobjType MT_REBOUND allocated.
+MobjType MT_RBDWALLSPECIAL allocated.
+State S_REBOUND allocated.
+Sound sfx_airdsh allocated.
+Sound sfx_bounc1 allocated.
+Sound sfx_bounc2 allocated.
+Sound sfx_strdsh allocated.
+MobjType MT_REBOUNDFIREBALL_AURA allocated.
+MobjType MT_FAKETHOK allocated.
+MobjType MT_FAKESPIN allocated.
+State S_FAKETHOK allocated.
+State S_FAKESPIN allocated.
+Sprite SPR_FTHK allocated.
+Sprite SPR_FSPN allocated.
+Sprite SPR_MSTE allocated.
+State S_FAKEEMERALD1 allocated.
+State S_FAKEEMERALD2 allocated.
+State S_FAKEEMERALD3 allocated.
+State S_FAKEEMERALD4 allocated.
+State S_FAKEEMERALD5 allocated.
+State S_FAKEEMERALD6 allocated.
+State S_FAKEEMERALD7 allocated.
+State S_FAKEEMERALD8 allocated.
+MobjType MT_TLBRD allocated.
+MobjType MT_TLHME allocated.
+State S_TAILSBIRD1 allocated.
+State S_TAILSBIRD2 allocated.
+State S_TAILSBIRD3 allocated.
+State S_TAILSBIRD4 allocated.
+State S_TAILSBIRDHOUSE allocated.
+Sprite SPR_FLTS allocated.
+Sound sfx_marioe allocated.
+Sprite SPR_UNCEMB allocated.
+Sprite SPR_KEY0L allocated.
+Sprite SPR_KEY1S allocated.
+Sprite SPR_KEY2S allocated.
+Sprite SPR_KEY3S allocated.
+MobjType MT_FIRE_STONE allocated.
+MobjType MT_WATER_STONE allocated.
+MobjType MT_LIGHTNING_STONE allocated.
+Sound sfx_dltrun allocated.
+MobjType MT_ULTRABUZZ allocated.
+MobjType MT_DASHERCRAWLA allocated.
+MobjType MT_COCONUTS allocated.
+MobjType MT_JCZCAKE allocated.
+State S_JCZCAKE3 allocated.
+State S_JCZCAKE4 allocated.
+Sprite SPR_MRCE_JCZ_COCONUTS allocated.
+State S_COCONUTS_IDLE1 allocated.
+State S_COCONUTS_IDLE2 allocated.
+State S_COCONUTS_IDLE3 allocated.
+State S_COCONUTS_IDLE4 allocated.
+State S_COCONUTS_IDLE5 allocated.
+State S_COCONUTS_IDLE6 allocated.
+State S_COCONUTS_HOSTILE1 allocated.
+State S_COCONUTS_HOSTILE2 allocated.
+State S_COCONUTS_HOSTILE3 allocated.
+State S_COCONUTS_HOSTILE4 allocated.
+State S_COCONUTS_HOSTILE5 allocated.
+State S_COCONUTS_HOSTILE6 allocated.
+MobjType MT_COCONUTS_BALL allocated.
+State S_COCONUTS_BALL allocated.
+State S_PURPLESNAILA_STND allocated.
+State S_PURPLESNAILA_RUN1 allocated.
+State S_PURPLESNAILA_RUN2 allocated.
+State S_PURPLESNAILA_RUN3 allocated.
+State S_PURPLESNAILA_RUN4 allocated.
+State S_PURPLESNAILA_RUN5 allocated.
+State S_PURPLESNAILA_RUN6 allocated.
+State S_PURPLESNAILA_RUN7 allocated.
+Sprite SPR_GPOS allocated.
+MobjType MT_SLOWGOOP allocated.
+MobjType MT_PURPLESNAILA allocated.
+MobjType MT_BLUESNAILA allocated.
+State S_BLUESNAILA_STND allocated.
+State S_BLUESNAILA_RUN1 allocated.
+State S_BLUESNAILA_RUN2 allocated.
+State S_BLUESNAILA_RUN3 allocated.
+State S_BLUESNAILA_RUN4 allocated.
+State S_BLUESNAILA_RUN5 allocated.
+State S_BLUESNAILA_RUN6 allocated.
+State S_BLUESNAILA_RUN7 allocated.
+Sprite SPR_POSG allocated.
+Sprite SPR_WDOR allocated.
+MobjType MT_WOODOOR allocated.
+State S_WDOOR_STAND1 allocated.
+State S_WDOOR_SPIN1 allocated.
+State S_WDOOR_SPIN2 allocated.
+State S_WDOOR_SPIN3 allocated.
+State S_WDOOR_SPIN4 allocated.
+State S_WDOOR_SPIN5 allocated.
+State S_WDOOR_SPINREPEAT allocated.
+Sprite SPR_MRCE_SPIKEYBOI allocated.
+MobjType MT_SPIKYBOY allocated.
+State S_SPIKYBOY_STND1 allocated.
+State S_SPIKYBOY_STND2 allocated.
+State S_SPIKYBOY_CHASE1 allocated.
+State S_SPIKYBOY_CHASE2 allocated.
+State S_SPIKYBOY_SPIKE1 allocated.
+State S_SPIKYBOY_SPIKE2 allocated.
+State S_SPIKYBOY_SPIKE3 allocated.
+State S_SPIKYBOY_SPIKE4 allocated.
+State S_SPIKYBOY_SPIKE5 allocated.
+State S_SPIKYBOY_SPIKEREPEAT allocated.
+State S_SPIKYBOY_PAIN1 allocated.
+State S_SPIKYBOY_PAIN2 allocated.
+State S_SPIKYBOY_PAIN3 allocated.
+State S_SPIKYBOY_PAIN4 allocated.
+State S_SPIKYBOY_PAIN5 allocated.
+MobjType MT_SPIKYITEM allocated.
+State S_SPIKYITEM_PROTECT1 allocated.
+MobjType MT_LARIO allocated.
+Sound sfx_lario allocated.
+MobjType MT_EGGBALLER allocated.
+MobjType MT_EGGBALLER_FIRE allocated.
+MobjType MT_MFZTREE allocated.
+MobjType MT_EGGFREEZER allocated.
+MobjType MT_CRYOCRAWLA allocated.
+State S_ICEBEAM1 allocated.
+State S_ICEBEAM2 allocated.
+State S_ICEBEAM3 allocated.
+State S_ICEBEAM4 allocated.
+State S_ICEBEAM5 allocated.
+State S_ICEBEAM6 allocated.
+State S_ICEBEAM7 allocated.
+State S_ICEBEAM8 allocated.
+State S_ICEBEAMSHARD1 allocated.
+State S_ICEBEAMSHARD2 allocated.
+State S_ICEBEAMSHARD3 allocated.
+State S_ICEBEAMSHARD4 allocated.
+State S_ICEBEAMPARTICLE allocated.
+State S_ICESCATTER1 allocated.
+State S_ICESCATTER2 allocated.
+State S_ICESCATTERSHARD1 allocated.
+State S_ICESCATTERSHARD2 allocated.
+State S_ICESCATTERSHARD3 allocated.
+State S_ICESCATTERSHARD4 allocated.
+State S_ICEBOMB1 allocated.
+State S_ICEBOMB2 allocated.
+State S_ICEBOMB3 allocated.
+State S_ICEBOMB4 allocated.
+State S_ICEBOMB5 allocated.
+State S_ICEBOMB6 allocated.
+State S_ICEBOMB7 allocated.
+State S_ICEBOMB8 allocated.
+State S_ICEBOMBE allocated.
+Sprite SPR_ICEB allocated.
+MobjType MT_BLUECRYSTAL_BRIGHT allocated.
+State S_BLUECRYSTAL_BRIGHT allocated.
+Sprite SPR_MRCE_FALLING_ICICLE allocated.
+State S_ICICLE1 allocated.
+State S_ICICLE2 allocated.
+State S_ICICLE3 allocated.
+State S_ICICLE4 allocated.
+State S_ICICLE5 allocated.
+State S_ICICLE6 allocated.
+State S_ICICLE7 allocated.
+MobjType MT_ICICLEPAINSPAWN allocated.
+State S_ICICLEPAIN1 allocated.
+State S_FRPI allocated.
+Sprite SPR_FRPI allocated.
+State S_ICEBEAM1 allocated.
+State S_ICEBEAM2 allocated.
+State S_ICEBEAM3 allocated.
+State S_ICEBEAM4 allocated.
+State S_ICEBEAM5 allocated.
+State S_ICEBEAM6 allocated.
+State S_ICEBEAM7 allocated.
+State S_ICEBEAM8 allocated.
+State S_ICEBEAMSHARD1 allocated.
+State S_ICEBEAMSHARD2 allocated.
+State S_ICEBEAMSHARD3 allocated.
+State S_ICEBEAMSHARD4 allocated.
+State S_ICEBEAMPARTICLE allocated.
+MobjType MT_LASERDUDE allocated.
+State S_LASERDUDE_LASER3 allocated.
+MobjType MT_LASERTARGET allocated.
+MobjType MT_EBOMB allocated.
+MobjType MT_EGGEBOMBER allocated.
+State S_EBOMB1 allocated.
+State S_EBOMB2 allocated.
+State S_EBOMB3 allocated.
+State S_EBOMB4 allocated.
+State S_EBOMB5 allocated.
+State S_EBOMB6 allocated.
+State S_EBOMB7 allocated.
+State S_EBOMB8 allocated.
+State S_EBOMB9 allocated.
+State S_EBOMBE allocated.
+State S_EGGEBOMBER_STND allocated.
+State S_EGGEBOMBER_PAIN1 allocated.
+State S_EGGEBOMBER_PAIN2 allocated.
+State S_EGGEBOMBER_PAIN3 allocated.
+State S_EGGEBOMBER_LATK1 allocated.
+State S_EGGEBOMBER_LATK2 allocated.
+State S_EGGEBOMBER_LATK3 allocated.
+State S_EGGEBOMBER_LATK4 allocated.
+State S_EGGEBOMBER_LATK5 allocated.
+State S_EGGEBOMBER_LATK6 allocated.
+State S_EGGEBOMBER_LATK7 allocated.
+State S_EGGEBOMBER_LATK8 allocated.
+State S_EGGEBOMBER_MATK1 allocated.
+State S_EGGEBOMBER_MATK2 allocated.
+State S_EGGEBOMBER_MATK3 allocated.
+State S_EGGEBOMBER_MATK4 allocated.
+State S_EGGEBOMBER_MATK5 allocated.
+State S_EGGEBOMBER_MATK6 allocated.
+State S_EGGEBOMBER_MATKE1 allocated.
+State S_EGGEBOMBER_MATKE2 allocated.
+State S_EGGEBOMBER_MATKE3 allocated.
+State S_EGGEBOMBER_RATK1 allocated.
+State S_EGGEBOMBER_RATK2 allocated.
+State S_EGGEBOMBER_RATK3 allocated.
+State S_EGGEBOMBER_RATK4 allocated.
+State S_EGGEBOMBER_RATK5 allocated.
+State S_EGGEBOMBER_RATK6 allocated.
+State S_EGGEBOMBER_RATK7 allocated.
+State S_EGGEBOMBER_RATK8 allocated.
+State S_EGGEBOMBER_RATKE allocated.
+State S_EGGEBOMBER_DIE1 allocated.
+State S_EGGEBOMBER_DIE2 allocated.
+State S_EGGEBOMBER_DIE3 allocated.
+State S_EGGEBOMBER_DIE4 allocated.
+State S_EGGEBOMBER_FLEE1 allocated.
+State S_EGGEBOMBER_FLEE2 allocated.
+Sound sfx_topaz allocated.
+MobjType MT_FBOSS allocated.
+MobjType MT_FBOSS2 allocated.
+MobjType MT_BEETLE allocated.
+MobjType MT_OLDCRAWLA allocated.
+Sprite SPR_RCRW allocated.
+MobjType MT_SUSPICIOUS_HIVE_STATUE allocated.
+MobjType MT_HIVE_STATUE allocated.
+State S_SUSPICIOUS_HIVE_STATUE allocated.
+State S_SUSPICIOUS_HIVE_BURST1 allocated.
+State S_SUSPICIOUS_HIVE_BURST2 allocated.
+State S_HIVE_STATUE allocated.
+Sprite SPR_SHVE allocated.
+MobjType MT_YELLOWMFLOWER allocated.
+MobjType MT_REDMFLOWER allocated.
+MobjType MT_WHITEDANDELION allocated.
+MobjType MT_BLUEMFLOWER allocated.
+MobjType MT_CYANFLOWER allocated.
+MobjType MT_BLUFLOWER allocated.
+MobjType MT_AQUAFLOWER allocated.
+State S_YELLOWMFLOWER allocated.
+State S_REDMFLOWER1 allocated.
+State S_WHITEDANDELION allocated.
+State S_BLUEMFLOWER allocated.
+State S_FLR3 allocated.
+State S_ICFLR1 allocated.
+State S_ICFLR2 allocated.
+State S_ICFLR3 allocated.
+State S_ICFLR4 allocated.
+State S_BUFLR1 allocated.
+State S_BUFLR2 allocated.
+State S_BUFLR3 allocated.
+State S_BUFLR4 allocated.
+State S_AQFLR1 allocated.
+State S_AQFLR2 allocated.
+State S_AQFLR3 allocated.
+State S_AQFLR4 allocated.
+Sprite SPR_MFRE allocated.
+Sprite SPR_MFYE allocated.
+Sprite SPR_MFWD allocated.
+Sprite SPR_MFBE allocated.
+Sprite SPR_FLR3 allocated.
+Sprite SPR_SHR1 allocated.
+Sprite SPR_SHR2 allocated.
+Sprite SPR_SHR3 allocated.
+State S_OLDCRAWLA_STND allocated.
+State S_OLDCRAWLA_RUN1 allocated.
+State S_OLDCRAWLA_RUN2 allocated.
+State S_OLDCRAWLA_RUN3 allocated.
+State S_OLDCRAWLA_RUN4 allocated.
+State S_OLDCRAWLA_RUN5 allocated.
+State S_OLDCRAWLA_RUN6 allocated.
+State S_OLDCRAWLA_RUN7 allocated.
+Sprite SPR_OPOS allocated.
+Sprite SPR_MRCE_BEETLA allocated.
+State S_BEET_STND allocated.
+State S_BEET_STND2 allocated.
+State S_BEET_STAB1 allocated.
+State S_BEET_STAB2 allocated.
+State S_BEET_STAB3 allocated.
+State S_BEET_STAB4 allocated.
+State S_PORTALSCRAP1 allocated.
+State S_PORTALSCRAP2 allocated.
+State S_PORTALSCRAP3 allocated.
+State S_PORTALSCRAP4 allocated.
+Sprite SPR_ANGL allocated.
+Sprite SPR_TFLR allocated.
+MobjType MT_ANGEL allocated.
+MobjType MT_ANGELSPAWNER allocated.
+State S_ANGEL1 allocated.
+State S_ANGEL2 allocated.
+State S_ANGEL3 allocated.
+State S_ANGEL4 allocated.
+Sound sfx_grchm allocated.
+Sound sfx_fwarn allocated.
+Sound sfx_iwarn allocated.
+State S_ANGEL_INDICATOR allocated.
+MobjType MT_EGGCRYSTAL_RED allocated.
+MobjType MT_EGGCRYSTAL_BLUE allocated.
+MobjType MT_EGGCRYSTAL_GREEN allocated.
+MobjType MT_EGGCRYSTAL_YELLOW allocated.
+MobjType MT_ULTRAFIRE allocated.
+MobjType MT_ULTRAEARTH allocated.
+MobjType MT_ULTRATHUNDER allocated.
+MobjType MT_ULTRATHUNDER2 allocated.
+MobjType MT_ULTRAICE allocated.
+MobjType MT_ULTRAICEALT allocated.
+MobjType MT_ULTRARETALIATOR allocated.
+MobjType MT_PEARLSPIN allocated.
+MobjType MT_ULTRARETALIATORFREE allocated.
+MobjType MT_PEARL allocated.
+MobjType MT_EGGINVIS allocated.
+MobjType MT_ULTRAFIRE_EX allocated.
+MobjType MT_METEOR allocated.
+MobjType MT_ULTRAICE_EX allocated.
+MobjType MT_QUAKE allocated.
+MobjType MT_ULTRAROCK allocated.
+MobjType MT_ULTRAROCK2 allocated.
+MobjType MT_ULTIMA allocated.
+MobjType MT_EGGINVIS_THUN allocated.
+MobjType MT_ULTRABOLT allocated.
+State S_EGGANIMUS_START1 allocated.
+State S_EGGANIMUS_START1EX allocated.
+State S_EGGANIMUS_START2 allocated.
+State S_EGGANIMUS_START3 allocated.
+State S_EGGANIMUS_START4 allocated.
+State S_EGGANIMUS_START5 allocated.
+State S_EGGANIMUS_START6 allocated.
+State S_EGGANIMUS_START7 allocated.
+State S_EGGANIMUS_START8 allocated.
+State S_EGGANIMUS_CHOOSE0 allocated.
+State S_EGGANIMUS_PAIN0 allocated.
+State S_EGGANIMUS_PAIN1 allocated.
+State S_EGGANIMUS_PAIN2 allocated.
+State S_EGGANIMUS_PAIN3 allocated.
+State S_EGGANIMUS_PAIN4 allocated.
+State S_EGGANIMUS_PAIN5 allocated.
+State S_EGGANIMUS_PAIN6 allocated.
+State S_EGGANIMUS_PAIN7 allocated.
+State S_EGGANIMUS_PAIN8 allocated.
+State S_EGGANIMUS_PAIN9 allocated.
+State S_EGGANIMUS_PAIN10 allocated.
+State S_EGGANIMUS_PAIN11 allocated.
+State S_EGGANIMUS_PAIN12 allocated.
+State S_EGGANIMUS_PAIN13 allocated.
+State S_EGGANIMUS_PAIN13EX allocated.
+State S_EGGANIMUS_PAIN14 allocated.
+State S_EGGANIMUS_PAIN15 allocated.
+State S_EGGANIMUS_PAIN16 allocated.
+State S_EGGANIMUS_PAIN17 allocated.
+State S_EGGANIMUS_DIE1 allocated.
+State S_EGGANIMUS_DIE2 allocated.
+State S_EGGANIMUS_DIE3 allocated.
+State S_EGGANIMUS_DIE4 allocated.
+State S_EGGANIMUS_DIE5 allocated.
+State S_EGGANIMUS_DIE6 allocated.
+State S_EGGANIMUS_DIE7 allocated.
+State S_EGGANIMUS_DIE8 allocated.
+State S_EGGANIMUS_DIE9 allocated.
+State S_EGGANIMUS_DIE10 allocated.
+State S_EGGANIMUS_DIE11 allocated.
+State S_EGGANIMUS_DIE12 allocated.
+State S_EGGANIMUS_DIE13 allocated.
+State S_EGGANIMUS_FIRESTART allocated.
+State S_EGGANIMUS_WATERSTART allocated.
+State S_EGGANIMUS_WINDSTART allocated.
+State S_EGGANIMUS_EARTHSTART allocated.
+State S_EGGANIMUS_FIRE0 allocated.
+State S_EGGANIMUS_WATER0 allocated.
+State S_EGGANIMUS_EARTH0 allocated.
+State S_EGGANIMUS_WIND0 allocated.
+State S_EGGANIMUS_FIRE1 allocated.
+State S_EGGANIMUS_FIRE2 allocated.
+State S_EGGANIMUS_FIRE3 allocated.
+State S_EGGANIMUS_WATER1 allocated.
+State S_EGGANIMUS_WATER2 allocated.
+State S_EGGANIMUS_WATER3 allocated.
+State S_EGGANIMUS_EARTH1 allocated.
+State S_EGGANIMUS_EARTH2 allocated.
+State S_EGGANIMUS_EARTH3 allocated.
+State S_EGGANIMUS_WIND1 allocated.
+State S_EGGANIMUS_WIND2 allocated.
+State S_EGGANIMUS_WIND3 allocated.
+State S_EGGANIMUS_RESETREACT allocated.
+State S_EGGANIMUS_ROAM0 allocated.
+State S_EGGANIMUS_ROAM1 allocated.
+State S_EGGANIMUS_ROAM2 allocated.
+State S_EGGANIMUS_ROAM2EX allocated.
+State S_EGGANIMUS_ROAM3 allocated.
+State S_EGGANIMUS_ROAM4 allocated.
+State S_EGGANIMUS_ROAM5 allocated.
+State S_EGGANIMUS_ROAM6 allocated.
+State S_EGGANIMUS_ROAM7 allocated.
+State S_EGGANIMUS_EX_START1 allocated.
+State S_EGGANIMUS_EX_START2 allocated.
+State S_EGGANIMUS_EX_START3 allocated.
+State S_EGGANIMUS_EX_START4 allocated.
+State S_EGGANIMUS_EX_START5 allocated.
+State S_EGGANIMUS_EX_START6 allocated.
+State S_EGGANIMUS_EX_START7 allocated.
+State S_EGGANIMUS_EX_START8 allocated.
+State S_EGGANIMUS_EX_START9 allocated.
+State S_EGGANIMUS_EX_ROAM0 allocated.
+State S_EGGANIMUS_EX_ROAM1 allocated.
+State S_EGGANIMUS_EX_ROAM2 allocated.
+State S_EGGANIMUS_EX_CHOOSE0 allocated.
+State S_EGGANIMUS_EX_FIRE0 allocated.
+State S_EGGANIMUS_EX_EARTH0 allocated.
+State S_EGGANIMUS_EX_WIND0 allocated.
+State S_EGGANIMUS_EX_FIRE1 allocated.
+State S_EGGANIMUS_EX_FIRE2 allocated.
+State S_EGGANIMUS_EX_FIRE3 allocated.
+State S_EGGANIMUS_EX_FIRE4 allocated.
+State S_EGGANIMUS_EX_FIRE5 allocated.
+State S_EGGANIMUS_EX_FIRE6 allocated.
+State S_EGGANIMUS_EX_FIRE7 allocated.
+State S_EGGANIMUS_EX_FIRE7EX allocated.
+State S_EGGANIMUS_EX_FIRE8 allocated.
+State S_EGGANIMUS_EX_FIRE9 allocated.
+State S_EGGANIMUS_EX_FIRE10 allocated.
+State S_EGGANIMUS_EX_METEOR allocated.
+State S_EGGANIMUS_EX_EARTH1 allocated.
+State S_EGGANIMUS_EX_EARTH2 allocated.
+State S_EGGANIMUS_EX_EARTH3 allocated.
+State S_EGGANIMUS_EX_EARTH4 allocated.
+State S_EGGANIMUS_EX_EARTH5 allocated.
+State S_EGGANIMUS_EX_EARTH6 allocated.
+State S_EGGANIMUS_EX_EARTH7 allocated.
+State S_EGGANIMUS_EX_EARTH8 allocated.
+State S_EGGANIMUS_EX_QUAKE allocated.
+State S_EGGANIMUS_EX_WIND1 allocated.
+State S_EGGANIMUS_EX_WIND2 allocated.
+State S_EGGANIMUS_EX_WIND3 allocated.
+State S_EGGANIMUS_EX_WIND4 allocated.
+State S_EGGANIMUS_EX_WIND5 allocated.
+State S_EGGANIMUS_EX_WIND6 allocated.
+State S_EGGANIMUS_EX_WIND7 allocated.
+State S_EGGANIMUS_EX_WIND8 allocated.
+State S_EGGANIMUS_EX_WIND9 allocated.
+State S_EGGANIMUS_EX_WIND10 allocated.
+State S_EGGANIMUS_EX_PAIN0 allocated.
+State S_EGGANIMUS_EX_PAIN1 allocated.
+State S_EGGANIMUS_EX_PAIN2 allocated.
+State S_EGGANIMUS_EX_PAIN3 allocated.
+State S_EGGANIMUS_EX_PAIN4 allocated.
+State S_EGGANIMUS_EX_PAIN5 allocated.
+State S_EGGANIMUS_EX_PAIN6 allocated.
+State S_EGGANIMUS_EX_PAIN7 allocated.
+State S_EGGANIMUS_EX_PAIN7EX1 allocated.
+State S_EGGANIMUS_EX_PAIN7EX2 allocated.
+State S_EGGANIMUS_EX_PAIN7EX3 allocated.
+State S_EGGANIMUS_EX_PAIN7EX4 allocated.
+State S_EGGANIMUS_EX_PAIN8 allocated.
+State S_EGGANIMUS_EX_PAIN9 allocated.
+State S_EGGANIMUS_EX_PAIN10 allocated.
+State S_EGGANIMUS_EX_PAIN11 allocated.
+State S_EGGANIMUS_EX_PAIN12 allocated.
+State S_EGGANIMUS_EX_PAIN13 allocated.
+State S_EGGANIMUS_EX_PAIN14 allocated.
+State S_EGGANIMUS_EX_PAIN15 allocated.
+State S_EGGANIMUS_EX_PAIN16 allocated.
+State S_EGGANIMUS_EX_PAIN17 allocated.
+State S_EGGANIMUS_EX_DIE1 allocated.
+State S_EGGANIMUS_EX_DIE1EX1 allocated.
+State S_EGGANIMUS_EX_DIE1EX2 allocated.
+State S_EGGANIMUS_EX_DIE2 allocated.
+State S_EGGANIMUS_EX_DIE3 allocated.
+State S_EGGANIMUS_EX_DIE4 allocated.
+State S_EGGANIMUS_EX_DIE5 allocated.
+State S_EGGANIMUS_EX_HAX1 allocated.
+State S_EGGANIMUS_EX_HAX2 allocated.
+State S_EGGANIMUS_EX_HAX3 allocated.
+State S_EGGANIMUS_EX_HAX4 allocated.
+State S_EGGANIMUS_EX_HAX5 allocated.
+State S_EGGANIMUS_EX_HAX6 allocated.
+State S_EGGCRYSTAL_SUPPORT1 allocated.
+State S_EGGCRYSTAL_SUPPORT2 allocated.
+State S_EGGCRYSTAL_SUPPORT3 allocated.
+State S_EGGCRYSTAL_SUPPORT4 allocated.
+State S_EGGCRYSTAL_SUPPORT5 allocated.
+State S_EGGCRYSTAL_RESET1 allocated.
+State S_EGGCRYSTAL_RESET2 allocated.
+State S_EGGCRYSTAL_RESET3 allocated.
+State S_EGGCRYSTAL_RED1 allocated.
+State S_EGGCRYSTAL_RED2 allocated.
+State S_EGGCRYSTAL_RED3 allocated.
+State S_EGGCRYSTAL_RED4 allocated.
+State S_EGGCRYSTAL_RED_A1 allocated.
+State S_EGGCRYSTAL_RED_A2 allocated.
+State S_EGGCRYSTAL_RED_A3 allocated.
+State S_EGGCRYSTAL_RED_A3EX allocated.
+State S_EGGCRYSTAL_RED_A4 allocated.
+State S_EGGCRYSTAL_RED_A5 allocated.
+State S_EGGCRYSTAL_RED_A5EX allocated.
+State S_EGGCRYSTAL_RED_A6 allocated.
+State S_EGGCRYSTAL_RED_A7 allocated.
+State S_EGGCRYSTAL_RED_A8 allocated.
+State S_EGGCRYSTAL_RED_A9 allocated.
+State S_EGGCRYSTAL_RED_A10 allocated.
+State S_EGGCRYSTAL_RED_A11 allocated.
+State S_EGGCRYSTAL_BLUE1 allocated.
+State S_EGGCRYSTAL_BLUE2 allocated.
+State S_EGGCRYSTAL_BLUE3 allocated.
+State S_EGGCRYSTAL_BLUE4 allocated.
+State S_EGGCRYSTAL_BLUE_A1 allocated.
+State S_EGGCRYSTAL_BLUE_A2 allocated.
+State S_EGGCRYSTAL_BLUE_A3 allocated.
+State S_EGGCRYSTAL_BLUE_A3EX allocated.
+State S_EGGCRYSTAL_BLUE_A3EX1 allocated.
+State S_EGGCRYSTAL_BLUE_A3EX2 allocated.
+State S_EGGCRYSTAL_BLUE_A3EX3 allocated.
+State S_EGGCRYSTAL_BLUE_A4 allocated.
+State S_EGGCRYSTAL_BLUE_A5 allocated.
+State S_EGGCRYSTAL_BLUE_A6 allocated.
+State S_EGGCRYSTAL_BLUE_A7 allocated.
+State S_EGGCRYSTAL_BLUE_A7EX1 allocated.
+State S_EGGCRYSTAL_BLUE_A7EX2 allocated.
+State S_EGGCRYSTAL_BLUE_A7EX3 allocated.
+State S_EGGCRYSTAL_BLUE_A8 allocated.
+State S_EGGCRYSTAL_BLUE_A9 allocated.
+State S_EGGCRYSTAL_BLUE_A10 allocated.
+State S_EGGCRYSTAL_BLUE_A11 allocated.
+State S_EGGCRYSTAL_GREEN1 allocated.
+State S_EGGCRYSTAL_GREEN2 allocated.
+State S_EGGCRYSTAL_GREEN3 allocated.
+State S_EGGCRYSTAL_GREEN4 allocated.
+State S_EGGCRYSTAL_GREEN_A1 allocated.
+State S_EGGCRYSTAL_GREEN_A2 allocated.
+State S_EGGCRYSTAL_GREEN_A3 allocated.
+State S_EGGCRYSTAL_GREEN_A3UGLY1 allocated.
+State S_EGGCRYSTAL_GREEN_A3UGLY2 allocated.
+State S_EGGCRYSTAL_GREEN_A3UGLY3 allocated.
+State S_EGGCRYSTAL_GREEN_A3UGLY4 allocated.
+State S_EGGCRYSTAL_GREEN_A4 allocated.
+State S_EGGCRYSTAL_GREEN_A5 allocated.
+State S_EGGCRYSTAL_GREEN_A6 allocated.
+State S_EGGCRYSTAL_GREEN_A7 allocated.
+State S_EGGCRYSTAL_GREEN_A7EX allocated.
+State S_EGGCRYSTAL_GREEN_A8 allocated.
+State S_EGGCRYSTAL_GREEN_A9 allocated.
+State S_EGGCRYSTAL_GREEN_A10 allocated.
+State S_EGGCRYSTAL_GREEN_A11 allocated.
+State S_EGGCRYSTAL_GREEN_A12 allocated.
+State S_EGGCRYSTAL_GREEN_A13 allocated.
+State S_EGGCRYSTAL_GREEN_A14 allocated.
+State S_EGGCRYSTAL_GREEN_A15 allocated.
+State S_EGGCRYSTAL_YELLOW1 allocated.
+State S_EGGCRYSTAL_YELLOW2 allocated.
+State S_EGGCRYSTAL_YELLOW3 allocated.
+State S_EGGCRYSTAL_YELLOW4 allocated.
+State S_EGGCRYSTAL_YELLOW_A1 allocated.
+State S_EGGCRYSTAL_YELLOW_A2 allocated.
+State S_EGGCRYSTAL_YELLOW_A3 allocated.
+State S_EGGCRYSTAL_YELLOW_A4 allocated.
+State S_EGGCRYSTAL_YELLOW_A5 allocated.
+State S_EGGCRYSTAL_YELLOW_A6 allocated.
+State S_EGGCRYSTAL_YELLOW_A6EX allocated.
+State S_EGGCRYSTAL_YELLOW_A7 allocated.
+State S_EGGCRYSTAL_YELLOW_A8 allocated.
+State S_EGGCRYSTAL_YELLOW_A9 allocated.
+State S_EGGCRYSTAL_YELLOW_A9EX allocated.
+State S_EGGCRYSTAL_YELLOW_A10 allocated.
+State S_EGGCRYSTAL_YELLOW_A11 allocated.
+State S_EGGCRYSTAL_YELLOW_A12 allocated.
+State S_EGGCRYSTAL_YELLOW_A13 allocated.
+State S_ULTRAFIRE1 allocated.
+State S_ULTRAFIRE2 allocated.
+State S_ULTRAFIRE3 allocated.
+State S_ULTRAEARTH1 allocated.
+State S_ULTRAEARTH2 allocated.
+State S_ULTRAEARTH3 allocated.
+State S_ULTRAICE1 allocated.
+State S_ULTRAICE2 allocated.
+State S_ULTRAICE3 allocated.
+State S_ULTRAICE4 allocated.
+State S_ULTRAICE5 allocated.
+State S_ULTRAICE6 allocated.
+State S_ULTRAICE7 allocated.
+State S_ULTRAICEALT1 allocated.
+State S_ULTRAICEALT2 allocated.
+State S_ULTRATHUNDER0 allocated.
+State S_ULTRATHUNDER1 allocated.
+State S_ULTRATHUNDER2 allocated.
+State S_ULTRATHUNDER3 allocated.
+State S_ULTRATHUNDER4 allocated.
+State S_ULTRATHUNDER5 allocated.
+State S_ULTRATHUNDER6 allocated.
+State S_ULTRATHUNDER7 allocated.
+State S_ULTRARETALIATOR1 allocated.
+State S_ULTRARETALIATOR2 allocated.
+State S_ULTRARETALIATOR3 allocated.
+State S_PEARLSPIN1 allocated.
+State S_PEARLSPIN2 allocated.
+State S_PEARLSPIN3 allocated.
+State S_ULTRARETALIATORFREE1 allocated.
+State S_PEARL1 allocated.
+State S_PEARL2 allocated.
+State S_PEARL3 allocated.
+State S_PEARL4 allocated.
+State S_PEARL5 allocated.
+State S_PEARL6 allocated.
+State S_PEARL7 allocated.
+State S_PEARL8 allocated.
+State S_EGGINVIS allocated.
+State S_EGGINVIS_T2 allocated.
+State S_EGGINVIS_T1 allocated.
+State S_EGGINVIS_HELPER allocated.
+State S_ULTRAFIRE_EX1 allocated.
+State S_ULTRAFIRE_EX2 allocated.
+State S_ULTRAFIRE_EX3 allocated.
+State S_ULTRAFIRE_EX4 allocated.
+State S_ULTRAFIRE_EX5 allocated.
+State S_ULTRAFIRE_EX6 allocated.
+State S_METEOR1 allocated.
+State S_METEOR2 allocated.
+State S_METEOR3 allocated.
+State S_METEOR4 allocated.
+State S_METEOR5 allocated.
+State S_METEOR6 allocated.
+State S_METEOR7 allocated.
+State S_METEOR8 allocated.
+State S_ULTRAICE_EX1 allocated.
+State S_ULTRAICE_EX2 allocated.
+State S_ULTRAICE_EX3 allocated.
+State S_ULTRAICE_EX3INVIS allocated.
+State S_ULTRAICE_EX3OFF allocated.
+State S_ULTRAICE_EX3ON allocated.
+State S_QUAKE1 allocated.
+State S_QUAKE2 allocated.
+State S_QUAKE3 allocated.
+State S_QUAKE4 allocated.
+State S_QUAKE5 allocated.
+State S_QUAKE6 allocated.
+State S_QUAKE7 allocated.
+State S_QUAKE8 allocated.
+State S_QUAKE_SCALE allocated.
+State S_QUAKE_CHASE allocated.
+State S_ULTRAROCK1 allocated.
+State S_ULTRAROCK2 allocated.
+State S_ULTRAROCK3 allocated.
+State S_ULTRAROCK4 allocated.
+State S_ULTIMA1 allocated.
+State S_ULTIMA2 allocated.
+State S_ULTIMA3 allocated.
+State S_ULTIMA4 allocated.
+State S_ULTIMA4EX allocated.
+State S_ULTIMA4EX2 allocated.
+State S_ULTIMA5 allocated.
+State S_ULTIMA6 allocated.
+State S_ULTIMA7 allocated.
+State S_EGGINVIS_THUN allocated.
+State S_EGGINVIS_THUN1 allocated.
+State S_EGGINVIS_THUN2 allocated.
+State S_EGGINVIS_THUN3 allocated.
+State S_EGGINVIS_THUN4 allocated.
+State S_EGGINVIS_THUN5 allocated.
+State S_EGGINVIS_THUN6 allocated.
+State S_EGGINVIS_THUN7 allocated.
+State S_ULTRABOLT1 allocated.
+State S_ULTRABOLT2 allocated.
+State S_ULTRABOLT3 allocated.
+State S_ULTRABOLT4 allocated.
+State S_ULTRABOLT5 allocated.
+State S_ULTRABOLT6 allocated.
+Sprite SPR_AICE allocated.
+Sprite SPR_BUBZ allocated.
+Sprite SPR_ULTI allocated.
+Sprite SPR_THUN allocated.
+MobjType MT_SUPER_ORB allocated.
+State S_SUPER_ORB allocated.
+Sprite SPR_MRCE_SUPERSHIELD allocated.
+MobjType MT_URING allocated.
+MobjType MT_XBOSS allocated.
+MobjType MT_EGGANIMUS allocated.
+MobjType MT_EGGANIMUS_EX allocated.
+Sound sfx_spdash allocated.
+Sprite SPR_TRL2 allocated.
+Sprite SPR_WCRY allocated.
+State S_BOSSXCHASEA allocated.
+State S_BOSSXCHASEB allocated.
+State S_BOSS_STAND allocated.
+State S_BOSS_FLEE1 allocated.
+State S_BOSS_FLEE2 allocated.
+State S_BOSS_FLEE3 allocated.
+State S_BOSS_FLEE4 allocated.
+State S_BOSS_FLEE5 allocated.
+State S_BOSS_FLEE6 allocated.
+State S_FBOSS_PAIN1 allocated.
+State S_FBOSS_PAIN2 allocated.
+State S_FBOSS_DASHCOMBO2 allocated.
+State S_FBOSS_DASHCOMBO1 allocated.
+State S_FBOSS_DASHCOMBO3 allocated.
+State S_FBOSS_DASHCOMBO4 allocated.
+State S_FBOSS_RAPIDFRISBEE1 allocated.
+State S_FBOSS_RAPIDFRISBEE2 allocated.
+State S_FBOSS_RAPIDFRISBEE3 allocated.
+State S_FBOSS_RAPIDFRISBEE4 allocated.
+State S_FBOSS_RAPIDFRISBEE5 allocated.
+State S_FBOSS_RAPIDFRISBEE6 allocated.
+State S_FBOSS_RAPIDFRISBEE7 allocated.
+State S_FBOSS_RAPIDFRISBEE8 allocated.
+State S_FBOSS_RAPIDFRISBEE9 allocated.
+State S_FBOSS_RAPIDFRISBEE10 allocated.
+State S_FBOSS_RAPIDFRISBEE11 allocated.
+State S_FBOSS_RAPIDFRISBEE12 allocated.
+State S_FBOSS_RAPIDFRISBEE13 allocated.
+State S_FBOSS_RAPIDFRISBEE14 allocated.
+State S_FBOSS_RAPIDFRISBEE15 allocated.
+State S_FBOSS_RAPIDFRISBEE16 allocated.
+State S_FBOSS_PANIC1 allocated.
+State S_FBOSS_PANIC2 allocated.
+State S_XBOSS_TRISPARK1 allocated.
+State S_XBOSS_TRISPARK2 allocated.
+State S_XBOSS_TRISPARK3 allocated.
+State S_XBOSS_TRISPARK4 allocated.
+State S_XBOSS_TRISPARK5 allocated.
+State S_XBOSS_TRISPARK6 allocated.
+State S_XBOSS_TRISPARK7 allocated.
+State S_XBOSS_TRISPARK8 allocated.
+State S_XBOSS_STF1 allocated.
+State S_XBOSS_STF2 allocated.
+State S_XBOSS_STF3 allocated.
+State S_XBOSS_STF4 allocated.
+State S_XBOSS_PANIC1 allocated.
+State S_XBOSS_PANIC2 allocated.
+State S_XBOSS_PAIN1 allocated.
+State S_XBOSS_PAIN2 allocated.
+State S_XBOSS_PAIN3 allocated.
+State S_XBOSS_PAIN4 allocated.
+State S_XBOSS_PAIN5 allocated.
+MobjType MT_SPARKMORTAR allocated.
+State S_SPARKMORTAR_PREP1 allocated.
+State S_SPARKMORTAR_PREP2 allocated.
+State S_SPARKMORTAR_1 allocated.
+State S_SPARKMORTAR_2 allocated.
+State S_SPARKMORTAR_3 allocated.
+State S_SPARKMORTAR_4 allocated.
+State S_SPARKMORTAR_EXPLODE allocated.
+MobjType MT_SPARKHELPER allocated.
+State S_SPARKHELPER_PREP allocated.
+State S_SPARKHELPER_1 allocated.
+State S_SPARKHELPER_2 allocated.
+MobjType MT_SPARKDEBRIS allocated.
+State S_SPARKDEBRIS allocated.
+State S_SPARKDEBRIS_WAIT1 allocated.
+State S_SPARKDEBRIS_WAIT2 allocated.
+State S_SPARKDEBRIS_WAIT3 allocated.
+State S_SPARKDEBRIS_WAIT4 allocated.
+State S_SPARKDEBRIS_WAIT5 allocated.
+State S_SPARKDEBRIS_WAIT6 allocated.
+State S_SPARKDEBRIS_WAIT7 allocated.
+State S_SPARKDEBRIS_WAIT8 allocated.
+State S_SPARKDEBRIS_WAIT9 allocated.
+State S_SPARKDEBRIS_WAIT10 allocated.
+State S_SPARKDEBRIS_WAIT11 allocated.
+State S_SPARKDEBRIS_WAIT12 allocated.
+State S_SPARKDEBRIS_WAIT13 allocated.
+State S_SPARKDEBRIS_FIRE1 allocated.
+State S_SPARKDEBRIS_FIRE2 allocated.
+MobjType MT_STLASER allocated.
+MobjType MT_STLASER2 allocated.
+State S_STLASER allocated.
+State S_STLASERQEXPLODE1 allocated.
+State S_STLASERQEXPLODE2 allocated.
+MobjType MT_TLASER2 allocated.
+MobjType MT_WCRYSTAL allocated.
+State S_WCRYSTAL_PREP1 allocated.
+State S_WCRYSTAL_PREP2 allocated.
+State S_WCRYSTAL_PREP3 allocated.
+State S_WCRYSTAL_ORBIT allocated.
+MobjType MT_CBUFFER allocated.
+State S_CBUFFER_PREP1 allocated.
+State S_CBUFFER_PREP2 allocated.
+State S_CBUFFER_1 allocated.
+State S_CBUFFER_2 allocated.
+MobjType MT_CROCKET allocated.
+State S_CROCKET_1 allocated.
+State S_CROCKET_2 allocated.
+MobjType MT_ROCKETFUME allocated.
+State S_ROCKETFUME_PREP allocated.
+State S_ROCKETFUME_1 allocated.
+State S_ROCKETFUME_2 allocated.
+State S_URING_1 allocated.
+State S_URING_2 allocated.
+Sprite SPR_MRCE_ULTRABUZZ allocated.
+State S_UBUZLOOK1 allocated.
+State S_UBUZLOOK2 allocated.
+State S_UBUZMOVE1 allocated.
+State S_UBUZMOVE2 allocated.
+MobjType MT_MAYALRM allocated.
+State S_STATEMAYALRM allocated.
+Sprite SPR_MYAT allocated.
+State S_SPECCY allocated.
+Sprite SPR_SPCY allocated.
+Sprite SPR_HUND allocated.
+Sprite SPR_MRCE_REBOUNDFIREBALL_AURA allocated.
+State S_REBOUNDFIREBALL_AURA allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/libraries/tbslib_general.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/libraries/tbslib_mobjnodes.lua
+MobjType MT_LUASCRIPTNODE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/libraries/sprkizard_worldtoscreen.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/libraries/lib_customhud.lua
+Added command "customhud_force_enableitem"
+Added command "customhud_force_disableitem"
+Added command "customhud_force_reset"
+Added command "customhud_setmod"
+Added command "customhud_setitem"
+Added command "customhud_getitemtype"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/libraries/L_Feedback-v3.1.lua
+Added command "comment"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/libraries/mrcelibraries.lua
+Sprite SPR_7ROP allocated.
+State S_DEFAULTROPE allocated.
+We are testing barebones "BB"code capability,
+This way, we could write in more comfortable way text and add more interesting descriptions.
+Even if it wouldn't be hard to do manually, this will allow non-scripters to write more interesting descriptions.
 
-I_Error(): Out of memory allocating 4206628 bytes
+table: 330b5384
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/libraries/mrceprompts.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/savesystem/GlobalBanks.lua
+initializing GlobalBanks tables
+GlobalBanks initialization successful
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/savesystem/globalunlocks.lua
+Added command "mr_epskip"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/savesystem/SavingIO.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/savesystem/Achivements.lua
+MobjType MT_MRCEACHIVEMENT allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/savesystem/Achivements_MR.lua
+Sprite SPR_MRCE_MEDALS allocated.
+[Mystic Realms CE] 160 achievements added!
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Core/secondquest.lua
+Added command "mr_secondquest"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/hud/MRCEHUD.lua
+Added command "mr_hud"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/hud/ContLives.lua
+Skincolor SKINCOLOR_COMPLETEBLACKDROPSHADOW allocated.
+Sprite SPR2_MRCL allocated.
+Sprite SPR2_MRXL allocated.
+Skincolor SKINCOLOR_IRIDESCENCE1 allocated.
+Skincolor SKINCOLOR_IRIDESCENCE2 allocated.
+Skincolor SKINCOLOR_IRIDESCENCE3 allocated.
+Skincolor SKINCOLOR_IRIDESCENCE4 allocated.
+Skincolor SKINCOLOR_IRIDESCENCE5 allocated.
+Skincolor SKINCOLOR_IRIDESCENCE6 allocated.
+Skincolor SKINCOLOR_IRIDESCENCEF allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/hud/emeralds.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/hud/titlecard-credits.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/hud/itemhud.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/hud/modernhack.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/hud/stageinter.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Menu/Title/title_animation.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Menu/episode_select.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Menu/Extras/credits.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/ExAi.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/jumpleniency.lua
+Added command "nomrphysics"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/classicmomentum.lua
+Sound sfx_rev1 allocated.
+Sound sfx_rev2 allocated.
+Sound sfx_rev3 allocated.
+Sound sfx_rev4 allocated.
+Sound sfx_rev5 allocated.
+Sound sfx_rev6 allocated.
+Sound sfx_rev7 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/STF.lua
+Added command "stfcheckspeed"
+Added command "stfattacknum"
+Added command "stfsearchtype"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/cheatcodes.lua
+Added command "mrsecret"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/music.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/KeepShield.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/mrce_shields.lua
+MobjType MT_METEOR_ELEM_FIREBALL allocated.
+State S_METEOR_ELEM_FIREBALL allocated.
+Sprite SPR_MRCE_ELEM_FIREBALL allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/mrceplayer.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/superfloat.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/mrceplayer-hyper.lua
+Sound sfx_mrfly allocated.
+Added command "hyperflash"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/ReboundDash.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/BoostDrive.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/rebound_tails.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/rebound_knuckles.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/sonicpeelout.lua
+Sprite SPR_MRCE_SONICPEEL allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/Character/AmyMoveset.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/customColors.lua
+Skincolor SKINCOLOR_SPEEDYBLUE allocated.
+Skincolor SKINCOLOR_MR_RETRO allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/mushroombounce.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/xians-misc-stuff.lua
+Sprite SPR2_OOF_ allocated.
+Sprite SPR2_SHIT allocated.
+State S_PLAY_FACEPLANT allocated.
+Added command "mr_serverinfo"
+Skincolor SKINCOLOR_BUP allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/speedsDirtCorner.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/spriterotapplication.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/shields/ESP_Freeslot_Init.lua
+MobjType MT_EXTRA_ORB allocated.
+State S_EXTRA_ORB allocated.
+Sprite SPR_MRCE_EXTRASHIELDORB allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/shields/ESP_Freeslot_Grav.lua
+MobjType MT_GRAVITORB_BOX allocated.
+MobjType MT_GRAVITORB_GOLDBOX allocated.
+MobjType MT_GRAVITORB_ICON allocated.
+MobjType MT_GRAVITORB_PART_B allocated.
+MobjType MT_GRAVITORB_PART_O allocated.
+State S_GRAVITORB_BOX allocated.
+State S_GRAVITORB_GOLDBOX allocated.
+State S_GRAVITORB_ICON1 allocated.
+State S_GRAVITORB_ICON2 allocated.
+State S_GRAVITORB_PB1 allocated.
+State S_GRAVITORB_PB2 allocated.
+State S_GRAVITORB_PO1 allocated.
+State S_GRAVITORB_PO2 allocated.
+Sprite SPR_VMGS allocated.
+Sprite SPR_PTGS allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/shields/ESP_Freeslot_Clock.lua
+MobjType MT_CLOCK_BOX allocated.
+MobjType MT_CLOCK_GOLDBOX allocated.
+MobjType MT_CLOCK_ICON allocated.
+MobjType MT_CLOCK_REWIND allocated.
+State S_CLOCK_BOX allocated.
+State S_CLOCK_GOLDBOX allocated.
+State S_CLOCK_ICON1 allocated.
+State S_CLOCK_ICON2 allocated.
+State S_CLOCK_OVERLAY allocated.
+State S_CLOCK_OVERLAY_HR allocated.
+State S_CLOCK_OVERLAY_MIN allocated.
+Sprite SPR_VMCS allocated.
+Sprite SPR_PTCS allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/shields/ESP_Logic_Orb.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/shields/ESP_Logic_Other.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/EmeraldStages/emstages_main.lua
+Sound sfx_mscry0 allocated.
+Sound sfx_mscry1 allocated.
+Sound sfx_mscry2 allocated.
+Sound sfx_mscry3 allocated.
+Sound sfx_mscry4 allocated.
+Sound sfx_mscry5 allocated.
+Sound sfx_mscry6 allocated.
+Sound sfx_mscry7 allocated.
+Sound sfx_mscry8 allocated.
+Sound sfx_mscry9 allocated.
+Sound sfx_shudcl allocated.
+Sound sfx_shudop allocated.
+Sound sfx_comup0 allocated.
+Sound sfx_comup1 allocated.
+Sound sfx_comup2 allocated.
+Skincolor SKINCOLOR_FULLHUDRAINBOW allocated.
+MobjType MT_MRCEMULTICRYSTAL allocated.
+State S_MRCEMULTICRYSTAL allocated.
+Sprite SPR_MRCE_EMSTAGECOLLECT allocated.
+Sprite SPR_MRCE_EMSTAGECRYSTAL allocated.
+State S_MRCEMULTICRYSTALGLASS allocated.
+Sprite SPR_MRCE_EMSTAGEGLBREA allocated.
+State S_MRCEMULTICRYSTAL allocated.
+MobjType MT_SCOREEMPW allocated.
+State S_SCOREEMPW allocated.
+MobjType MT_TIMESCOREEMPW allocated.
+State S_TIMESCOREEMPW allocated.
+MobjType MT_ATTRACTIONEMPW allocated.
+State S_ATTRACTIONEMPW allocated.
+MobjType MT_FREEZETIMEREMPW allocated.
+State S_FREEZETIMEREMPW allocated.
+MobjType MT_ARMAGEDDONEMPW allocated.
+State S_ARMAGEDDONEMPW allocated.
+MobjType MT_INVINCEMPW allocated.
+State S_INVINCEMPW allocated.
+MobjType MT_BOMBEMPW allocated.
+State S_BOMBEMPW allocated.
+MobjType MT_MRCE_EMST_RINGBOX allocated.
+MobjType MT_MRCE_ESHOOPSPAWNER allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/EmeraldStages/emstages_retryscreen.lua
+Added command "mr_deletus"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_FREESLOTS.lua
+MobjType MT_GSRAIL allocated.
+MobjType MT_GSRAILDIRECTOR allocated.
+MobjType MT_GSRAILSEG allocated.
+MobjType MT_GSRAILATTACHEDTHING allocated.
+MobjType MT_GSRAILGFX allocated.
+MobjType MT_GSRAILLIGHT allocated.
+MobjType MT_GSRAILDYE allocated.
+MobjType MT_GSRAILPOLE allocated.
+Sound sfx_gsral1 allocated.
+Sound sfx_gsral2 allocated.
+Sound sfx_gsral3 allocated.
+Sound sfx_gsral4 allocated.
+Sound sfx_gsral5 allocated.
+Sound sfx_gsral6 allocated.
+Sound sfx_gsral7 allocated.
+Sound sfx_gsral8 allocated.
+Sound sfx_gsral9 allocated.
+Sound sfx_gsrala allocated.
+Sound sfx_gsralb allocated.
+Sound sfx_gsralc allocated.
+Sound sfx_gsrald allocated.
+Sound sfx_gsrale allocated.
+Sound sfx_gsralf allocated.
+Sound sfx_gsralg allocated.
+Sound sfx_gsralh allocated.
+Sound sfx_gsrali allocated.
+Sound sfx_gsralj allocated.
+Sound sfx_gsralk allocated.
+Sound sfx_gsrall allocated.
+Sound sfx_gsralm allocated.
+Sound sfx_gsraln allocated.
+Sound sfx_gsralo allocated.
+State S_GSRAIL allocated.
+State S_GSRAILSEG allocated.
+State S_GSRAILDESTROYED allocated.
+State S_PLAY_GSGRINDING allocated.
+State S_PLAY_GSHANGRAIL allocated.
+State S_PLAY_GSCUSTOMGRIND allocated.
+State S_GSRAILLIGHT allocated.
+State S_GSRAILPOLE allocated.
+Sprite SPR2_GRND allocated.
+Sprite SPR_GSRL allocated.
+Sprite SPR_GSR7 allocated.
+Sprite SPR_GSR8 allocated.
+Sprite SPR_GSR2 allocated.
+Sprite SPR_GSR3 allocated.
+Sprite SPR_GSR0 allocated.
+Sprite SPR_GSR1 allocated.
+Sprite SPR_GSR4 allocated.
+Skincolor SKINCOLOR_GRINDSPARK allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_SETUP.lua
+Added command "gsrload"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_RAILTYPES.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_LOOPTYPES.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_CUSTOMCHARS.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_ADVENTURESONIC.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_MAINRAIL.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_MOBJFUNC.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_GRINDMOBJ.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_PLAYER.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_CAMERA.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_DECOR.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_COLLIDE.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_RAILGFX.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_MENU-HUD.lua
+Added command "gsrailmenu"
+Added command "gsrailsmenu"
+Added command "gsgrindrailsmenu"
+Added command "gsgrindrailmenu"
+Added command "gsgrindrails"
+Added command "gsgrindmenu"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_PREPOST.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/GSGrindRails-Lua/LUA_HOOKS.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Gameplay/newcamera.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/DecoScaling.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/hudFade.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/sandsnow.lua
+MobjType MT_AEZ_SNOWBIT allocated.
+State S_AEZ_SNOWBIT allocated.
+Sprite SPR_MRCE_SNOWBITS allocated.
+Sound sfx_safl1 allocated.
+Sound sfx_safl2 allocated.
+Sound sfx_safl3 allocated.
+Sound sfx_safl4 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/CustWeather.lua
+State S_MRCE_CWEMBER1 allocated.
+MobjType MT_MRCE_CWEMBER1 allocated.
+Sprite SPR_MRCE_CWEMBER allocated.
+State S_MRCE_CWICECRYSTAL1 allocated.
+Sprite SPR_MRCE_CWICECRYSTAL allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/UtilityMap/dontdraw.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Jade Coast/JCZ_SegProps.lua
+MobjType MT_JCZTREE allocated.
+MobjType MT_JCZTREE_DECO allocated.
+MobjType MT_JCZSPECCYEASTER allocated.
+MobjType MT_JCZVINE allocated.
+MobjType MT_JCZVINESEG allocated.
+State S_JCZVINE allocated.
+State S_JCZTREE allocated.
+Sprite SPR_MRCE_JCZ_DECO1 allocated.
+State S_JCZSPECCYEASTER allocated.
+Sprite SPR_MRCE_JCZ_DECO2 allocated.
+Sprite SPR_2AIZ allocated.
+MobjType MT_JCZSANDTRESURE allocated.
+MobjType MT_JCZSANDDUST allocated.
+State S_JCZSANDTRESURE allocated.
+State S_JCZSANDTRSPARKLE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Jade Coast/JCZ_Zipline.lua
+MobjType MT_JCZZIPLINE allocated.
+State S_JCZZIPLINE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Jade Coast/JCZ_Deco.lua
+MobjType MT_JCZFLOWER allocated.
+State S_JCZFLOWER allocated.
+MobjType MT_JCZPINEAPPLE allocated.
+State S_JCZPINEAPPLE allocated.
+MobjType MT_JCZBUSH allocated.
+State S_JCZBUSH allocated.
+MobjType MT_JCZFLOWERBUSH allocated.
+State S_JCZFLOWERBUSH allocated.
+MobjType MT_JCZLUSHFLOWER allocated.
+State S_JCZLUSHFLOWER allocated.
+MobjType MT_JCZOAKTREE allocated.
+State S_JCZOAKTREE allocated.
+MobjType MT_JCZAPPLETREE allocated.
+State S_JCZAPPLETREE allocated.
+MobjType MT_JCZLUSHTREE allocated.
+State S_JCZLUSHTREE allocated.
+State S_JCZHAT allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Jade Coast/UDMF_CustomSpawn.lua
+MobjType MT_UDMFCUSTOMSPAWN allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Jade Coast/mudholes.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Flame Rift/FRZ_Deco.lua
+MobjType MT_DUMMYAIZ allocated.
+MobjType MT_AIZROCK1 allocated.
+MobjType MT_AIZROCK2 allocated.
+MobjType MT_AIZROCK3 allocated.
+State S_AIZROCK allocated.
+Sprite SPR_MRCE_AIZROCK allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Flame Rift/FRZ_Scripts.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Tempest Valley/LightningBolt.lua
+MobjType MT_LIGHTNING_BOLT_PART allocated.
+MobjType MT_LIGHTNING_SPAWNER allocated.
+State S_LIGHTNING_BOLT_PART allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Tempest Valley/TVZ_Spears.lua
+MobjType MT_TVZ_SPEAR_VERTICAL allocated.
+MobjType MT_TVZ_SPEAR_HORIZONTAL allocated.
+MobjType MT_TVZ_SPEAR_HORIZONTAL_BASE allocated.
+State S_TVZ_SPEAR_VERTICAL1 allocated.
+State S_TVZ_SPEAR_VERTICAL2 allocated.
+State S_TVZ_SPEAR_VERTICAL3 allocated.
+State S_TVZ_SPEAR_VERTICAL4 allocated.
+State S_TVZ_SPEAR_VERTICAL5 allocated.
+State S_TVZ_SPEAR_VERTICAL6 allocated.
+State S_TVZ_SPEAR_HORIZONTAL1 allocated.
+State S_TVZ_SPEAR_HORIZONTAL2 allocated.
+State S_TVZ_SPEAR_HORIZONTAL3 allocated.
+State S_TVZ_SPEAR_HORIZONTAL4 allocated.
+State S_TVZ_SPEAR_HORIZONTAL5 allocated.
+State S_TVZ_SPEAR_HORIZONTAL6 allocated.
+State S_TVZ_SPEAR_HORIZONTAL_BASE allocated.
+Sprite SPR_TVSK allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Tempest Valley/lantern.lua
+MobjType MT_LANTERN allocated.
+State S_LCORONA allocated.
+State S_LANTERN allocated.
+State S_LANTERN1 allocated.
+State S_LANTERN2 allocated.
+State S_LANTERNPOP1 allocated.
+State S_LANTERNPOP2 allocated.
+State S_LANTERNPOP3 allocated.
+State S_LANTERNPOP4 allocated.
+State S_LANTERNPOP5 allocated.
+State S_LANTERNPOP6 allocated.
+Sprite SPR_MRCE_TORO_NAGASHI_LANTERNS allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Tempest Valley/cherryTree.lua
+MobjType MT_BIGCHERRYTREE allocated.
+State S_BIGCHERRYTREE allocated.
+Sprite SPR_MRCE_TVZ_BIGCHERRYTREE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Tempest Valley/rsk.lua
+Sound sfx_philip allocated.
+Sound sfx_phili2 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Tempest Valley/TVZ2_SCRIPTS.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/midnightfreeze/freezingwater.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/midnightfreeze/NorthernLights.lua
+MobjType MT_AURORABOREALIS allocated.
+MobjType MT_AURORASEG allocated.
+State S_AURORASEG allocated.
+State S_AURORASEG1 allocated.
+Sprite SPR_MRCE_AURORABOREALIS allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/midnightfreeze/snowywind.lua
+MobjType MT_MFZWINDSPAWNER allocated.
+MobjType MT_MFZWINDSNOW allocated.
+State S_MFZWINDSNOW allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/midnightfreeze/snowboard.lua
+MobjType MT_SNOWBOARD allocated.
+State S_SNOWBOARD allocated.
+MobjType MT_SNOWBOARDSPLAT allocated.
+State S_SNWBRD1 allocated.
+State S_SNWBRD2 allocated.
+State S_SNWBRDF allocated.
+State S_PLAY_SNOWBOARDRIDE allocated.
+Sprite SPR_SBRD allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/midnightfreeze/crackingIceSectors.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Sunken Plant/electricpipe.lua
+Skincolor SKINCOLOR_ELECPIPE allocated.
+MobjType MT_ELECPIPE_MAN allocated.
+MobjType MT_SPECCY allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Sunken Plant/FloorSplat.lua
+MobjType MT_SPZ_FSPLAT allocated.
+Sprite SPR_MRCE_SPZ_FLOORDEBRIS1 allocated.
+State S_FLRSPLATSTATE1 allocated.
+State S_FLRSPLATSTATE2 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Sunken Plant/SPZ2_scripts.lua
+Sound sfx_bstrt allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Sunken Plant/susMonitor.lua
+MobjType MT_SUS_BOX allocated.
+State S_SUS_BOX allocated.
+Sprite SPR_TSUS allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Sunken Plant/bioPlants.lua
+Sprite SPR_MRCE_SPZ_ORBPLANT allocated.
+MobjType MT_ORBPLANT allocated.
+State S_ORBPLANT1 allocated.
+State S_ORBPLANT2 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Vulcan Forge/risingLava.lua
+Sprite SPR_MRCE_FRZ_FIRENFLAME allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Starlight Palace/SLP_Scripts.lua
+Sound sfx_sptic allocated.
+State S_FOGCLOUD1 allocated.
+State S_FOGCLOUD2 allocated.
+MobjType MT_FOGCLOUD allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Nitric Citadel/acidRingDrain.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Mystic Realm/spacecrystal.lua
+MobjType MT_SPACECRYSTAL allocated.
+MobjType MT_SPACECRYSTALDUMMY allocated.
+State S_SPACECRYSTAL allocated.
+Sprite SPR_MRCE_MRZ_SPACECRYSTAL allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Aerial Garden/agz_misc.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Aerial Garden/portal.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Aerial Garden/LightTemple.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Aerial Garden/voteexit.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/primordialabyss/skychange.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/dimensionwarp/doomsday.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/dimensionwarp/decay.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/dimensionwarp/reveriefly.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/dimensionwarp/HMScheat.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Emerald Stages/emeralds.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/Emerald Stages/Mystic_Shrines.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/LevelSpecific/mobjnodes_mr.lua
+[Script Nodes] Script 'MYSTICREALMZONE_CRYSTALPREFAB' registered
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/forcerollsprings.lua
+MobjType MT_BROSPRING allocated.
+MobjType MT_YROSPRING allocated.
+MobjType MT_RROSPRING allocated.
+State S_BROSPRING1 allocated.
+State S_BROSPRING2 allocated.
+State S_BROSPRING3 allocated.
+State S_BROSPRING4 allocated.
+State S_BROSPRING5 allocated.
+State S_BROSPRING6 allocated.
+State S_BROSPRING7 allocated.
+State S_BROSPRING8 allocated.
+State S_YROSPRING1 allocated.
+State S_YROSPRING2 allocated.
+State S_YROSPRING3 allocated.
+State S_YROSPRING4 allocated.
+State S_YROSPRING5 allocated.
+State S_YROSPRING6 allocated.
+State S_YROSPRING7 allocated.
+State S_YROSPRING8 allocated.
+State S_RROSPRING1 allocated.
+State S_RROSPRING2 allocated.
+State S_RROSPRING3 allocated.
+State S_RROSPRING4 allocated.
+State S_RROSPRING5 allocated.
+State S_RROSPRING6 allocated.
+State S_RROSPRING7 allocated.
+State S_RROSPRING8 allocated.
+Sprite SPR_SBSP allocated.
+Sprite SPR_SYSP allocated.
+Sprite SPR_SRSP allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/NewEmblems.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/capsule.lua
+Sprite SPR_CAPJ allocated.
+MobjType MT_GGCAPSULE allocated.
+State S_GGCAPSULE allocated.
+State S_GGCAPSULE_JUNK allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/starpost.lua
+State S_STARPOSTCUBE allocated.
+State S_STARPOSTCUBEFLASH allocated.
+Sprite SPR_CTPT allocated.
+Skincolor SKINCOLOR_MRCESTARPOST allocated.
+Sprite SPR_MRCE_STARPOSTARROW allocated.
+MobjType MT_SPARROW allocated.
+State S_SPARROW allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/superdiagspring.lua
+MobjType MT_PURPLEDIAG allocated.
+Sprite SPR_PSPR allocated.
+State S_PDIAG1 allocated.
+State S_PDIAG2 allocated.
+State S_PDIAG3 allocated.
+State S_PDIAG4 allocated.
+State S_PDIAG5 allocated.
+State S_PDIAG6 allocated.
+State S_PDIAG7 allocated.
+State S_PDIAG8 allocated.
+MobjType MT_PURPLESIDESPRING allocated.
+Sprite SPR_MRCE_SIDEWAYS_PURPLE_SPRING allocated.
+State S_PSIDESPRNG1 allocated.
+State S_PSIDESPRNG2 allocated.
+State S_PSIDESPRNG3 allocated.
+State S_PSIDESPRNG4 allocated.
+State S_PSIDESPRNG5 allocated.
+State S_PSIDESPRNG6 allocated.
+State S_PSIDESPRNG7 allocated.
+State S_PSIDESPRNG8 allocated.
+Sound sfx_psprng allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/hundringbox.lua
+MobjType MT_CONTICON allocated.
+State S_CONTICON1 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/hyperstones.lua
+State S_LIGHTNING_STONE allocated.
+State S_FIRE_STONE allocated.
+State S_WATER_STONE allocated.
+Sprite SPR_KYST allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/flowbubble.lua
+MobjType MT_BIGBUBBLEPATCH allocated.
+State S_BIGBUBBLEPATCH allocated.
+MobjType MT_BIGFLOWBUBBLE allocated.
+State S_BIGFLOWBUBBLE0 allocated.
+State S_BIGFLOWBUBBLE1 allocated.
+State S_BIGFLOWBUBBLE2 allocated.
+State S_BIGFLOWBUBBLE3 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/corona.lua
+MobjType MT_CORONA allocated.
+MobjType MT_CORONALAMP allocated.
+Sprite SPR_MRCE_CORONA allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/ESP_Combi.lua
+MobjType MT_COMBINE_BOX allocated.
+MobjType MT_COMBINE_GOLDBOX allocated.
+MobjType MT_COMBINE_ICON allocated.
+State S_COMBINE_BOX allocated.
+State S_COMBINE_GOLDBOX allocated.
+State S_COMBINE_ICON1 allocated.
+State S_COMBINE_ICON2 allocated.
+Sprite SPR_VMCO allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/speedboosters.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/superems.lua
+State S_SUPEREMERALD allocated.
+Sprite SPR_0SUP allocated.
+MobjType MT_SUPEREMERALD allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/objectSpawnTarget.lua
+MobjType MT_OBJTARGET allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/audioSource.lua
+MobjType MT_AUDIOSRC allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/eggDrive.lua
+Sprite SPR_MRCE_EGGDRIVE allocated.
+State S_EGDRVE1 allocated.
+State S_EGDRVE2 allocated.
+MobjType MT_EGGDRIVE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/common/silverRing.lua
+MobjType MT_HYPERRINGBOX allocated.
+MobjType MT_HYPERRINGICON allocated.
+State S_HYPERRINGBOX allocated.
+State S_HYPERRINGBOX1 allocated.
+State S_HYPERRINGBOX2 allocated.
+State S_HYPERRINGBOX3 allocated.
+Sprite SPR_SILR allocated.
+State S_HYPERRINGICON allocated.
+State S_HYPERRINGICON2 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/jcz/CAKE.lua
+State S_JCZCAKE1 allocated.
+State S_JCZCAKE2 allocated.
+Sprite SPR_MRCE_JCZCAKE allocated.
+Sound sfx_cake allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/jcz/speccy.lua
+Skincolor SKINCOLOR_SPECCY allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/tvz/slowgoop.lua
+Sprite SPR_SLGP allocated.
+State S_SLOWGOOP allocated.
+State S_SLOWGOOP_XPLD allocated.
+State S_SLOWGOOP_SPLT1 allocated.
+State S_SLOWGOOP_SPLT2 allocated.
+MobjType MT_SLOWGOOP_PARTICLE allocated.
+State S_SLOWGOOP_PARTICLE allocated.
+MobjType MT_SLOWGOOP_TRAIL allocated.
+State S_SLOWGOOP_TRAIL allocated.
+Skincolor SKINCOLOR_SLOWGOOPHONEY allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/tvz/tvzdeco.lua
+MobjType MT_TVZBUSH1 allocated.
+State S_TVZBUSH1 allocated.
+Sprite SPR_TBSH allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/tvz/goopfall.lua
+Sprite SPR_MRCE_TVZ_PURPLEGOOPFALL allocated.
+State S_GOOPFALL_SHOOT_PURPLE allocated.
+State S_GOOPFALL_PURPLE1 allocated.
+State S_GOOPFALL_PURPLE2 allocated.
+State S_GOOPFALL_PURPLE3 allocated.
+MobjType MT_GOOPFALL allocated.
+MobjType MT_GOOPFALL_GOOP_PURPLE allocated.
+Sprite SPR_MRCE_TVZ_BLUEGOOPFALL allocated.
+State S_GOOPFALL_SHOOT_BLUE allocated.
+State S_GOOPFALL_BLUE1 allocated.
+State S_GOOPFALL_BLUE2 allocated.
+State S_GOOPFALL_BLUE3 allocated.
+MobjType MT_GOOPFALL_GOOP_BLUE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/tvz/fountain.lua
+MobjType MT_GOOPFOUNTAIN allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/tvz/smashableVases.lua
+Sprite SPR_MRCE_SMASHABLE_VASES allocated.
+MobjType MT_SM2POT allocated.
+MobjType MT_SM2BIGPOT allocated.
+State S_SM2POT allocated.
+State S_SM2BIGPOT allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/tvz/showervine.lua
+MobjType MT_SLIMESHOWERVINE allocated.
+State S_SHWBUSH allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/frz/torchkey.lua
+MobjType MT_TEMPLETORCH allocated.
+State S_TEMPLETORCH1 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/frz/valveWheel.lua
+Sprite SPR_MRCE_VALVEWHEEL allocated.
+MobjType MT_VALVEWHEEL allocated.
+State S_VWHEELINIT allocated.
+State S_VWHEELSTOP allocated.
+State S_VWHEELROT1 allocated.
+State S_VWHEELROT2 allocated.
+State S_VWHEELROT3 allocated.
+State S_VWHEELROT4 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/mfz/mfzicicles.lua
+MobjType MT_ICICLE allocated.
+Sound sfx_s1dfal allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/mfz/sharpIce.lua
+MobjType MT_SHARPICESHARD allocated.
+State S_HAZARDICESHARDSPAWN allocated.
+State S_HAZARDICE1 allocated.
+Sprite SPR_MRCE_SHARPICE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/agz/vinespike.lua
+MobjType MT_VINESPIKE allocated.
+MobjType MT_VINECASTLEBALL allocated.
+State S_VINEBALL allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/agz/hangglider.lua
+MobjType MT_HANGGLIDER allocated.
+State S_HANGGLIDER allocated.
+State S_HANGGLIDER_PANEL allocated.
+Sprite SPR_HGPN allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/agz/KHZDeco1.lua
+Sprite SPR_KHB1 allocated.
+Sprite SPR_KHB4 allocated.
+Sprite SPR_KHF1 allocated.
+Sprite SPR_KHF2 allocated.
+Sprite SPR_KHF3 allocated.
+Sprite SPR_KHF4 allocated.
+Sprite SPR_KHT1 allocated.
+Sprite SPR_KHV1 allocated.
+Sprite SPR_KHR1 allocated.
+MobjType MT_KHB1A allocated.
+MobjType MT_KHB1B allocated.
+MobjType MT_KHB1C allocated.
+MobjType MT_KHB1D allocated.
+MobjType MT_KHB1E allocated.
+MobjType MT_KHF1A allocated.
+MobjType MT_KHF1B allocated.
+MobjType MT_KHF1C allocated.
+MobjType MT_KHF1D allocated.
+MobjType MT_KHF1E allocated.
+MobjType MT_KHF1F allocated.
+MobjType MT_KHF2A allocated.
+MobjType MT_KHF2B allocated.
+MobjType MT_KHF2C allocated.
+MobjType MT_KHF3A allocated.
+MobjType MT_KHF3B allocated.
+MobjType MT_KHF3C allocated.
+MobjType MT_KHF4A allocated.
+MobjType MT_KHT1A allocated.
+MobjType MT_KHT1B allocated.
+MobjType MT_KHT1C allocated.
+MobjType MT_KHT1D allocated.
+MobjType MT_KHT1E allocated.
+MobjType MT_KHV1 allocated.
+MobjType MT_KHR1 allocated.
+State S_KHB1A allocated.
+State S_KHB1B allocated.
+State S_KHB1C allocated.
+State S_KHB1D allocated.
+State S_KHB1E allocated.
+State S_KHF1A allocated.
+State S_KHF1B allocated.
+State S_KHF1C allocated.
+State S_KHF1D allocated.
+State S_KHF1E allocated.
+State S_KHF1F allocated.
+State S_KHF2A allocated.
+State S_KHF2B allocated.
+State S_KHF2C allocated.
+State S_KHF3A allocated.
+State S_KHF3B allocated.
+State S_KHF3C allocated.
+State S_KHF4A allocated.
+State S_KHT1A allocated.
+State S_KHT1B allocated.
+State S_KHT1C allocated.
+State S_KHT1D allocated.
+State S_KHT1E allocated.
+State S_KHV1 allocated.
+State S_KHR1 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/agz/KHZDeco2.lua
+MobjType MT_OAKFALLSLOTUS allocated.
+MobjType MT_OAKFALLSLILY allocated.
+State S_OAKFALLSLILYNEW allocated.
+State S_OAKFALLSLILY allocated.
+State S_OAKFALLSLOTUS allocated.
+Sprite SPR_0KHX allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/agz/emeralds.lua
+MobjType MT_FAKEEMERALD1 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/agz/waterspout.lua
+MobjType MT_AGZ_WATERSPOUT allocated.
+State S_AGZ_WATERSPOUT1 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/paz/clocktower.lua
+Sprite SPR_MRCE_PAZ_CLOCKTOWERHANDS allocated.
+State S_MRCE_PAZCLOCKTOWERHANDHOUR allocated.
+State S_MRCE_PAZCLOCKTOWERHANDMINUTE allocated.
+State S_MRCE_PAZCLOCKTOWERHANDSECOND allocated.
+MobjType MT_MRCE_PAZ_CLOCKTOWERHAND allocated.
+MobjType MT_MRCE_PAZ_CLOCKTOWERHANDSPAWN allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Objects/vfz/firefly.lua
+Sprite SPR_MRCE_VFZ_FIREFLY allocated.
+MobjType MT_FIREFLYVFZ allocated.
+State S_FIREFLY1 allocated.
+State S_FIREFLY2 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/CustomSeed.lua
+MobjType MT_CUSTOMSEED allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/JCZ/Goggola.lua
+Sprite SPR_MRCE_JCZ_GOGGOLA allocated.
+MobjType MT_GOGGLESCRAWLA_SLOW allocated.
+MobjType MT_GOGGLESCRAWLA_FAST allocated.
+State S_JOSS_STND allocated.
+State S_JOSS_WALK1 allocated.
+State S_JOSS_WALK2 allocated.
+State S_JOSS_WALK3 allocated.
+State S_JOSS_WALK4 allocated.
+State S_JOSS_WALK5 allocated.
+State S_JOSS_WALK6 allocated.
+State S_JOSS_CHARGE1 allocated.
+State S_JOSS_CHARGE2 allocated.
+State S_JOSS_RUN1 allocated.
+State S_JOSS_RUN2 allocated.
+State S_JOSS_RUN3 allocated.
+State S_JOSS_RUN4 allocated.
+State S_JOSS_RUN5 allocated.
+State S_JOSS_RUN6 allocated.
+State S_JOSS_STOP allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/VFZ/Jumper.lua
+State S_JUMPERCRAWLA_STND1 allocated.
+State S_JUMPERCRAWLA_STND2 allocated.
+State S_JUMPERCRAWLA_STND3 allocated.
+State S_JUMPERCRAWLA_JUMP1 allocated.
+State S_JUMPERCRAWLA_JUMP2 allocated.
+State S_JUMPERCRAWLA_JUMP3 allocated.
+State S_JUMPERCRAWLA_JUMP4 allocated.
+State S_JUMPERCRAWLA_JUMP5 allocated.
+State S_JUMPERCRAWLA_JUMP6 allocated.
+State S_JUMPERCRAWLA_JUMP7 allocated.
+State S_JUMPERCRAWLA_JUMP8 allocated.
+State S_JUMPERCRAWLA_JUMP9 allocated.
+State S_JUMPERCRAWLA_AMBUSH1 allocated.
+State S_JUMPERCRAWLA_AMBUSH2 allocated.
+State S_JUMPERCRAWLA_AMBUSH3 allocated.
+State S_JUMPERCRAWLA_AMBUSH4 allocated.
+MobjType MT_JUMPERCRAWLA allocated.
+MobjType MT_JUMPROCK allocated.
+State S_JUMPROCK_1 allocated.
+State S_JUMPROCK_2 allocated.
+State S_JUMPROCK_3 allocated.
+State S_JUMPROCK_4 allocated.
+State S_JUMPROCK_5 allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/VFZ/RDNT.lua
+MobjType MT_CANCERMOUSE allocated.
+MobjType MT_TURBOCANCERMOUSE allocated.
+MobjType MT_TURBOCANCERBLARGH allocated.
+State S_CANCERMOUSE_THINK allocated.
+State S_TURBOCANCERMOUSE_THINK allocated.
+State S_TURBOCANCERMOUSE_PAIN allocated.
+State S_TURBOCANCERBLARGH_THINK allocated.
+State S_TURBOCANCERBLARGH_EXPLODE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/FRZ/MambaTheMan.lua
+MobjType MT_AIZSNAKEPAIN allocated.
+MobjType MT_AIZSNAKE allocated.
+MobjType MT_AIZSNAKETAIL allocated.
+State S_AIZSNAKE allocated.
+Sprite SPR_MRCE_CATAKILLERGOTH allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/FRZ/Drilla.lua
+State S_DASHERCRAWLA_STND allocated.
+State S_DASHERCRAWLA_STND_X allocated.
+State S_DASHERCRAWLA_JUMP1 allocated.
+State S_DASHERCRAWLA_JUMP2 allocated.
+State S_DASHERCRAWLA_DASH1 allocated.
+State S_DASHERCRAWLA_DASH2 allocated.
+State S_DASHERCRAWLA_DASH3 allocated.
+MobjType MT_DASHERCRAWLA allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/MFZ/Cryocrawla.lua
+State S_CRYOCRAWLA_STND allocated.
+State S_CRYOCRAWLA_RUN1 allocated.
+State S_CRYOCRAWLA_RUN2 allocated.
+State S_CRYOCRAWLA_RUN3 allocated.
+State S_CRYOCRAWLA_RUN4 allocated.
+State S_CRYOCRAWLA_RUN5 allocated.
+State S_CRYOCRAWLA_RUN6 allocated.
+State S_CRYOCRAWLA_RUN7 allocated.
+State S_CRYOCRAWLA_ATK1 allocated.
+State S_CRYOCRAWLA_ATK2 allocated.
+State S_CRYOCRAWLA_ATK3 allocated.
+Sprite SPR_MRCE_CHILLA allocated.
+MobjType MT_ICEBEAM allocated.
+MobjType MT_ICEBEAMSHARD allocated.
+MobjType MT_ICEBEAMPARTICLE allocated.
+State S_ICEBEAMPARTICLE allocated.
+MobjType MT_ICECHILLAPAIN allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/SPZ/DerelictCrawla.lua
+State S_BROKENCRAWLA_STND allocated.
+State S_BROKENCRAWLA_ATK1 allocated.
+State S_BROKENCRAWLA_ATK2 allocated.
+State S_BROKENCRAWLA_ATK3 allocated.
+State S_BROKENCRAWLA_ATKE allocated.
+MobjType MT_BROKENCRAWLA allocated.
+Sprite SPR_MRCE_DERELICTCRAWLACOMMANDER allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/SPZ/bouncerNBeamer.lua
+State S_LASERDUDE_LASER1 allocated.
+State S_LASERDUDE_LASER2 allocated.
+State S_LASERDUDE_LASER4 allocated.
+State S_LASERTARGET_STAND allocated.
+State S_LASERTARGET_CHASE1 allocated.
+State S_LASERTARGET_CHASE2 allocated.
+State S_LASERTARGET_CHASE3 allocated.
+State S_LASERTARGET_CHASE4 allocated.
+State S_LASERTARGET_CHASE5 allocated.
+State S_LASERTARGET_CHASE6 allocated.
+State S_LASERTARGET_CHASE7 allocated.
+State S_LASERTARGET_RESET1 allocated.
+State S_LASERTARGET_RESET2 allocated.
+State S_LASERTARGET_PAIN allocated.
+State S_LASERDUDE_STARTUP1 allocated.
+State S_LASERDUDE_STARTUP2 allocated.
+State S_LASERDUDE_STARTUP3 allocated.
+Sprite SPR_MRCE_SPZBOUNCER allocated.
+Sprite SPR_MRCE_SPZBEAMER allocated.
+Sprite SPR_MRCE_BEAMEROVERLAY allocated.
+Sprite SPR_MRCE_BOUNCEROVERLAY allocated.
+Sound sfx_bnclg allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/AGZ/betterhiveelem.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/PAZ/angel.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Enemies/FoxHunter.lua
+MobjType MT_FOXHUNTER allocated.
+State S_FOXHUNTERLOOK0 allocated.
+State S_FOXHUNTERLOOK1 allocated.
+State S_FOXHUNTERAIM0 allocated.
+State S_FOXHUNTERSHOOT0 allocated.
+MobjType MT_SNIPERSHOT allocated.
+State S_SNIPERSHOT allocated.
+MobjType MT_HUNTERCORONA allocated.
+State S_HUNTERCORONA allocated.
+Sprite SPR_FHUN allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/EggDecker.lua
+MobjType MT_EGGDECKER allocated.
+State S_EGGDECKER_SPAWN allocated.
+State S_EGGDECKER_MAIN allocated.
+State S_EGGDECKER_PAIN allocated.
+State S_EGGDECKER_DEATH allocated.
+MobjType MT_EGGDECKER_BOULDER allocated.
+State S_EGGBOULDER_MAIN allocated.
+State S_EGGBOULDER_DEATH allocated.
+State S_EGGBOULDER_JUNK allocated.
+Sprite SPR_GHBD allocated.
+Sprite SPR_GHBJ allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/StarlightWeaver.lua
+MobjType MT_STARWEAVER allocated.
+MobjType MT_STARWEAVER_CHASER_HORIZONTAL allocated.
+MobjType MT_STARWEAVER_CHASER_VERTICAL allocated.
+MobjType MT_SW_REPLIKA_GUN allocated.
+MobjType MT_SW_REPLIKA_VILE allocated.
+MobjType MT_SW_REPLIKA_SHOCK allocated.
+MobjType MT_SW_REPLIKA_SHOCK_FRYER allocated.
+MobjType MT_SW_REPLIKA_SPAWNER allocated.
+Sprite SPR_MRCE_SEWZONES allocated.
+State S_WVDMGZONE1 allocated.
+State S_WVDMGZONE2 allocated.
+State S_STARWEAVER_LOOK allocated.
+State S_STARWEAVER_SPOTDELAY allocated.
+State S_STARWEAVER_SPOTREPEAT allocated.
+State S_STARWEAVER_RINGSOUND allocated.
+State S_STARWEAVER_RINGLAUNCH1 allocated.
+State S_STARWEAVER_RINGLAUNCHCHOOSE allocated.
+State S_STARWEAVER_RINGH1 allocated.
+State S_STARWEAVER_RINGV1 allocated.
+State S_STARWEAVER_CHASER_HORIZONTAL_LOOK allocated.
+State S_STARWEAVER_CHASER_VERTICAL_LOOK allocated.
+State S_STARWEAVER_CHASER_HORIZONTAL_ITBEGINS allocated.
+State S_STARWEAVER_CHASER_VERTICAL_ITBEGINS allocated.
+State S_STARWEAVER_INIT1 allocated.
+State S_STARWEAVER_INIT2 allocated.
+State S_STARWEAVER_INIT3 allocated.
+State S_STARWEAVER_RINGCHASE1 allocated.
+State S_STARWEAVER_RINGCHASE2 allocated.
+State S_STARWEAVER_DASHONE1 allocated.
+State S_STARWEAVER_DASHONE2 allocated.
+State S_STARWEAVER_DASHONE3 allocated.
+State S_STARWEAVER_DASHONE4 allocated.
+State S_STARWEAVER_DASHONE5 allocated.
+State S_STARWEAVER_DASHONE6 allocated.
+State S_STARWEAVER_DASHONE7 allocated.
+State S_STARWEAVER_DASHONE8 allocated.
+State S_STARWEAVER_REPLONE1 allocated.
+State S_STARWEAVER_REPLONE2 allocated.
+State S_STARWEAVER_REPLONE3 allocated.
+State S_STARWEAVER_REPLONE4 allocated.
+State S_STARWEAVER_DASHTWO1 allocated.
+State S_STARWEAVER_DASHTWO2 allocated.
+State S_STARWEAVER_DASHTWO3 allocated.
+State S_STARWEAVER_DASHTWO4 allocated.
+State S_STARWEAVER_DASHTWO5 allocated.
+State S_STARWEAVER_DASHTWO6 allocated.
+State S_STARWEAVER_DASHTWO7 allocated.
+State S_STARWEAVER_DASHTWO8 allocated.
+State S_STARWEAVER_REPLTWO1 allocated.
+State S_STARWEAVER_REPLTWO2 allocated.
+State S_STARWEAVER_REPLTWO3 allocated.
+State S_STARWEAVER_REPLTWO4 allocated.
+State S_STARWEAVER_DASHTHREE1 allocated.
+State S_STARWEAVER_DASHTHREE2 allocated.
+State S_STARWEAVER_DASHTHREE3 allocated.
+State S_STARWEAVER_DASHTHREE4 allocated.
+State S_STARWEAVER_DASHTHREE5 allocated.
+State S_STARWEAVER_DASHTHREE6 allocated.
+State S_STARWEAVER_DASHTHREE7 allocated.
+State S_STARWEAVER_DASHTHREE8 allocated.
+State S_STARWEAVER_REPLTHREE1 allocated.
+State S_STARWEAVER_REPLTHREE2 allocated.
+State S_STARWEAVER_REPLTHREE3 allocated.
+State S_STARWEAVER_REPLTHREE4 allocated.
+State S_STARWEAVER_DASHFOUR1 allocated.
+State S_STARWEAVER_DASHFOUR2 allocated.
+State S_STARWEAVER_DASHFOUR3 allocated.
+State S_STARWEAVER_DASHFOUR4 allocated.
+State S_STARWEAVER_DASHFOUR5 allocated.
+State S_STARWEAVER_DASHFOUR6 allocated.
+State S_STARWEAVER_DASHFOUR7 allocated.
+State S_STARWEAVER_DASHFOUR8 allocated.
+State S_STARWEAVER_REPLFOUR1 allocated.
+State S_STARWEAVER_REPLFOUR2 allocated.
+State S_STARWEAVER_REPLFOUR3 allocated.
+State S_STARWEAVER_REPLFOUR4 allocated.
+State S_STARWEAVER_MGCHOOSE allocated.
+State S_STARWEAVER_JETCHOOSE allocated.
+State S_STARWEAVER_MG1 allocated.
+State S_STARWEAVER_MG2 allocated.
+State S_STARWEAVER_MG3 allocated.
+State S_STARWEAVER_MG4 allocated.
+State S_STARWEAVER_MG5 allocated.
+State S_STARWEAVER_MG6 allocated.
+State S_STARWEAVER_MG7 allocated.
+State S_STARWEAVER_MG8 allocated.
+State S_STARWEAVER_MG9 allocated.
+State S_STARWEAVER_MG10 allocated.
+State S_STARWEAVER_MG11 allocated.
+State S_STARWEAVER_JET1 allocated.
+State S_STARWEAVER_JET2 allocated.
+State S_STARWEAVER_JET3 allocated.
+State S_STARWEAVER_JET4 allocated.
+State S_STARWEAVER_JET5 allocated.
+State S_STARWEAVER_JET6 allocated.
+State S_STARWEAVER_JET7 allocated.
+State S_STARWEAVER_JET8 allocated.
+State S_STARWEAVER_PAIN1 allocated.
+State S_STARWEAVER_PAIN2 allocated.
+State S_STARWEAVER_PAIN3 allocated.
+State S_STARWEAVER_PAIN4 allocated.
+State S_STARWEAVER_PAIN5 allocated.
+State S_STARWEAVER_PAIN6 allocated.
+State S_STARWEAVER_PAIN7 allocated.
+State S_STARWEAVER_PAIN8 allocated.
+State S_STARWEAVER_PAIN9 allocated.
+State S_STARWEAVER_PAIN10 allocated.
+State S_STARWEAVER_PAIN11 allocated.
+State S_STARWEAVER_PAIN12 allocated.
+State S_STARWEAVER_PAIN13 allocated.
+State S_STARWEAVER_PAIN14 allocated.
+State S_SW_REPLIKA_SPAWNER_INIT allocated.
+State S_SW_REPLIKA_SPAWNER_CHOOSE allocated.
+State S_SW_REPLIKA_SPAWNER_GUN allocated.
+State S_SW_REPLIKA_SPAWNER_SHOCK allocated.
+State S_SW_REPLIKA_SPAWNER_VILE allocated.
+State S_SW_REPLIKA_SPAWNER_CLEAR allocated.
+State S_SW_REPLIKA_GUN_LOOK allocated.
+State S_SW_REPLIKA_GUN_CHOOSE allocated.
+State S_SW_REPLIKA_GUN_WAIT1 allocated.
+State S_SW_REPLIKA_GUN_WAIT2 allocated.
+State S_SW_REPLIKA_GUN_FIRE1 allocated.
+State S_SW_REPLIKA_GUN_FIRE2 allocated.
+State S_SW_REPLIKA_GUN_FIRE3 allocated.
+State S_SW_REPLIKA_GUN_FIRE4 allocated.
+State S_SW_REPLIKA_GUN_FIRE5 allocated.
+State S_SW_REPLIKA_SHOCK_LOOK allocated.
+State S_SW_REPLIKA_SHOCK_CHOOSE allocated.
+State S_SW_REPLIKA_SHOCK_WAIT1 allocated.
+State S_SW_REPLIKA_SHOCK_WAIT2 allocated.
+State S_SW_REPLIKA_SHOCK_FIRE1 allocated.
+State S_SW_REPLIKA_SHOCK_FRYER_INIT allocated.
+State S_SW_REPLIKA_SHOCK_FRYER_FRYAIR allocated.
+State S_SW_REPLIKA_VILE_LOOK allocated.
+State S_SW_REPLIKA_VILE_CHOOSE allocated.
+State S_SW_REPLIKA_VILE_WAIT1 allocated.
+State S_SW_REPLIKA_VILE_WAIT2 allocated.
+State S_SW_REPLIKA_VILE_FIRE1 allocated.
+State S_SW_REPLIKA_VILE_FIRE2 allocated.
+State S_SW_REPLIKA_VILE_FIRE3 allocated.
+State S_SW_REPLIKA_VILE_FIRE4 allocated.
+State S_SW_REPLIKA_ONDEATH allocated.
+Sound sfx_slwvds allocated.
+Sound sfx_slwvmg allocated.
+Sound sfx_rplcte allocated.
+Sound sfx_rpldsp allocated.
+MobjType MT_SINSEWDMGZONE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/Egg Amoeba/Freeslot.lua
+MobjType MT_EGGAMOEBA allocated.
+State S_EGGAMOEBA_START1 allocated.
+State S_EGGAMOEBA_START2 allocated.
+State S_EGGAMOEBA_START3 allocated.
+State S_EGGAMOEBA_START4 allocated.
+State S_EGGAMOEBA_JUMP1 allocated.
+State S_EGGAMOEBA_JUMP2 allocated.
+State S_EGGAMOEBA_JUMP3 allocated.
+State S_EGGAMOEBA_JUMP4 allocated.
+State S_EGGAMOEBA_JUMP5 allocated.
+State S_EGGAMOEBA_JUMP6 allocated.
+State S_EGGAMOEBA_SPOUT1 allocated.
+State S_EGGAMOEBA_SPOUT2 allocated.
+State S_EGGAMOEBA_SPOUT3 allocated.
+State S_EGGAMOEBA_SPOUT4 allocated.
+State S_EGGAMOEBA_SPOUT5 allocated.
+State S_EGGAMOEBA_SPOUT6 allocated.
+State S_EGGAMOEBA_POGO allocated.
+State S_EGGAMOEBA_PINCHPREP1 allocated.
+State S_EGGAMOEBA_PINCHPREP2 allocated.
+State S_EGGAMOEBA_PINCH1 allocated.
+State S_EGGAMOEBA_PINCH2 allocated.
+State S_EGGAMOEBA_PINCH3 allocated.
+State S_EGGAMOEBA_PINCH4 allocated.
+State S_EGGAMOEBA_PINCH5 allocated.
+State S_EGGAMOEBA_PINCH6 allocated.
+State S_EGGAMOEBA_PINCH7 allocated.
+State S_EGGAMOEBA_PINCH8 allocated.
+State S_EGGAMOEBA_PINCH9 allocated.
+State S_EGGAMOEBA_PINCH10 allocated.
+State S_EGGAMOEBA_DIE1 allocated.
+State S_EGGAMOEBA_DIE2 allocated.
+State S_EGGAMOEBA_DIE3 allocated.
+State S_EGGAMOEBA_DIE4 allocated.
+State S_EGGAMOEBA_DIE5 allocated.
+Sprite SPR_EGSL allocated.
+MobjType MT_SHIELDSLIME allocated.
+State S_SHIELDSLIME allocated.
+State S_SHIELDSLIME_POP allocated.
+Sprite SPR_SLIM allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/Egg Amoeba/Boss2.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/Boiling Egg/Boss4.lua
+MobjType MT_BOILINGEGG allocated.
+State S_BOILINGEGG_SPAWN allocated.
+State S_BOILINGEGG_MAIN allocated.
+State S_BOILINGEGG_PAIN allocated.
+MobjType MT_BE_QUAKESPAWNER allocated.
+State S_QUAKESPAWNER_THINK allocated.
+State S_QUAKESPAWNER_THINK2 allocated.
+State S_QUAKESPAWNER_TARGET allocated.
+State S_QUAKESPAWNER_SOUND allocated.
+State S_QUAKESPAWNER_SPAWN allocated.
+State S_QUAKESPAWNER_RAM allocated.
+State S_QUAKESPAWNER_CEASE allocated.
+MobjType MT_BE_QUAKEMISSILE allocated.
+State S_QUAKEMISSILE_THINK allocated.
+MobjType MT_BE_NAPALM allocated.
+State S_BE_NAPALM_THRUST allocated.
+State S_BE_NAPALM_EXPAND allocated.
+State S_BE_NAPALM_LOOP allocated.
+State S_BE_NAPALM_LINGER allocated.
+Sprite SPR_EGNB allocated.
+Sound sfx_subept allocated.
+Sound sfx_submrg allocated.
+Sound sfx_b4flmr allocated.
+Sound sfx_rage allocated.
+MobjType MT_EGGBALLER_FIRE allocated.
+State S_EGGBALLER_FIRE allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/PoseidonCore/Freeslot.lua
+MobjType MT_POSEIDONCORE allocated.
+MobjType MT_POSEIDONCORE_BOTTOM allocated.
+State S_POSEIDONCORE allocated.
+State S_POSEIDONCORE_BOTTOM allocated.
+State S_POSEIDONCORE_DEATH allocated.
+MobjType MT_POSEIDONBLAST allocated.
+MobjType MT_POSEIDONBLAST_PAIN allocated.
+State S_POSEIDONBLAST allocated.
+State S_POSEIDONBLAST_TYPE2 allocated.
+MobjType MT_POSEIDONSHIELD allocated.
+State S_POSEIDONSHIELD allocated.
+MobjType MT_POSEIDONTRUECORE allocated.
+MobjType MT_POSEIDONGENERATOR allocated.
+State S_POSEIDONGENERATOR allocated.
+State S_POSEIDONGENERATOR_SHINE allocated.
+State S_POSEIDONGENERATOR_PAIN allocated.
+Sprite SPR_GENH allocated.
+Sprite SPR_GENS allocated.
+Sprite SPR_PSDN allocated.
+Sprite SPR_PCBL allocated.
+Sound sfx_pschrg allocated.
+Sound sfx_psbeam allocated.
+Sound sfx_prleas allocated.
+Sound sfx_pshock allocated.
+Sound sfx_pschg2 allocated.
+Sound sfx_pschg3 allocated.
+Sound sfx_psexpd allocated.
+Sound sfx_psexp2 allocated.
+Sound sfx_pspnch allocated.
+Sound sfx_psdmgd allocated.
+Sound sfx_psdead allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/PoseidonCore/Boss6.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/EggFreezer.lua
+MobjType MT_ICEBEAM allocated.
+MobjType MT_ICEBEAMSHARD allocated.
+MobjType MT_ICEBEAMPARTICLE allocated.
+State S_ICEBEAMPARTICLE allocated.
+MobjType MT_ICESCATTER allocated.
+MobjType MT_ICESCATTERSHARD allocated.
+MobjType MT_ICEBOMB allocated.
+State S_EGGFREEZER_JET1 allocated.
+State S_EGGFREEZER_STND2 allocated.
+State S_EGGFREEZER_STND3 allocated.
+State S_EGGFREEZER_PAIN3 allocated.
+State S_EGGFREEZER_LATK1 allocated.
+State S_EGGFREEZER_LATK2 allocated.
+State S_EGGFREEZER_LATK3 allocated.
+State S_EGGFREEZER_LATK4 allocated.
+State S_EGGFREEZER_LATK5 allocated.
+State S_EGGFREEZER_LATK6 allocated.
+State S_EGGFREEZER_LATK7 allocated.
+State S_EGGFREEZER_LATK8 allocated.
+State S_EGGFREEZER_LATK9 allocated.
+State S_EGGFREEZER_LATK10 allocated.
+State S_EGGFREEZER_MATKE allocated.
+State S_EGGFREEZER_MATK1 allocated.
+State S_EGGFREEZER_MATK2 allocated.
+State S_EGGFREEZER_MATK3 allocated.
+State S_EGGFREEZER_MATK4 allocated.
+State S_EGGFREEZER_MATK5 allocated.
+State S_EGGFREEZER_MATK6 allocated.
+State S_EGGFREEZER_MATK7 allocated.
+State S_EGGFREEZER_RATK1 allocated.
+State S_EGGFREEZER_RATK2 allocated.
+State S_EGGFREEZER_RATK3 allocated.
+State S_EGGFREEZER_RATK4 allocated.
+State S_EGGFREEZER_RATK5 allocated.
+State S_EGGFREEZER_RATK6 allocated.
+State S_EGGFREEZER_RATK7 allocated.
+State S_EGGFREEZER_RATK8 allocated.
+State S_EGGFREEZER_RATK9 allocated.
+State S_EGGFREEZER_RATK10 allocated.
+State S_EGGFREEZER_RATK11 allocated.
+State S_EGGFREEZER_RATK12 allocated.
+State S_EGGFREEZER_RATKE allocated.
+State S_EGGFREEZER_PAIN1 allocated.
+State S_EGGFREEZER_PAIN2 allocated.
+State S_EGGFREEZER_DIE1 allocated.
+State S_EGGFREEZER_DIE2 allocated.
+State S_EGGFREEZER_DIE3 allocated.
+State S_EGGFREEZER_DIE4 allocated.
+State S_EGGFREEZER_DIE5 allocated.
+State S_EGGFREEZER_DIE6 allocated.
+State S_EGGFREEZER_DIE7 allocated.
+State S_EGGFREEZER_FLEE1 allocated.
+State S_EGGFREEZER_FLEE2 allocated.
+MobjType MT_JETSPAWN allocated.
+Sprite SPR_EGGF allocated.
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/EggBomber.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/EggAnimus/ondeath.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/Bosses/EggAnimus/DWZ/eggmobileX.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/End/charactersupport.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/End/time_events_data.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/End/time_events_core.lua
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/End/time_events_mr.lua
+Added event element TITLE_SKY
+Added event element PRIS_AP
+Added event element VFZ_SKYCOLORS
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/End/escapemenu.lua
+Added command "mr_menu"
+Added command "debug_mrce_escapemenu"
+Loading Lua script from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|Lua/End/loadlast.lua
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/A - Core/
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/A - Core/MAINCFG
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/A - Core/mr-levelheaders.soc
+WARNING: Line 1287: Level header 931: music exceeds max length of 6
+WARNING: Line 1395: Level header 1001: unknown typeoflevel flag  BATTLECTF
+
+WARNING: Line 1408: Level header 1002: unknown typeoflevel flag  BATTLECTF
+
+WARNING: Line 1418: Level header 1003: unknown typeoflevel flag  BATTLECTF
+
+WARNING: Line 1427: Level header 1004: unknown typeoflevel flag  BATTLECTF
+
+5 warnings in the SOC lump
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/A - Core/vanillacampaignpatch.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/bosses/
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/bosses/A - ebomb.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/bosses/A - icebeambomb.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/bosses/A-mr5bosses.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/bosses/egganimusnew.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/bosses/eggebomber.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/bosses/eggfreezer.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/bosses/starlightweaver.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/crawlas/
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/crawlas/agzbeetla.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/crawlas/agzoldcrawla.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/crawlas/icebeam.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/crawlas/tvzgooper.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/agzdecoration.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/jczobjects.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/mfzobjects.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/misc.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/SOC_LARI
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/SOC_MAY
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/SOC_THZ3
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/SOC_TVZ3
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/speccyprompt.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/suspicioushive.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/ultrabuzz.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/objects/vfzobjects.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/scenes/
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/scenes/badend.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/scenes/cutscenes.soc
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/styles/
+Loading SOC from /dev_hdd0/game/SRB222PS3/USRDIR/addons/SRML_MysticRealmCE-v0.6.1.pk3|SOC/styles/SOC_PLAY
+SRML_MysticRealmCE-v0.6.1.pk3 added 3221 frames in 177 sprites
+Patched skin 'amy'
+Patched skin 'fang'
+Patched skin 'knuckles'
+Patched skin 'metalsonic'
+Patched skin 'sonic'
+Patched skin 'tails'
+Patched skin 'metalsonic'
+WARNING: Bad sprite name: TRNSLATE
+Patched skin 'metalsonic'
+MAPA1
+MAPA2
+MAPA3
+MAPBQ
+MAPA4
+MAPA5
+MAPA6
+MAPA7
+MAPA8
+MAPA9
+MAPAA
+MAPAB
+MAPAC
+MAPAD
+MAPAE
+MAPAF
+MAPAG
+MAPAH
+MAPAI
+MAPAJ
+MAPAK
+MAPAL
+MAPAM
+MAPAW
+MAPAX
+MAPAN
+MAPAO
+MAPAP
+MAPAQ
+MAPAR
+MAPAS
+MAPAT
+MAPAU
+MAPEN
+MAPEO
+MAPEP
+MAPEQ
+MAPER
+MAPES
+MAPET
+MAPAV
+MAPAZ
+MAPBS
+MAP69
+MAP75
+MAP76
+MAP77
+MAP97
+MAP98
+MAP99
+MAPA0
+MAPRD
+MAPT0
+MAPT1
+MAPBT
+MAPBU
+MAPBX
+MAPS2
+MAP27
+MAPZ1
+MAPZ2
+MAPZ3
+MAPZ4
+MAPX1
+MAPX2
+MAPX3
+MAPX4
+MAPX5
+MAPX6
+MAPX7
+MAPX8
+MAPY0
+MAPY1
+Error while loading models.dat: no such file or directory
+I_PlaySong: Playing OGG/Vorbis format (44100 Hz, 2 channels)
+I_PlaySong: Playing OGG/Vorbis format (44100 Hz, 2 channels)
+[PS3][MEMSTATS] ---- Nivel 784 ----
+[PS3][MEMSTATS] Total   : 53014 KB
+[PS3][MEMSTATS] Static  : 37091 KB
+[PS3][MEMSTATS] Sound   : 1 KB
+[PS3][MEMSTATS] Music   : 766 KB
+[PS3][MEMSTATS] Level   : 5523 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 120918 KB
+loading warp data false: false
+                   ###########################################
+                  ###########################################
+                 ####  MYSTIC REALM: COMMUNITY EDITION #####
+                ####           DEVELOPMENT INFO       #####
+               ###########################################
+              ###########################################
+ 
+ #########################################################################
+###########################################################################
+###                                                                     ###
+### THANK YOU FOR CONTRIBUTING TO PLAYTESTING AND                       ###
+### DEVELOPMENT OF THE MYSTIC REALM: COMMUNITY EDITION                  ###
+###                                                                     ###
+### ALL MYSTIC REALM: COMMUNITY EDITION ASSETS MAY BE REUSED            ###
+### IN FACT, WE ENCOURAGE YOU TO!                                       ###
+###                                                                     ###
+### ANY PERSON MAY MAKE ANY CONTRIBUTION, BIG OR SMALL,                 ###
+### VIA EITHER OUR OFFICIAL DISCORD OR OUR GITLAB.                      ###
+###                                                                     ###
+### JOIN THE TEAM PRISMATIC DEVELOPMENT DISCORD                         ###
+###  https://discord.gg/WcB2vaqbgf                                      ###
+###                                                                     ###
+### CONTRIBUTE TO THE MYSTIC REALM CE GITLAB                            ###
+###  https://gitlab.com/team-prismatic/mystic-realm-ce                  ###
+###                                                                     ###
+### LEAVE A COMMENT ON THE TEAM PRISMATIC MESSAGE BOARD PAGE            ###
+###  https://mb.srb2.org/threads/29931/                                 ###
+###                                                                     ###
+### THANK YOU                                                           ###
+###                                                                     ###
+###########################################################################
+ #########################################################################
+I_PlaySong: Playing OGG/Vorbis format (44100 Hz, 2 channels)
+Starting Server....
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 99 ----
+[PS3][MEMSTATS] Total   : 128089 KB
+[PS3][MEMSTATS] Static  : 64279 KB
+[PS3][MEMSTATS] Sound   : 18 KB
+[PS3][MEMSTATS] Music   : 667 KB
+[PS3][MEMSTATS] Level   : 36320 KB
+[PS3][MEMSTATS] LevSpec : 45 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 46614 KB
+I_PlaySong: Playing OGG/Vorbis format (44100 Hz, 2 channels)
+Hyper form screen flashing has been enabled.
+
+GS Grind Rails [SATv0.9.30] for [SRB2 v2.2.15+] by Golden Shine!
+loading warp data false: false
+Speeding off to level...
+[PS3][MEMSTATS] ---- Nivel 101 ----
+[PS3][MEMSTATS] Total   : 94826 KB
+[PS3][MEMSTATS] Static  : 65034 KB
+[PS3][MEMSTATS] Sound   : 1 KB
+[PS3][MEMSTATS] Music   : 1386 KB
+[PS3][MEMSTATS] Level   : 700 KB
+[PS3][MEMSTATS] LevSpec : 0 KB
+[PS3][MEMSTATS] Purgable: 0 KB
+[PS3][MEMSTATS] SysFreeMem: 79695 KB
+I_PlaySong: Playing OGG/Vorbis format (44100 Hz, 2 channels)
+loading warp data false: false
+
+I_Error(): Out of memory allocating 63982 bytes at C:\SRB2_2.2-PS3\src\w_wad.c:2199 (while loading asset: Patch: Graphics/HUD/StageCard/MRCETTBASE28.lmp)
 I_ShutdownTcpDriver: shut down
 I_ShutdownSystem(): end of logstream.

@@ -82,6 +82,8 @@ typedef struct memblock_s
 #define MEMORY(x) (void *)((uintptr_t)(x) + sizeof(memblock_t))
 #define MEMBLOCK(x) (memblock_t *)((uintptr_t)(x) - sizeof(memblock_t))
 
+char z_currently_allocating_asset[256] = "";
+
 // both the head and tail of the zone memory block list
 static memblock_t head;
 
@@ -186,13 +188,24 @@ void Z_Free(void *ptr)
   * \param size Amount of memory to be allocated, in bytes.
   * \return A pointer to the allocated memory.
   */
+#ifdef ZDEBUG
+static void *xm(size_t size, const char *file, INT32 line)
+#else
 static void *xm(size_t size)
+#endif
 {
-	const size_t padedsize = size+sizeof (size_t);
+
+	const size_t padedsize = size + sizeof (size_t);
 	void *p;
 
 	if (padedsize < size)/* overflow check */
+	{
+#ifdef ZDEBUG
+		I_Error("You are allocating memory too large at %s:%d!", file, line);
+#else
 		I_Error("You are allocating memory too large!");
+#endif
+	}
 	p = malloc(padedsize);
 
 	if (p == NULL)
@@ -203,7 +216,17 @@ static void *xm(size_t size)
 
 		if (p == NULL)
 		{
-			I_Error("Out of memory allocating %s bytes", sizeu1(size));
+#ifdef ZDEBUG
+			if (z_currently_allocating_asset[0] != '\0')
+				I_Error("Out of memory allocating %s bytes at %s:%d (while loading asset: %s)", sizeu1(size), file, line, z_currently_allocating_asset);
+			else
+				I_Error("Out of memory allocating %s bytes at %s:%d (not caused by an asset)", sizeu1(size), file, line);
+#else
+			if (z_currently_allocating_asset[0] != '\0')
+				I_Error("Out of memory allocating %s bytes (while loading asset: %s)", sizeu1(size), z_currently_allocating_asset);
+			else
+				I_Error("Out of memory allocating %s bytes (not caused by an asset)", sizeu1(size));
+#endif
 		}
 	}
 
@@ -237,7 +260,11 @@ void *Z_MallocAlign(size_t size, INT32 tag, void *user, INT32 alignbits)
 	CONS_Debug(DBG_MEMORY, "Z_Malloc %s:%d\n", file, line);
 #endif
 
-	block = xm(sizeof (memblock_t) + size);
+#ifdef ZDEBUG
+	block = xm(sizeof (memblock_t)+size, file, line);
+#else
+	block = xm(sizeof (memblock_t)+size);
+#endif
 	ptr = MEMORY(block);
 	I_Assert((intptr_t)ptr % sizeof (void *) == 0);
 

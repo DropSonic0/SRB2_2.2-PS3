@@ -60,7 +60,6 @@
     <ClCompile>
       <PreprocessorDefinitions>__CELLOS_LV2__;LOGMESSAGES;NDEBUG;HAVE_ZLIB;HAVE_XMP;LIBXMP_CORE_PLAYER;LIBXMP_NO_PROWIZARD;LIBXMP_NO_DEPACKERS;WORDS_BIGENDIAN;HAVE_PNG;HWRENDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
-      <AdditionalOptions>-O3 %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CppLanguageStd>Cpp03</CppLanguageStd>
       <AdditionalIncludeDirectories>C:\SRB2_2.2-PS3\src\ps3;C:\SRB2_2.2-PS3\libs\libpng-src;C:\SRB2_2.2-PS3\libs\zlib;C:\SRB2_2.2-PS3\libs\xmp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

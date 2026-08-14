@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*-
+﻿// Emacs style mode select   -*- C++ -*-
 //
 // SONIC ROBO BLAST 2
 //-----------------------------------------------------------------------------
@@ -232,10 +232,10 @@ static char returnWadPath[256];
 #define PS3_NUM_BINS 32
 
 typedef struct ps3_mem_block_s {
-	size_t size;                     // Usable size of this block
-	int free;                        // 1 = free, 0 = allocated
-	struct ps3_mem_block_s *next;    // Next block physically
-	struct ps3_mem_block_s *prev;    // Prev block physically
+	size_t size;                       // Usable size of this block
+	int free;                          // 1 = free, 0 = allocated
+	struct ps3_mem_block_s *next;      // Next block physically
+	struct ps3_mem_block_s *prev;      // Prev block physically
 	struct ps3_mem_block_s *bin_next; // Next block in the free bin
 	struct ps3_mem_block_s *bin_prev; // Prev block in the free bin
 } __attribute__((aligned(16))) ps3_mem_block_t;
@@ -296,18 +296,17 @@ void I_InitPS3Memory(void) {
 	if (ps3_mem_inited) return;
 
 	sys_memory_info_t mem_info;
-	size_t pool_size = 160 * 1024 * 1024; // Default fallback to 160MB for PSGL
+	size_t pool_size = 165 * 1024 * 1024; // Default fallback to 170MB
 
 	if (sys_memory_get_user_memory_size(&mem_info) == 0) {
 		size_t avail = mem_info.available_user_memory;
-		if (avail > 48 * 1024 * 1024) {
-			pool_size = avail - (48 * 1024 * 1024);
+		if (avail > 29 * 1024 * 1024) {
+			pool_size = avail - (29 * 1024 * 1024);
 		}
 	}
 
-	// Cap strictly between 32MB and 160MB for PSGL compatibility
 	if (pool_size < 32 * 1024 * 1024) pool_size = 32 * 1024 * 1024;
-	if (pool_size > 160 * 1024 * 1024) pool_size = 160 * 1024 * 1024;
+	if (pool_size > 165 * 1024 * 1024) pool_size = 165 * 1024 * 1024;
 
 	// Align to 1MB boundary
 	pool_size = (pool_size / (1024 * 1024)) * (1024 * 1024);
@@ -318,11 +317,14 @@ void I_InitPS3Memory(void) {
 		ps3_pool_start = alloc_addr;
 		ps3_pool_size = pool_size;
 		ps3_total_pool_bytes = pool_size;
-		ps3_allocated_bytes = sizeof(ps3_mem_block_t);
 
-		// Create the initial big block
+		// Header struct size aligned to 16
+		size_t struct_size = (sizeof(ps3_mem_block_t)+15) & ~15;
+		ps3_allocated_bytes = struct_size;
+
+		// Create initial block
 		ps3_mem_block_t *initial_block = (ps3_mem_block_t *)ps3_pool_start;
-		initial_block->size = pool_size - sizeof(ps3_mem_block_t);
+		initial_block->size = pool_size - struct_size;
 		initial_block->free = 1;
 		initial_block->next = NULL;
 		initial_block->prev = NULL;
@@ -348,8 +350,9 @@ void *I_PS3_Malloc(size_t size) {
 
 	if (size == 0) return NULL;
 
-
+	// Align request size to 16 bytes
 	size = (size + 15) & ~15;
+	size_t struct_size = (sizeof(ps3_mem_block_t)+15) & ~15;
 
 	pthread_mutex_lock(&ps3_mem_mutex);
 
@@ -380,9 +383,13 @@ void *I_PS3_Malloc(size_t size) {
 		best_block->free = 0;
 
 		size_t excess = best_block->size - size;
-		if (excess >= sizeof(ps3_mem_block_t)+16) {
-			ps3_mem_block_t *new_block = (ps3_mem_block_t *)((uintptr_t)best_block + sizeof(ps3_mem_block_t)+size);
-			new_block->size = excess - sizeof(ps3_mem_block_t);
+		// Require enough space for struct + at least 16 bytes payload
+		if (excess >= struct_size + 16) {
+			// FIX FATAL: Calculate pointer aligned to 16 bytes!
+			uintptr_t block_addr = (uintptr_t)best_block;
+			ps3_mem_block_t *new_block = (ps3_mem_block_t *)(block_addr + struct_size + size);
+
+			new_block->size = excess - struct_size;
 			new_block->free = 1;
 			new_block->next = best_block->next;
 			new_block->prev = best_block;
@@ -398,7 +405,7 @@ void *I_PS3_Malloc(size_t size) {
 
 		ps3_allocated_bytes += best_block->size;
 		pthread_mutex_unlock(&ps3_mem_mutex);
-		return (void *)((uintptr_t)best_block + sizeof(ps3_mem_block_t));
+		return (void *)((uintptr_t)best_block + struct_size);
 	}
 
 	pthread_mutex_unlock(&ps3_mem_mutex);
@@ -414,9 +421,11 @@ void I_PS3_Free(void *ptr) {
 		return;
 	}
 
+	size_t struct_size = (sizeof(ps3_mem_block_t)+15) & ~15;
+
 	pthread_mutex_lock(&ps3_mem_mutex);
 
-	ps3_mem_block_t *block = (ps3_mem_block_t *)((uintptr_t)ptr - sizeof(ps3_mem_block_t));
+	ps3_mem_block_t *block = (ps3_mem_block_t *)((uintptr_t)ptr - struct_size);
 	if (block->free) {
 		pthread_mutex_unlock(&ps3_mem_mutex);
 		return;
@@ -425,20 +434,22 @@ void I_PS3_Free(void *ptr) {
 	block->free = 1;
 	ps3_allocated_bytes -= block->size;
 
+	// Merge with NEXT block
 	if (block->next != NULL && block->next->free) {
 		ps3_mem_block_t *next_block = block->next;
 		bin_remove(next_block);
-		block->size += sizeof(ps3_mem_block_t)+next_block->size;
+		block->size += struct_size + next_block->size;
 		block->next = next_block->next;
 		if (next_block->next != NULL) {
 			next_block->next->prev = block;
 		}
 	}
 
+	// Merge with PREV block
 	if (block->prev != NULL && block->prev->free) {
 		ps3_mem_block_t *prev_block = block->prev;
 		bin_remove(prev_block);
-		prev_block->size += sizeof(ps3_mem_block_t)+block->size;
+		prev_block->size += struct_size + block->size;
 		prev_block->next = block->next;
 		if (block->next != NULL) {
 			block->next->prev = prev_block;
@@ -459,21 +470,22 @@ void *I_PS3_Realloc(void *ptr, size_t size) {
 	}
 
 	size_t aligned_size = (size + 15) & ~15;
+	size_t struct_size = (sizeof(ps3_mem_block_t)+15) & ~15;
 
 	if (ps3_pool_start == 0 || (uintptr_t)ptr < (uintptr_t)ps3_pool_start ||
 		(uintptr_t)ptr >= (uintptr_t)ps3_pool_start + ps3_pool_size) {
-		void *reallocated = realloc(ptr, size);
-		return reallocated;
+		return realloc(ptr, size);
 	}
 
 	pthread_mutex_lock(&ps3_mem_mutex);
-	ps3_mem_block_t *block = (ps3_mem_block_t *)((uintptr_t)ptr - sizeof(ps3_mem_block_t));
+	ps3_mem_block_t *block = (ps3_mem_block_t *)((uintptr_t)ptr - struct_size);
 	size_t old_size = block->size;
-	pthread_mutex_unlock(&ps3_mem_mutex);
 
 	if (old_size >= aligned_size) {
+		pthread_mutex_unlock(&ps3_mem_mutex);
 		return ptr;
 	}
+	pthread_mutex_unlock(&ps3_mem_mutex);
 
 	void *new_ptr = I_PS3_Malloc(size);
 	if (new_ptr != NULL) {
@@ -960,12 +972,19 @@ void I_OsPolling(void)
 	{
 		I_Quit();
 	}
-	// Check for critical low-memory conditions (<16MB) to trigger automatic cache purging
-	size_t total_mem = 0;
-	size_t free_mem = I_PS3_GetFreeMem(&total_mem);
-	if (free_mem < 16 * 1024 * 1024)
+	// Check for critical low-memory conditions (<16MB) to trigger automatic cache purging.
+	// Rate-limited to at most once every 2 seconds (2 * TICRATE) to prevent constant heap-traversal lag and cache thrashing.
+	static tic_t last_purge_time = 0;
+	tic_t now = I_GetTime();
+	if (now - last_purge_time >= 2 * TICRATE)
 	{
-		Z_FreeTags(PU_PURGELEVEL, INT32_MAX);
+		last_purge_time = now;
+		size_t total_mem = 0;
+		size_t free_mem = I_PS3_GetFreeMem(&total_mem);
+		if (free_mem < 16 * 1024 * 1024)
+		{
+			Z_FreeTags(PU_PURGELEVEL, INT32_MAX);
+		}
 	}
 #endif
 }

@@ -1251,7 +1251,21 @@ const char *W_CheckNameForNumPwad(UINT16 wad, UINT16 lump)
 
 const char *W_CheckNameForNum(lumpnum_t lumpnum)
 {
+
 	return W_CheckNameForNumPwad(WADFILENUM(lumpnum), LUMPNUM(lumpnum));
+}
+
+const char *W_LumpNamePwad(UINT16 wad, UINT16 lump, char *buf, size_t buf_sz)
+{
+	if (!TestValidLump(wad, lump))
+		return "invalid";
+	lumpinfo_t *li = &wadfiles[wad]->lumpinfo[lump];
+	if (li->fullname)
+		return li->fullname;
+	if (li->longname)
+		return li->longname;
+	snprintf(buf, buf_sz, "%.8s", li->name);
+	return buf;
 }
 
 //
@@ -2264,9 +2278,13 @@ void W_ReadLumpPwad(UINT16 wad, UINT16 lump, void *dest)
 void *W_CacheLumpNumPwad(UINT16 wad, UINT16 lump, INT32 tag)
 {
 	lumpcache_t *lumpcache;
+	char tmp_name[32];
+	void *result;
 
 	if (!TestValidLump(wad, lump))
 		return NULL;
+
+	snprintf(z_currently_allocating_asset, sizeof(z_currently_allocating_asset), "Lump: %s", W_LumpNamePwad(wad, lump, tmp_name, sizeof(tmp_name)));
 
 	lumpcache = wadfiles[wad]->lumpcache;
 	if (!lumpcache[lump])
@@ -2277,7 +2295,9 @@ void *W_CacheLumpNumPwad(UINT16 wad, UINT16 lump, INT32 tag)
 	else
 		Z_ChangeTag(lumpcache[lump], tag);
 
-	return lumpcache[lump];
+	result = lumpcache[lump];
+	z_currently_allocating_asset[0] = '\0';
+	return result;
 }
 
 void *W_CacheLumpNum(lumpnum_t lumpnum, INT32 tag)
@@ -2388,9 +2408,13 @@ void *W_CacheLumpName(const char *name, INT32 tag)
 static void *W_GetPatchPwad(UINT16 wad, UINT16 lump, INT32 tag)
 {
 	lumpcache_t *lumpcache = NULL;
+	char tmp_name[32];
+	void *result;
 
 	if (!TestValidLump(wad, lump))
 		return NULL;
+
+	snprintf(z_currently_allocating_asset, sizeof(z_currently_allocating_asset), "Patch: %s", W_LumpNamePwad(wad, lump, tmp_name, sizeof(tmp_name)));
 
 	lumpcache = wadfiles[wad]->patchcache;
 
@@ -2410,9 +2434,12 @@ static void *W_GetPatchPwad(UINT16 wad, UINT16 lump, INT32 tag)
 			Z_ChangeTag(ptr, tag);
 			Z_SetUser(ptr, &lumpcache[lump]);
 			Z_Free(lumpdata);
-			return lumpcache[lump];
+			result = lumpcache[lump];
+			z_currently_allocating_asset[0] = '\0';
+			return result;
 #else
 			Picture_ThrowPNGError(W_CheckNameForNumPwad(wad, lump), wadfiles[wad]->filename);
+			z_currently_allocating_asset[0] = '\0';
 			return NULL;
 #endif
 		}
@@ -2426,13 +2453,20 @@ static void *W_GetPatchPwad(UINT16 wad, UINT16 lump, INT32 tag)
 	else
 		Z_ChangeTag(lumpcache[lump], tag);
 
-	return lumpcache[lump];
+	result = lumpcache[lump];
+	z_currently_allocating_asset[0] = '\0';
+	return result;
 }
 
 void *W_CachePatchNumPwad(UINT16 wad, UINT16 lump, INT32 tag)
 {
+	char tmp_name[32];
+	void *result;
+
 	if (!TestValidLump(wad, lump))
 		return NULL;
+
+	snprintf(z_currently_allocating_asset, sizeof(z_currently_allocating_asset), "PatchNum: %s", W_LumpNamePwad(wad, lump, tmp_name, sizeof(tmp_name)));
 
 	patch_t *patch = W_GetPatchPwad(wad, lump, tag);
 
@@ -2441,7 +2475,9 @@ void *W_CachePatchNumPwad(UINT16 wad, UINT16 lump, INT32 tag)
 		Patch_CreateGL(patch);
 #endif
 
-	return (void *)patch;
+	result = (void *)patch;
+	z_currently_allocating_asset[0] = '\0';
+	return result;
 }
 
 void *W_CachePatchNum(lumpnum_t lumpnum, INT32 tag)

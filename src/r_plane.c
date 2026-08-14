@@ -349,7 +349,7 @@ static visplane_t *new_visplane(unsigned hash)
 	visplane_t *check = freetail;
 	if (!check)
 	{
-		check = malloc(sizeof (*check));
+		check = Z_Malloc(sizeof (*check), PU_STATIC, NULL);
 		if (check == NULL) I_Error("%s: Out of memory", "new_visplane"); // FIXME: ugly
 	}
 	else

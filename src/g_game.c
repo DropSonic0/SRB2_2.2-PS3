@@ -582,7 +582,7 @@ static void G_SetMainRecords(gamedata_t *data, player_t *player)
 		I_mkdir(va("%s"PATHSEP"replay", srb2home), 0755);
 		I_mkdir(va("%s"PATHSEP"replay"PATHSEP"%s", srb2home, timeattackfolder), 0755);
 
-		if ((gpath = malloc(glen)) == NULL)
+		gpath = Z_Malloc(glen, PU_STATIC, NULL);
 			I_Error("Out of memory for replay filepath\n");
 
 		sprintf(gpath,"%s"PATHSEP"replay"PATHSEP"%s"PATHSEP"%s", srb2home, timeattackfolder, G_BuildMapName(gamemap));
@@ -624,7 +624,7 @@ static void G_SetMainRecords(gamedata_t *data, player_t *player)
 
 			Z_Free(buf);
 		}
-		free(gpath);
+		Z_Free(gpath);
 	}
 
 	// Check emblems when level data is updated
@@ -720,7 +720,7 @@ static void G_SetNightsRecords(gamedata_t *data, player_t *player)
 		I_mkdir(va("%s"PATHSEP"replay", srb2home), 0755);
 		I_mkdir(va("%s"PATHSEP"replay"PATHSEP"%s", srb2home, timeattackfolder), 0755);
 
-		if ((gpath = malloc(glen)) == NULL)
+		gpath = Z_Malloc(glen, PU_STATIC, NULL);
 			I_Error("Out of memory for replay filepath\n");
 
 		sprintf(gpath,"%s"PATHSEP"replay"PATHSEP"%s"PATHSEP"%s", srb2home, timeattackfolder, G_BuildMapName(gamemap));
@@ -753,7 +753,7 @@ static void G_SetNightsRecords(gamedata_t *data, player_t *player)
 
 			Z_Free(buf);
 		}
-		free(gpath);
+		Z_Free(gpath);
 	}
 
 	if ((earnedEmblems = M_CheckLevelEmblems(data)))
@@ -4631,7 +4631,7 @@ void G_SaveGameData(gamedata_t *data)
 		return; // If never loaded (-nodata), don't save
 
 	savebuffer.size = GAMEDATASIZE;
-	savebuffer.buf = (UINT8 *)malloc(savebuffer.size);
+	savebuffer.buf = (UINT8 *)Z_Malloc(savebuffer.size, PU_STATIC, NULL);
 	if (!savebuffer.buf)
 	{
 		CONS_Alert(CONS_ERROR, M_GetText("No more free memory for saving game data\n"));
@@ -4641,7 +4641,7 @@ void G_SaveGameData(gamedata_t *data)
 
 	if (usedCheats)
 	{
-		free(savebuffer.buf);
+		Z_Free(savebuffer.buf);
 		return;
 	}
 
@@ -4732,7 +4732,7 @@ void G_SaveGameData(gamedata_t *data)
 	}
 
 	FIL_WriteFile(va(pandf, srb2home, gamedatafilename), savebuffer.buf, savebuffer.pos);
-	free(savebuffer.buf);
+	Z_Free(savebuffer.buf);
 }
 
 #define VERSIONSIZE 16
@@ -4849,7 +4849,7 @@ void G_SaveGame(UINT32 slot, INT16 mapnum)
 		char name[VERSIONSIZE];
 
 		savebuffer.size = SAVEGAMESIZE;
-		savebuffer.buf = (UINT8 *)malloc(savebuffer.size);
+		savebuffer.buf = (UINT8 *)Z_Malloc(savebuffer.size, PU_STATIC, NULL);
 		if (!savebuffer.buf)
 		{
 			CONS_Alert(CONS_ERROR, M_GetText("No more free memory for saving game data\n"));
@@ -4872,7 +4872,7 @@ void G_SaveGame(UINT32 slot, INT16 mapnum)
 		}
 
 		saved = FIL_WriteFile(backup, savebuffer.buf, savebuffer.pos);
-		free(savebuffer.buf);
+		Z_Free(savebuffer.buf);
 	}
 
 	gameaction = ga_nothing;

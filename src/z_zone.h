@@ -149,6 +149,8 @@ void Z_SetUser(void *ptr, void **newuser);
 size_t Z_TagsUsage(INT32 lowtag, INT32 hightag);
 #define Z_TotalUsage() Z_TagsUsage(0, INT32_MAX)
 
+extern char z_currently_allocating_asset[256];
+
 //
 // Miscellaneous functions
 //

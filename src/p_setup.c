@@ -8021,10 +8021,10 @@ boolean P_LoadLevel(boolean fromnetsave, boolean reloadinggamestate)
 	HWR_ClearLightTables();
 #endif
 
+Z_FreeTags(PU_LEVEL, PU_PURGELEVEL - 1);
+#ifdef __CELLOS_LV2__
 	Patch_FreeTag(PU_PATCH_LOWPRIORITY);
 	Patch_FreeTag(PU_PATCH_ROTATED);
-	Z_FreeTags(PU_LEVEL, PU_PURGELEVEL - 1);
-#ifdef __CELLOS_LV2__
 	Z_FreeTags(PU_HWRCACHE, PU_CACHE);
 	Z_FreeTags(PU_PURGELEVEL, INT32_MAX);
 #endif

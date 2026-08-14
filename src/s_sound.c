@@ -2266,6 +2266,7 @@ void S_ChangeMusicEx(const char *mmusic, UINT16 mflags, boolean looping, UINT32 
 
 	strncpy(newmusic, mmusic, sizeof(newmusic)-1);
 	newmusic[6] = 0;
+
 	if (LUA_HookMusicChange(music_name, &hook_param))
 		return;
 
@@ -2294,14 +2295,24 @@ void S_ChangeMusicEx(const char *mmusic, UINT16 mflags, boolean looping, UINT32 
 
 		S_StopMusic();
 
+		snprintf(z_currently_allocating_asset, sizeof(z_currently_allocating_asset), "Music: %s", newmusic);
+
 		if (!S_LoadMusic(newmusic))
+		{
+			z_currently_allocating_asset[0] = '\0';
 			return;
+		}
 
 		music_flags = mflags;
 		music_looping = looping;
 
 		if (!S_PlayMusic(looping, fadeinms))
+		{
+			z_currently_allocating_asset[0] = '\0';
 			return;
+		}
+
+		z_currently_allocating_asset[0] = '\0';
 
 		if (position)
 			I_SetSongPosition(position);

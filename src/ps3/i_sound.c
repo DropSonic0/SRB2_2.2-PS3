@@ -6,6 +6,7 @@
 #include <sys/event.h>
 #include <pthread.h>
 #include <sys/timer.h>
+#include <stdlib.h>
 
 #ifdef true
 #undef true
@@ -65,13 +66,14 @@ static ps3_audio_t *aud = NULL;
 
 static inline fifo_buffer_t *fifo_new(size_t size)
 {
-	fifo_buffer_t *fifo = (fifo_buffer_t*)calloc(1, sizeof(*fifo));
+	fifo_buffer_t *fifo = (fifo_buffer_t*)Z_Calloc(sizeof(*fifo), PU_STATIC, NULL);
 	if (!fifo) return NULL;
-	fifo->buffer = (char*)calloc(1, size);
+	fifo->buffer = (char*)Z_Malloc(size, PU_STATIC, NULL);
 	if (!fifo->buffer) {
-		free(fifo);
+		Z_Free(fifo);
 		return NULL;
 	}
+	memset(fifo->buffer, 0, size);
 	fifo->size = size;
 	return fifo;
 }
@@ -79,8 +81,8 @@ static inline fifo_buffer_t *fifo_new(size_t size)
 static inline void fifo_free(fifo_buffer_t *fifo)
 {
 	if (fifo) {
-		free(fifo->buffer);
-		free(fifo);
+		Z_Free(fifo->buffer);
+		Z_Free(fifo);
 	}
 }
 
@@ -315,7 +317,7 @@ static void *getsfx(sfxinfo_t *sfx, size_t *len)
 	dssfx_t *paddedsfx = NULL;
 	size_t size = *len;
 
-	lump = malloc(size);
+	lump = Z_Malloc(size, PU_STATIC, NULL);
 	if (!lump) {
 		return NULL;
 	}
@@ -336,7 +338,7 @@ static void *getsfx(sfxinfo_t *sfx, size_t *len)
 		}
 
 		if (fmt_offset + 24 > size) {
-			free(lump);
+			Z_Free(lump);
 			return NULL;
 		}
 
@@ -356,12 +358,12 @@ static void *getsfx(sfxinfo_t *sfx, size_t *len)
 		}
 
 		if (raw_data_offset == 0 || raw_data_offset + raw_data_size > size) {
-			free(lump);
+			Z_Free(lump);
 			return NULL;
 		}
 
 		if (format != 1) {
-			free(lump);
+			Z_Free(lump);
 			return NULL;
 		}
 
@@ -405,7 +407,7 @@ static void *getsfx(sfxinfo_t *sfx, size_t *len)
 			}
 		}
 		else {
-			free(lump);
+			Z_Free(lump);
 			return NULL;
 		}
 	}
@@ -416,7 +418,7 @@ static void *getsfx(sfxinfo_t *sfx, size_t *len)
 		int decoded_samples = stb_vorbis_decode_memory((unsigned char*)lump, size, &channels_num, &sample_rate, &output);
 
 		if (decoded_samples < 0) {
-			free(lump);
+			Z_Free(lump);
 			return NULL;
 		}
 
@@ -443,7 +445,7 @@ static void *getsfx(sfxinfo_t *sfx, size_t *len)
 		Uint32 samples = READUINT32(stream);
 
 		if (ver != 3) {
-			free(lump);
+			Z_Free(lump);
 			return NULL;
 		}
 
@@ -458,7 +460,7 @@ static void *getsfx(sfxinfo_t *sfx, size_t *len)
 		}
 	}
 
-	free(lump);
+	Z_Free(lump);
 	return paddedsfx;
 }
 
@@ -480,6 +482,7 @@ static uint8_t music_volume = 16; // 0 to 31
 static xmp_context xmp_ctx = NULL;
 static boolean music_playing_xmp = false;
 static boolean xmp_module_loaded = false;
+static volatile boolean xmp_player_started = false;
 #endif
 
 static fifo_buffer_t *music_fifo = NULL;
@@ -513,6 +516,10 @@ static void mix_music(Sint16 *stream, int num_frames)
 {
 #ifdef HAVE_XMP
 	if (music_playing_xmp && !music_paused) {
+		if (!xmp_player_started) {
+			xmp_start_player(xmp_ctx, 48000, 0);
+			xmp_player_started = true;
+		}
 		int16_t xmp_buf[num_frames * 2];
 		int play_err = xmp_play_buffer(xmp_ctx, xmp_buf, num_frames * 4, music_looping ? 0 : 1);
 		struct xmp_frame_info fi;
@@ -783,7 +790,7 @@ static boolean cellAudioPortInit(uint64_t samplerate, uint64_t buffersize)
 {
 	CellAudioPortParam params;
 
-	aud = (ps3_audio_t*)calloc(1, sizeof(*aud));
+	aud = (ps3_audio_t*)Z_Calloc(sizeof(*aud), PU_STATIC, NULL);
 	if (aud == NULL)
 		return false;
 
@@ -796,7 +803,7 @@ static boolean cellAudioPortInit(uint64_t samplerate, uint64_t buffersize)
 	if (cellAudioPortOpen(&params, &aud->audio_port) != CELL_OK)
 	{
 		cellAudioQuit();
-		free(aud);
+		Z_Free(aud);
 		aud = NULL;
 		return false;
 	}
@@ -806,7 +813,7 @@ static boolean cellAudioPortInit(uint64_t samplerate, uint64_t buffersize)
 	{
 		cellAudioPortClose(aud->audio_port);
 		cellAudioQuit();
-		free(aud);
+		Z_Free(aud);
 		aud = NULL;
 		return false;
 	}
@@ -842,7 +849,7 @@ static void cellAudioPortExit(void)
 
 	pthread_mutex_destroy(&aud->lock);
 	pthread_cond_destroy(&aud->cond);
-	free(aud);
+	Z_Free(aud);
 	aud = NULL;
 }
 
@@ -873,15 +880,23 @@ DOOM SYSTEM SOUND DRIVER INTERFACE
 
 void *I_GetSfx(sfxinfo_t *sfx)
 {
+	void *result;
+	snprintf(z_currently_allocating_asset, sizeof(z_currently_allocating_asset), "SFX: %s", sfx->name);
+
 	if (sfx->lumpnum == LUMPERROR)
 		sfx->lumpnum = S_GetSfxLumpNum(sfx);
 
 	if (sfx->data)
+	{
+		z_currently_allocating_asset[0] = '\0';
 		return sfx->data;
+	}
 
 	sfx->length = W_LumpLength(sfx->lumpnum);
 
-	return getsfx(sfx, &sfx->length);
+	result = getsfx(sfx, &sfx->length);
+	z_currently_allocating_asset[0] = '\0';
+	return result;
 }
 
 void I_FreeSfx(sfxinfo_t *sfx)
@@ -925,6 +940,12 @@ void I_StartupSound(void)
 
 	memset(channels, 0, sizeof(channels));
 	I_SetChannels();
+
+#ifdef HAVE_XMP
+	if (!xmp_ctx) {
+		xmp_ctx = xmp_create_context();
+	}
+#endif
 
 	if (!cellAudioPortInit(48000, 16384))
 	{
@@ -1174,12 +1195,13 @@ static void I_StopSong_Internal(void)
 	}
 
 #ifdef HAVE_XMP
-	if (xmp_ctx && xmp_module_loaded) {
+	if (xmp_ctx) {
 		xmp_end_player(xmp_ctx);
 		xmp_release_module(xmp_ctx);
-		music_playing_xmp = false;
-		xmp_module_loaded = false;
 	}
+	music_playing_xmp = false;
+	xmp_module_loaded = false;
+	xmp_player_started = false;
 #endif
 
 	if (music_decoder) {
@@ -1198,7 +1220,7 @@ static void I_UnloadSong_Internal(void)
 	I_StopSong_Internal();
 
 	if (music_data_buf) {
-		free(music_data_buf);
+		Z_Free(music_data_buf);
 		music_data_buf = NULL;
 	}
 	music_data_len = 0;
@@ -1214,7 +1236,7 @@ boolean I_LoadSong(char *data, size_t len)
 		return false;
 	}
 
-	music_data_buf = malloc(len);
+	music_data_buf = Z_Malloc(len, PU_STATIC, NULL);
 	if (!music_data_buf) {
 		pthread_mutex_unlock(&aud->lock);
 		return false;
@@ -1251,10 +1273,14 @@ boolean I_PlaySong(boolean looping)
 			xmp_ctx = xmp_create_context();
 		}
 		if (xmp_ctx && xmp_load_module_from_memory(xmp_ctx, music_data_buf, music_data_len) == 0) {
-			xmp_start_player(xmp_ctx, 48000, 0);
+			struct xmp_module_info mi;
+			xmp_get_module_info(xmp_ctx, &mi);
+			CONS_Printf("I_PlaySong: Playing %s format (Title: %s)\n", mi.mod ? mi.mod->type : "Tracker", mi.mod ? mi.mod->name : "Unknown");
+
 			music_looping = looping;
 			music_playing_xmp = true;
 			xmp_module_loaded = true;
+			xmp_player_started = false;
 			music_playing = true;
 			music_paused = false;
 			music_seek_fail_count = 0;
@@ -1264,12 +1290,14 @@ boolean I_PlaySong(boolean looping)
 			return true;
 		}
 #endif
+		CONS_Printf("I_PlaySong: Failed to decode music format (Unsupported or corrupt file)\n");
 		music_playing = false;
 		pthread_mutex_unlock(&aud->lock);
 		return true;
 	}
 
 	stb_vorbis_info info = stb_vorbis_get_info(music_decoder);
+	CONS_Printf("I_PlaySong: Playing OGG/Vorbis format (%d Hz, %d channels)\n", info.sample_rate, info.channels);
 
 	// Parse loop tags from OGG comments for precise loop points
 	music_loop_point_ms = 0;

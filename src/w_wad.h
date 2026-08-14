@@ -170,6 +170,7 @@ char *W_GetFullFolderPath(const char *path);
 
 const char *W_CheckNameForNumPwad(UINT16 wad, UINT16 lump);
 const char *W_CheckNameForNum(lumpnum_t lumpnum);
+const char *W_LumpNamePwad(UINT16 wad, UINT16 lump, char *buf, size_t buf_sz);
 
 UINT16 W_CheckNumForNamePwad(const char *name, UINT16 wad, UINT16 startlump); // checks only in one pwad
 UINT16 W_CheckNumForLongNamePwad(const char *name, UINT16 wad, UINT16 startlump);
