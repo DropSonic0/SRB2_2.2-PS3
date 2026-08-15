@@ -1,3 +1,7 @@
+#ifdef __CELLOS_LV2__
+#include <sys/process.h>
+SYS_PROCESS_PARAM(1001, 1024*1024)
+#endif
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
@@ -19,11 +23,6 @@
 
 #ifndef HAVE_SDL
 #define HAVE_SDL
-#endif
-
-#ifdef __CELLOS_LV2__
-#include <sys/process.h>
-SYS_PROCESS_PARAM(1001, 1024*1024)
 #endif
 
 #include "../doomdef.h"

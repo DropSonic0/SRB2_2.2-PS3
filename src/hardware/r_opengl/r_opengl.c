@@ -953,27 +953,27 @@ void SetModelView(GLint w, GLint h)
 	if (vid.glstate == VID_GL_LIBRARY_LOADED)
 	{
 #endif
-	// The screen textures need to be flushed if the width or height change so that they be remade for the correct size
-	if (screen_width != w || screen_height != h)
-		FlushScreenTextures();
+		// The screen textures need to be flushed if the width or height change so that they be remade for the correct size
+		if (screen_width != w || screen_height != h)
+			FlushScreenTextures();
 
-	screen_width = w;
-	screen_height = h;
+		screen_width = w;
+		screen_height = h;
 
-	pglViewport(0, 0, w, h);
+		pglViewport(0, 0, w, h);
 
-	pglMatrixMode(GL_PROJECTION);
-	pglLoadIdentity();
+		pglMatrixMode(GL_PROJECTION);
+		pglLoadIdentity();
 
-	pglMatrixMode(GL_MODELVIEW);
-	pglLoadIdentity();
+		pglMatrixMode(GL_MODELVIEW);
+		pglLoadIdentity();
 
-	GLPerspective(fov, ASPECT_RATIO);
-	//pglScalef(1.0f, 320.0f/200.0f, 1.0f);  // gl_scalefrustum (ORIGINAL_ASPECT)
+		GLPerspective(fov, ASPECT_RATIO);
+		//pglScalef(1.0f, 320.0f/200.0f, 1.0f);  // gl_scalefrustum (ORIGINAL_ASPECT)
 
-	// added for new coronas' code (without depth buffer)
-	pglGetIntegerv(GL_VIEWPORT, viewport);
-	pglGetFloatv(GL_PROJECTION_MATRIX, projMatrix);
+		// added for new coronas' code (without depth buffer)
+		pglGetIntegerv(GL_VIEWPORT, viewport);
+		pglGetFloatv(GL_PROJECTION_MATRIX, projMatrix);
 #ifdef __CELLOS_LV2__
 	}
 	else
@@ -1014,8 +1014,19 @@ void SetStates(void)
 
 	//pglDisable(GL_DITHER);         // faB: ??? (undocumented in OpenGL 1.1)
 	// Hurdler: yes, it is!
+#ifdef __CELLOS_LV2__
+	// The PS3 PSGL device is created with depthFormat = GL_NONE (see
+	// I_StartupGraphics() in i_video.c) -- there is no depth buffer surface
+	// at all. Enabling GL_DEPTH_TEST / depth writes here with no depth
+	// surface bound causes the RSX to hang on the first draw call that
+	// actually touches the pipeline (testing/writing depth against memory
+	// that doesn't exist), rather than a clean GL error.
+	pglDisable(GL_DEPTH_TEST);
+	pglDepthMask(GL_FALSE);
+#else
 	pglEnable(GL_DEPTH_TEST);    // check the depth buffer
 	pglDepthMask(GL_TRUE);             // enable writing to depth buffer
+#endif
 	pglClearDepth(1.0f);
 	pglDepthRange(0.0f, 1.0f);
 	pglDepthFunc(GL_LEQUAL);
@@ -1167,7 +1178,7 @@ EXPORT boolean HWRAPI(Init) (void)
 	fflush(stdout);
 	SetupGLFunc4();
 
-	textureformatGL = GL_RGBA_FORMAT;
+	textureformatGL = GL_RGBA;
 	CONS_Printf("[PS3] HWRAPI(Init) complete, textureformatGL=0x%x\n", textureformatGL);
 	fflush(stdout);
 #endif
@@ -2922,6 +2933,13 @@ EXPORT void HWRAPI(PostImgRedraw) (float points[SCREENVERTS][SCREENVERTS][2])
 #ifdef __CELLOS_LV2__
 	if (screen_width <= 0) screen_width = 640;
 	if (screen_height <= 0) screen_height = 400;
+
+	pglMatrixMode(GL_PROJECTION);
+	pglPushMatrix();
+	pglLoadIdentity();
+	pglMatrixMode(GL_MODELVIEW);
+	pglPushMatrix();
+	pglLoadIdentity();
 #endif
 	INT32 x, y;
 	float float_x, float_y, float_nextx, float_nexty;
@@ -3011,6 +3029,13 @@ EXPORT void HWRAPI(PostImgRedraw) (float points[SCREENVERTS][SCREENVERTS][2])
 
 	pglEnable(GL_DEPTH_TEST);
 	pglEnable(GL_BLEND);
+
+#ifdef __CELLOS_LV2__
+	pglMatrixMode(GL_PROJECTION);
+	pglPopMatrix();
+	pglMatrixMode(GL_MODELVIEW);
+	pglPopMatrix();
+#endif
 }
 
 // Sryder:	This needs to be called whenever the screen changes resolution in order to reset the screen textures to use
@@ -3028,6 +3053,13 @@ EXPORT void HWRAPI(DrawScreenTexture)(int tex, FSurfaceInfo *surf, FBITFIELD pol
 #ifdef __CELLOS_LV2__
 	if (screen_width <= 0) screen_width = 640;
 	if (screen_height <= 0) screen_height = 400;
+
+	pglMatrixMode(GL_PROJECTION);
+	pglPushMatrix();
+	pglLoadIdentity();
+	pglMatrixMode(GL_MODELVIEW);
+	pglPushMatrix();
+	pglLoadIdentity();
 #endif
 	float xfix, yfix;
 	INT32 texsize = 512;
@@ -3077,6 +3109,13 @@ EXPORT void HWRAPI(DrawScreenTexture)(int tex, FSurfaceInfo *surf, FBITFIELD pol
 	pglVertexPointer(3, GL_FLOAT, 0, screenVerts);
 	pglDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
+#ifdef __CELLOS_LV2__
+	pglMatrixMode(GL_PROJECTION);
+	pglPopMatrix();
+	pglMatrixMode(GL_MODELVIEW);
+	pglPopMatrix();
+#endif
+
 	tex_downloaded = screenTextures[tex];
 }
 
@@ -3087,6 +3126,13 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 #ifdef __CELLOS_LV2__
 	if (screen_width <= 0) screen_width = 640;
 	if (screen_height <= 0) screen_height = 400;
+
+	pglMatrixMode(GL_PROJECTION);
+	pglPushMatrix();
+	pglLoadIdentity();
+	pglMatrixMode(GL_MODELVIEW);
+	pglPushMatrix();
+	pglLoadIdentity();
 #endif
 	INT32 texsize = 512;
 	float xfix, yfix;
@@ -3195,13 +3241,39 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 		pglClientActiveTexture(GL_TEXTURE0);
 		tex_downloaded = screenTextures[wipeEnd];
 	}
+
+#ifdef __CELLOS_LV2__
+	pglMatrixMode(GL_PROJECTION);
+	pglPopMatrix();
+	pglMatrixMode(GL_MODELVIEW);
+	pglPopMatrix();
+#endif
 }
+
+#ifdef __CELLOS_LV2__
+#include <stdio.h>
+static void PS3_DebugLog(const char *msg)
+{
+	FILE *f = fopen("/dev_hdd0/game/SRB222PS3/USRDIR/log.txt", "a");
+	if (f)
+	{
+		fputs(msg, f);
+		fflush(f);
+		fclose(f);
+	}
+}
+#define PS3_DBG(msg) PS3_DebugLog(msg)
+#else
+#define PS3_DBG(msg)
+#endif
 
 // Create a texture from the screen.
 EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 {
 	INT32 texsize = 512;
 	boolean firstTime = (screenTextures[tex] == 0);
+
+	PS3_DBG("MakeScreenTexture: enter\n");
 
 	// look for power of two that is large enough for the screen
 	while (texsize < screen_width || texsize < screen_height)
@@ -3212,10 +3284,14 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 		texsize <<= 1;
 	}
 
+	PS3_DBG("MakeScreenTexture: after texsize calc\n");
+
 	// Create screen texture
 	if (firstTime)
 		pglGenTextures(1, &screenTextures[tex]);
+	PS3_DBG("MakeScreenTexture: after GenTextures\n");
 	pglBindTexture(GL_TEXTURE_2D, screenTextures[tex]);
+	PS3_DBG("MakeScreenTexture: after BindTexture\n");
 
 	if (firstTime)
 	{
@@ -3229,11 +3305,15 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 		// Allocate a temporary zero-initialized buffer with strict 128-byte alignment, pass it, and immediately free it.
 		extern void *memalign(size_t boundary, size_t size);
 		size_t temp_buf_size = texsize * texsize * sizeof(UINT32);
+		PS3_DBG("MakeScreenTexture: about to memalign\n");
 		void *temp_buf = memalign(128, temp_buf_size);
+		PS3_DBG("MakeScreenTexture: memalign returned\n");
 		if (temp_buf)
 		{
 			memset(temp_buf, 0, temp_buf_size);
-			pglTexImage2D(GL_TEXTURE_2D, 0, textureformatGL, texsize, texsize, 0, GL_RGBA_FORMAT, GL_UNSIGNED_BYTE, temp_buf);
+			PS3_DBG("MakeScreenTexture: about to TexImage2D\n");
+			pglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texsize, texsize, 0, GL_RGBA, GL_UNSIGNED_BYTE, temp_buf);
+			PS3_DBG("MakeScreenTexture: TexImage2D done\n");
 			free(temp_buf);
 		}
 #else
@@ -3243,10 +3323,18 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 
 #ifdef __CELLOS_LV2__
 	// Copy only the screen-bounded active rendering region to prevent RSX freeze/hang
-	if (screen_width > 0 && screen_height > 0)
+	// Skip on the very first call: the RSX color buffer hasn't been through a
+	// full clear/draw/flip cycle yet, and reading it back with CopyTexSubImage2D
+	// this early can deadlock the PSGL driver waiting on a fence that's never
+	// signaled. The texture is already zeroed from the TexImage2D call above,
+	// so there's nothing meaningful to copy on this first call anyway.
+	if (!firstTime && screen_width > 0 && screen_height > 0)
 	{
+		PS3_DBG("MakeScreenTexture: about to CopyTexSubImage2D\n");
 		pglCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, screen_width, screen_height);
+		PS3_DBG("MakeScreenTexture: CopyTexSubImage2D done\n");
 	}
+	PS3_DBG("MakeScreenTexture: exit\n");
 #else
 	if (!firstTime)
 		pglCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, texsize, texsize);
@@ -3257,9 +3345,24 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 
 EXPORT void HWRAPI(DrawScreenFinalTexture)(int tex, int width, int height)
 {
+	PS3_DBG("DrawScreenFinalTexture: enter\n");
 #ifdef __CELLOS_LV2__
 	if (screen_width <= 0) screen_width = 640;
 	if (screen_height <= 0) screen_height = 400;
+
+	PS3_DBG("DrawScreenFinalTexture: about to MatrixMode(PROJECTION)\n");
+	pglMatrixMode(GL_PROJECTION);
+	PS3_DBG("DrawScreenFinalTexture: about to PushMatrix (projection)\n");
+	pglPushMatrix();
+	PS3_DBG("DrawScreenFinalTexture: about to LoadIdentity (projection)\n");
+	pglLoadIdentity();
+	PS3_DBG("DrawScreenFinalTexture: about to MatrixMode(MODELVIEW)\n");
+	pglMatrixMode(GL_MODELVIEW);
+	PS3_DBG("DrawScreenFinalTexture: about to PushMatrix (modelview)\n");
+	pglPushMatrix();
+	PS3_DBG("DrawScreenFinalTexture: about to LoadIdentity (modelview)\n");
+	pglLoadIdentity();
+	PS3_DBG("DrawScreenFinalTexture: matrix setup done\n");
 #endif
 	float xfix, yfix;
 	float origaspect, newaspect;
@@ -3267,8 +3370,19 @@ EXPORT void HWRAPI(DrawScreenFinalTexture)(int tex, int width, int height)
 	FRGBAFloat clearColour;
 	INT32 texsize = 512;
 
+#ifdef __CELLOS_LV2__
+	// Client-array vertex/texcoord data must be in properly aligned/cache-safe
+	// memory for the RSX to DMA from directly. Stack memory isn't guaranteed
+	// to be flushed/visible to the GPU the same way, and this is the very
+	// first draw call of the whole run, so use static aligned buffers instead
+	// of local stack arrays (same rationale as the memalign'd temp_buf used
+	// in MakeScreenTexture above).
+	static float off[12] __attribute__((aligned(128)));
+	static float fix[8] __attribute__((aligned(128)));
+#else
 	float off[12];
 	float fix[8];
+#endif
 
 	// look for power of two that is large enough for the screen
 	while (texsize < screen_width || texsize < screen_height)
@@ -3320,20 +3434,41 @@ EXPORT void HWRAPI(DrawScreenFinalTexture)(int tex, int width, int height)
 	fix[7] = 0.0f;
 
 	pglViewport(0, 0, width, height);
+	PS3_DBG("DrawScreenFinalTexture: after Viewport\n");
 
-	clearColour.red = clearColour.green = clearColour.blue = 0;
+	clearColour.red = 1; // TEMP DIAGNOSTIC: magenta clear to verify the buffer reaches the screen at all
+	clearColour.green = 0;
+	clearColour.blue = 1;
 	clearColour.alpha = 1;
+	PS3_DBG("DrawScreenFinalTexture: about to ClearBuffer\n");
 	ClearBuffer(true, false, &clearColour);
+	PS3_DBG("DrawScreenFinalTexture: ClearBuffer done, about to SetBlend\n");
 	SetBlend(PF_NoDepthTest);
+	PS3_DBG("DrawScreenFinalTexture: SetBlend done, about to BindTexture\n");
 	pglBindTexture(GL_TEXTURE_2D, screenTextures[tex]);
+	PS3_DBG("DrawScreenFinalTexture: BindTexture done\n");
 
 	pglColor4ubv(white);
 
 	pglTexCoordPointer(2, GL_FLOAT, 0, fix);
 	pglVertexPointer(3, GL_FLOAT, 0, off);
 
+	PS3_DBG("DrawScreenFinalTexture: about to DrawArrays\n");
 	pglDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	PS3_DBG("DrawScreenFinalTexture: DrawArrays returned successfully\n");
+
+#ifdef __CELLOS_LV2__
+	PS3_DBG("DrawScreenFinalTexture: about to PopMatrix (projection)\n");
+	pglMatrixMode(GL_PROJECTION);
+	pglPopMatrix();
+	PS3_DBG("DrawScreenFinalTexture: about to PopMatrix (modelview)\n");
+	pglMatrixMode(GL_MODELVIEW);
+	pglPopMatrix();
+	PS3_DBG("DrawScreenFinalTexture: PopMatrix done\n");
+#endif
+
 	tex_downloaded = screenTextures[tex];
+	PS3_DBG("DrawScreenFinalTexture: exit\n");
 }
 
 EXPORT void HWRAPI(SetPaletteLookup)(UINT8 *lut)
@@ -3442,7 +3577,7 @@ EXPORT void HWRAPI(SetScreenPalette)(RGBA_t *palette)
 #ifdef __CELLOS_LV2__
 EXPORT void HWRAPI(SetTexturePalette) (RGBA_t *palette)
 {
-	size_t palsize = (sizeof(RGBA_t) * 256);
+	size_t palsize = (sizeof(RGBA_t)* 256);
 	if (memcmp(&myPaletteData, palette, palsize))
 	{
 		memcpy(&myPaletteData, palette, palsize);

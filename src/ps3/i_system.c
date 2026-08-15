@@ -300,8 +300,8 @@ void I_InitPS3Memory(void) {
 
 	if (sys_memory_get_user_memory_size(&mem_info) == 0) {
 		size_t avail = mem_info.available_user_memory;
-		if (avail > 29 * 1024 * 1024) {
-			pool_size = avail - (29 * 1024 * 1024);
+		if (avail > 50 * 1024 * 1024) {
+			pool_size = avail - (50 * 1024 * 1024);
 		}
 	}
 

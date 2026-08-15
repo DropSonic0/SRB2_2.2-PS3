@@ -9,27 +9,154 @@
 #include "../netcode/d_netcmd.h"
 
 #ifdef HWRENDER
+#include "../hardware/hw_drv.h"
 #include "../hardware/hw_main.h"
+#include "../hardware/r_opengl/r_opengl.h"
+
+extern void *PS3_GetGLSym(const char *name);
+
+void *hwSym(const char *funcName, void *handle)
+{
+	(void)handle;
+	return PS3_GetGLSym(funcName);
+}
 #endif
 
 #ifdef __CELLOS_LV2__
 #include <PSGL/psgl.h>
 #include <PSGL/psglu.h>
+#include <sysutil/sysutil_sysparam.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+
+static void PS3_DebugLog(const char *msg)
+{
+	FILE *f = fopen("/dev_hdd0/game/SRB222PS3/USRDIR/log.txt", "a");
+	if (f)
+	{
+		fputs(msg, f);
+		fflush(f);
+		fclose(f);
+	}
+}
+#define PS3_DBG(msg) PS3_DebugLog(msg)
 
 extern void *memalign(size_t boundary, size_t size);
 
 INT32 oglflags = 0;
+UINT32 display_width = 1280;
+UINT32 display_height = 720;
 
 boolean LoadGL(void)
 {
 	return true;
 }
 
+static void PS3_glMultiTexCoord2f(GLenum target, GLfloat s, GLfloat t)
+{
+	(void)target; (void)s; (void)t;
+}
+
+static void PS3_glMultiTexCoord2fv(GLenum target, const GLfloat *v)
+{
+	(void)target; (void)v;
+}
+
+static void PS3_glColor4ubv(const GLubyte *v)
+{
+	if (v)
+		glColor4ub(v[0], v[1], v[2], v[3]);
+}
+
+static void PS3_glMateriali(GLenum face, GLenum pname, GLint param)
+{
+	glMaterialf(face, pname, (GLfloat)param);
+}
+
+static void PS3_glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const GLvoid *pixels)
+{
+	(void)target; (void)level; (void)internalformat; (void)width; (void)border; (void)format; (void)type; (void)pixels;
+}
+
+static void PS3_glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLvoid *pixels)
+{
+	(void)target; (void)level; (void)format; (void)type; (void)pixels;
+}
+
 void *GetGLFunc(const char *name)
 {
-	(void)name;
+	if (!name) return NULL;
+
+#define MAP_GL(func) if (strcmp(name, #func) == 0) return (void*)(func)
+
+	MAP_GL(glClearColor);
+	MAP_GL(glClear);
+	MAP_GL(glColorMask);
+	MAP_GL(glAlphaFunc);
+	MAP_GL(glBlendFunc);
+	MAP_GL(glCullFace);
+	MAP_GL(glPolygonOffset);
+	MAP_GL(glScissor);
+	MAP_GL(glEnable);
+	MAP_GL(glDisable);
+	MAP_GL(glGetFloatv);
+	MAP_GL(glGetIntegerv);
+	MAP_GL(glGetString);
+	MAP_GL(glPolygonMode);
+	MAP_GL(glClearDepth);
+	MAP_GL(glDepthFunc);
+	MAP_GL(glDepthMask);
+	MAP_GL(glDepthRange);
+	MAP_GL(glMatrixMode);
+	MAP_GL(glViewport);
+	MAP_GL(glPushMatrix);
+	MAP_GL(glPopMatrix);
+	MAP_GL(glLoadIdentity);
+	MAP_GL(glMultMatrixf);
+	MAP_GL(glRotatef);
+	MAP_GL(glScalef);
+	MAP_GL(glTranslatef);
+	MAP_GL(glVertexPointer);
+	MAP_GL(glNormalPointer);
+	MAP_GL(glTexCoordPointer);
+	MAP_GL(glColorPointer);
+	MAP_GL(glDrawArrays);
+	MAP_GL(glDrawElements);
+	MAP_GL(glEnableClientState);
+	MAP_GL(glDisableClientState);
+	MAP_GL(glShadeModel);
+	MAP_GL(glLightfv);
+	MAP_GL(glLightModelfv);
+	MAP_GL(glMaterialfv);
+	MAP_GL(glPixelStorei);
+	MAP_GL(glReadPixels);
+	MAP_GL(glTexEnvi);
+	MAP_GL(glTexParameteri);
+	MAP_GL(glTexImage2D);
+	MAP_GL(glTexSubImage2D);
+	MAP_GL(glGenTextures);
+	MAP_GL(glDeleteTextures);
+	MAP_GL(glBindTexture);
+	MAP_GL(glCopyTexImage2D);
+	MAP_GL(glCopyTexSubImage2D);
+	MAP_GL(glActiveTexture);
+	MAP_GL(glClientActiveTexture);
+	MAP_GL(glGenBuffers);
+	MAP_GL(glBindBuffer);
+	MAP_GL(glBufferData);
+	MAP_GL(glDeleteBuffers);
+	MAP_GL(glBlendEquation);
+
+#undef MAP_GL
+
+	if (strcmp(name, "glMultiTexCoord2f") == 0) return (void*)PS3_glMultiTexCoord2f;
+	if (strcmp(name, "glMultiTexCoord2fv") == 0) return (void*)PS3_glMultiTexCoord2fv;
+	if (strcmp(name, "glColor4ubv") == 0) return (void*)PS3_glColor4ubv;
+	if (strcmp(name, "glMateriali") == 0) return (void*)PS3_glMateriali;
+	if (strcmp(name, "glTexImage1D") == 0) return (void*)PS3_glTexImage1D;
+	if (strcmp(name, "glGetTexImage") == 0) return (void*)PS3_glGetTexImage;
+
 	return NULL;
 }
 #endif
@@ -57,6 +184,72 @@ static INT32 windowedModes[1][2] = {
 	{ 640, 400 }
 };
 
+void VID_StartupOpenGL(void)
+{
+#ifdef HWRENDER
+	static boolean glstartup = false;
+	if (!glstartup)
+	{
+		CONS_Printf("[PS3] VID_StartupOpenGL()...\n");
+		HWD.pfnInit = hwSym("Init", NULL);
+		HWD.pfnFinishUpdate = NULL;
+		HWD.pfnDraw2DLine = hwSym("Draw2DLine", NULL);
+		HWD.pfnDrawPolygon = hwSym("DrawPolygon", NULL);
+		HWD.pfnDrawIndexedTriangles = hwSym("DrawIndexedTriangles", NULL);
+		HWD.pfnRenderSkyDome = hwSym("RenderSkyDome", NULL);
+		HWD.pfnSetBlend = hwSym("SetBlend", NULL);
+		HWD.pfnClearBuffer = hwSym("ClearBuffer", NULL);
+		HWD.pfnSetTexture = hwSym("SetTexture", NULL);
+		HWD.pfnUpdateTexture = hwSym("UpdateTexture", NULL);
+		HWD.pfnDeleteTexture = hwSym("DeleteTexture", NULL);
+		HWD.pfnReadScreenTexture = hwSym("ReadScreenTexture", NULL);
+		HWD.pfnGClipRect = hwSym("GClipRect", NULL);
+		HWD.pfnClearMipMapCache = hwSym("ClearMipMapCache", NULL);
+		HWD.pfnSetSpecialState = hwSym("SetSpecialState", NULL);
+		HWD.pfnSetTexturePalette = hwSym("SetTexturePalette", NULL);
+		HWD.pfnGetTextureUsed = hwSym("GetTextureUsed", NULL);
+		HWD.pfnDrawModel = hwSym("DrawModel", NULL);
+		HWD.pfnCreateModelVBOs = hwSym("CreateModelVBOs", NULL);
+		HWD.pfnSetTransform = hwSym("SetTransform", NULL);
+		HWD.pfnPostImgRedraw = hwSym("PostImgRedraw", NULL);
+		HWD.pfnFlushScreenTextures = hwSym("FlushScreenTextures", NULL);
+		HWD.pfnDoScreenWipe = hwSym("DoScreenWipe", NULL);
+		HWD.pfnDrawScreenTexture = hwSym("DrawScreenTexture", NULL);
+		HWD.pfnMakeScreenTexture = hwSym("MakeScreenTexture", NULL);
+		HWD.pfnDrawScreenFinalTexture = hwSym("DrawScreenFinalTexture", NULL);
+
+		HWD.pfnInitShaders = hwSym("InitShaders", NULL);
+		HWD.pfnLoadShader = hwSym("LoadShader", NULL);
+		HWD.pfnCompileShader = hwSym("CompileShader", NULL);
+		HWD.pfnSetShader = hwSym("SetShader", NULL);
+		HWD.pfnUnSetShader = hwSym("UnSetShader", NULL);
+
+		HWD.pfnSetShaderInfo = hwSym("SetShaderInfo", NULL);
+
+		HWD.pfnSetPaletteLookup = hwSym("SetPaletteLookup", NULL);
+		HWD.pfnCreateLightTable = hwSym("CreateLightTable", NULL);
+		HWD.pfnUpdateLightTable = hwSym("UpdateLightTable", NULL);
+		HWD.pfnClearLightTables = hwSym("ClearLightTables", NULL);
+		HWD.pfnSetScreenPalette = hwSym("SetScreenPalette", NULL);
+
+		vid.glstate = (HWD.pfnInit && HWD.pfnInit()) ? VID_GL_LIBRARY_LOADED : VID_GL_LIBRARY_ERROR;
+
+		if (vid.glstate == VID_GL_LIBRARY_ERROR)
+		{
+			CONS_Printf("[PS3] Hardware OpenGL/PSGL init failed! Falling back to Software mode.\n");
+			rendermode = render_soft;
+			chosenrendermode = render_soft;
+			setrenderneeded = 0;
+		}
+		else
+		{
+			CONS_Printf("[PS3] Hardware OpenGL/PSGL init succeeded! vid.glstate = VID_GL_LIBRARY_LOADED\n");
+		}
+		glstartup = true;
+	}
+#endif
+}
+
 void I_StartupGraphics(void)
 {
 #ifdef __CELLOS_LV2__
@@ -66,12 +259,31 @@ void I_StartupGraphics(void)
 	// Guarantee vid.buffer is NULL on startup to prevent freeing uninitialized memory
 	vid.buffer = NULL;
 
+	CellVideoOutState videoState;
+	if (cellVideoOutGetState(CELL_VIDEO_OUT_PRIMARY, 0, &videoState) == 0)
+	{
+		CellVideoOutResolution videoResolution;
+		if (cellVideoOutGetResolution(videoState.displayMode.resolutionId, &videoResolution) == 0)
+		{
+			display_width = videoResolution.width;
+			display_height = videoResolution.height;
+		}
+	}
+	if (display_width <= 0) display_width = 1280;
+	if (display_height <= 0) display_height = 720;
+
 	memset(&options, 0, sizeof(PSGLinitOptions));
 	options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_PERSISTENT_MEMORY_SIZE | PSGL_INIT_TRANSIENT_MEMORY_SIZE | PSGL_INIT_FIFO_SIZE | PSGL_INIT_HOST_MEMORY_SIZE;
 	options.maxSPUs = 1;
 	options.initializeSPUs = true;
-	options.persistentMemorySize = 1 * 1024 * 1024;
-	options.transientMemorySize = 1 * 1024 * 1024;
+	// Previously 1MB/1MB: too small to hold even a single 1024x1024 RGBA
+	// screen texture (4MB) from MakeScreenTexture(). PSGL likely defers the
+	// real upload of texture data into these pools until the texture is
+	// actually used by a draw call, so an undersized pool here can manifest
+	// as a hang on the first draw referencing a texture, rather than a clean
+	// allocation error at TexImage2D time.
+	options.persistentMemorySize = 16 * 1024 * 1024;
+	options.transientMemorySize = 16 * 1024 * 1024;
 	options.errorConsole = 0;
 	options.fifoSize = 2 * 1024 * 1024;
 	options.hostMemorySize = 16 * 1024 * 1024;
@@ -111,24 +323,51 @@ void I_StartupGraphics(void)
 	current_tex_idx = 0;
 
 #ifdef HWRENDER
-	if (M_CheckParm("-opengl"))
-	{
-		rendermode = render_opengl;
-		chosenrendermode = render_opengl;
-		CONS_Printf("[PS3] Initializing in Hardware OpenGL/PSGL mode (-opengl parameter detected)\n");
-	}
-	else
-#endif
+	if (M_CheckParm("-software"))
 	{
 		rendermode = render_soft;
 		chosenrendermode = render_soft;
-		CONS_Printf("[PS3] Initializing in Software mode (default)\n");
+		CONS_Printf("[PS3] Initializing in Software mode (-software parameter detected)\n");
 	}
+	else
+	{
+		rendermode = render_opengl;
+		chosenrendermode = render_opengl;
+		CONS_Printf("[PS3] Initializing in Hardware OpenGL/PSGL mode (default)\n");
+	}
+#else
+	rendermode = render_soft;
+	chosenrendermode = render_soft;
+	CONS_Printf("[PS3] Initializing in Software mode\n");
+#endif
 
 	CV_RegisterVar(&cv_vidwait);
 
+	if (rendermode == render_opengl)
+	{
+		VID_StartupOpenGL();
+	}
+
 	// Automatically set default resolution mode
 	VID_SetMode(0);
+
+#ifdef HWRENDER
+	// VID_CheckRenderer() only runs HWR_Switch()/V_SetPalette() when the
+	// renderer changes at runtime (setrenderneeded). Since we boot directly
+	// into render_opengl by default, that path is never hit on first launch,
+	// so the hardware renderer's palette/lighttables never get set up.
+	if (rendermode == render_opengl && vid.glstate == VID_GL_LIBRARY_LOADED)
+	{
+		CONS_Printf("[PS3][DEBUG] Running HWR_Switch()...\n");
+		HWR_Switch();
+		CONS_Printf("[PS3][DEBUG] HWR_Switch() done. Running V_SetPalette(0)...\n");
+		V_SetPalette(0);
+		CONS_Printf("[PS3][DEBUG] V_SetPalette(0) done.\n");
+		CONS_Printf("[PS3][DEBUG] pfnMakeScreenTexture=%p pfnDrawScreenFinalTexture=%p pfnSetScreenPalette=%p pfnSetTransform=%p\n",
+			(void*)HWD.pfnMakeScreenTexture, (void*)HWD.pfnDrawScreenFinalTexture,
+			(void*)HWD.pfnSetScreenPalette, (void*)HWD.pfnSetTransform);
+	}
+#endif
 
 	graphics_started = true;
 #endif
@@ -171,8 +410,6 @@ void I_ShutdownGraphics(void)
 	graphics_started = false;
 #endif
 }
-
-void VID_StartupOpenGL(void){}
 
 void I_SetPalette(RGBA_t *palette)
 {
@@ -228,6 +465,15 @@ INT32 VID_SetMode(INT32 modenum)
 	{
 		printf("Error: Not enough memory for video buffer\n");
 	}
+
+#ifdef HWRENDER
+	if (rendermode == render_opengl && vid.glstate == VID_GL_LIBRARY_LOADED)
+	{
+		SetModelView(vid.width, vid.height);
+		SetStates();
+		HWR_Startup();
+	}
+#endif
 
 	return 0;
 }
@@ -382,7 +628,21 @@ void I_FinishUpdate(void)
 	}
 	else if (rendermode == render_opengl)
 	{
+		static boolean firstframe = true;
+		if (firstframe)
+		{
+			PS3_DBG("I_FinishUpdate: first opengl frame\n");
+		}
+		PS3_DBG("I_FinishUpdate: about to call HWR_MakeScreenFinalTexture\n");
+		HWR_MakeScreenFinalTexture();
+		PS3_DBG("I_FinishUpdate: HWR_MakeScreenFinalTexture returned\n");
+		PS3_DBG("I_FinishUpdate: about to call HWR_DrawScreenFinalTexture\n");
+		HWR_DrawScreenFinalTexture(display_width, display_height);
+		PS3_DBG("I_FinishUpdate: HWR_DrawScreenFinalTexture returned\n");
+		PS3_DBG("I_FinishUpdate: about to call psglSwap\n");
 		psglSwap();
+		PS3_DBG("I_FinishUpdate: psglSwap returned\n");
+		firstframe = false;
 	}
 #endif
 }
