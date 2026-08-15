@@ -25,6 +25,7 @@ void *hwSym(const char *funcName, void *handle)
 #ifdef __CELLOS_LV2__
 #include <PSGL/psgl.h>
 #include <PSGL/psglu.h>
+#include <PSGL/report.h>
 #include <sysutil/sysutil_sysparam.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,6 +42,14 @@ static void PS3_DebugLog(const char *msg)
 	}
 }
 #define PS3_DBG(msg) PS3_DebugLog(msg)
+
+static void PS3_PSGLReportCallback(GLenum report, GLuint id, const char *message)
+{
+	char buf[512];
+	snprintf(buf, sizeof(buf), "[PSGL_REPORT] enum=0x%x id=%u msg=%s\n",
+		(unsigned int)report, (unsigned int)id, message ? message : "(null)");
+	PS3_DebugLog(buf);
+}
 
 extern void *memalign(size_t boundary, size_t size);
 
@@ -289,6 +298,13 @@ void I_StartupGraphics(void)
 	options.hostMemorySize = 16 * 1024 * 1024;
 
 	psglInit(&options);
+
+	// Hook PSGL's own internal diagnostics (texture/framebuffer completeness,
+	// GPU memory allocation failures, Cg errors, etc.) into our debug log,
+	// instead of guessing blindly from the outside.
+	psglSetReportFunction(PS3_PSGLReportCallback);
+	psglEnableReport(PSGL_REPORT_ALL);
+	PS3_DBG("I_StartupGraphics: PSGL report function hooked, PSGL_REPORT_ALL enabled\n");
 
 	memset(&params, 0, sizeof(params));
 	params.enable = PSGL_DEVICE_PARAMETERS_COLOR_FORMAT | PSGL_DEVICE_PARAMETERS_DEPTH_FORMAT | PSGL_DEVICE_PARAMETERS_MULTISAMPLING_MODE | PSGL_DEVICE_PARAMETERS_BUFFERING_MODE | PSGL_DEVICE_PARAMETERS_RESC_ADJUST_ASPECT_RATIO;

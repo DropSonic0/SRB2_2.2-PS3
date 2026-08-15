@@ -3212,6 +3212,27 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 	{
 		SetBlend(PF_Modulated | PF_Translucent | PF_NoDepthTest);
 
+#ifdef __CELLOS_LV2__
+		// PSGL's built-in fixed-function fragment program (no custom
+		// shader library loaded via psglLoadShaderLibrary()) only covers
+		// a single texture unit. The original 2-unit path below (wipeEnd
+		// modulated by fademaskdownloaded) triggers PSGL_REPORT_MISSING_STATE
+		// and hangs the RSX. Simplify to a single-texture alpha-blended
+		// draw of wipeEnd -- this drops the fade-mask shape from the wipe
+		// transition but keeps a working crossfade without a custom shader.
+		pglActiveTexture(GL_TEXTURE0);
+		pglEnable(GL_TEXTURE_2D);
+		pglBindTexture(GL_TEXTURE_2D, screenTextures[wipeEnd]);
+		pglTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		pglColor4ubv(white);
+
+		pglClientActiveTexture(GL_TEXTURE0);
+		pglTexCoordPointer(2, GL_FLOAT, 0, fix);
+		pglVertexPointer(3, GL_FLOAT, 0, screenVerts);
+		pglDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+		tex_downloaded = screenTextures[wipeEnd];
+#else
 		// Draw the end screen that fades in
 		pglActiveTexture(GL_TEXTURE0);
 		pglEnable(GL_TEXTURE_2D);
@@ -3240,6 +3261,7 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 		pglActiveTexture(GL_TEXTURE0);
 		pglClientActiveTexture(GL_TEXTURE0);
 		tex_downloaded = screenTextures[wipeEnd];
+#endif
 	}
 
 #ifdef __CELLOS_LV2__
@@ -3312,7 +3334,12 @@ EXPORT void HWRAPI(MakeScreenTexture) (int tex)
 		{
 			memset(temp_buf, 0, temp_buf_size);
 			PS3_DBG("MakeScreenTexture: about to TexImage2D\n");
-			pglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texsize, texsize, 0, GL_RGBA, GL_UNSIGNED_BYTE, temp_buf);
+			// NOTE: format param must be GL_RGBA_FORMAT (PSGL-specific), not
+			// plain GL_RGBA -- every other texture upload in this file
+			// (UpdateTexture, lighttable, palette) uses GL_RGBA_FORMAT here.
+			// Using GL_RGBA let TexImage2D succeed silently, but hung the
+			// RSX the first time this texture was actually sampled in a draw.
+			pglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA_FORMAT, texsize, texsize, 0, GL_RGBA_FORMAT, GL_UNSIGNED_BYTE, temp_buf);
 			PS3_DBG("MakeScreenTexture: TexImage2D done\n");
 			free(temp_buf);
 		}
@@ -3436,15 +3463,29 @@ EXPORT void HWRAPI(DrawScreenFinalTexture)(int tex, int width, int height)
 	pglViewport(0, 0, width, height);
 	PS3_DBG("DrawScreenFinalTexture: after Viewport\n");
 
-	clearColour.red = 1; // TEMP DIAGNOSTIC: magenta clear to verify the buffer reaches the screen at all
-	clearColour.green = 0;
-	clearColour.blue = 1;
+	clearColour.red = clearColour.green = clearColour.blue = 0;
 	clearColour.alpha = 1;
 	PS3_DBG("DrawScreenFinalTexture: about to ClearBuffer\n");
 	ClearBuffer(true, false, &clearColour);
 	PS3_DBG("DrawScreenFinalTexture: ClearBuffer done, about to SetBlend\n");
 	SetBlend(PF_NoDepthTest);
 	PS3_DBG("DrawScreenFinalTexture: SetBlend done, about to BindTexture\n");
+#ifdef __CELLOS_LV2__
+	// ROOT CAUSE (confirmed via official PSGL docs): PSGL_REPORT_MISSING_STATE
+	// fires because SetBlend(PF_NoDepthTest) leaves GL_TEXTURE_ENV_MODE at
+	// GL_REPLACE (PF_Modulated isn't set), and this project never calls
+	// psglLoadShaderLibrary() to give PSGL a fixed-function fragment program
+	// covering GL_REPLACE. PSGL's built-in default program only covers a
+	// single RGBA texture unit with no fog -- decoding the STATE: report
+	// (Table 23 in the PSGL Programming Guide) confirms our draw is exactly
+	// that shape except for the texture environment mode.
+	// Fix: force GL_MODULATE instead. Since the vertex color here is pure
+	// white (255,255,255,255 == 1,1,1,1), MODULATE (tex * color) produces
+	// the identical visual result to REPLACE, but GL_MODULATE is the mode
+	// PSGL's default fragment program actually supports.
+	pglTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	PS3_DBG("DrawScreenFinalTexture: forced GL_TEXTURE_ENV_MODE=GL_MODULATE\n");
+#endif
 	pglBindTexture(GL_TEXTURE_2D, screenTextures[tex]);
 	PS3_DBG("DrawScreenFinalTexture: BindTexture done\n");
 
