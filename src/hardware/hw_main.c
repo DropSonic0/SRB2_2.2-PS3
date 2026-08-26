@@ -49,7 +49,7 @@
 #include <stdio.h>
 static void PS3_DebugLog(const char *msg)
 {
-	FILE *f = fopen("/dev_hdd0/game/SRB222PS3/USRDIR/log.txt", "a");
+	FILE *f = fopen("", "a");
 	if (f)
 	{
 		fputs(msg, f);

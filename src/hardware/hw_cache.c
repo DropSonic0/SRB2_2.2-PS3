@@ -32,7 +32,7 @@
 INT32 patchformat = GL_TEXFMT_AP_88; // use alpha for holes
 INT32 textureformat = GL_TEXFMT_P_8; // use chromakey for hole
 
-RGBA_t mapPalette[256] = {0}; // the palette for the currently loaded level or menu etc.
+RGBA_t mapPalette[256] = { 0 }; // the palette for the currently loaded level or menu etc.
 
 // Returns a pointer to the palette which should be used for caching textures.
 RGBA_t *HWR_GetTexturePalette(void)
@@ -54,10 +54,10 @@ static INT32 format2bpp(GLTextureFormat_t format)
 // It is now split from it for my sanity! (and the sanity of others)
 // -- Monster Iestyn (13/02/19)
 static void HWR_DrawColumnInCache(const column_t *patchcol, UINT8 *block, GLMipmap_t *mipmap,
-								INT32 pblockheight, INT32 blockmodulo,
-								fixed_t yfracstep, fixed_t scale_y,
-								texpatch_t *originPatch, INT32 patchheight,
-								INT32 bpp, RGBA_t *palette)
+	INT32 pblockheight, INT32 blockmodulo,
+	fixed_t yfracstep, fixed_t scale_y,
+	texpatch_t *originPatch, INT32 patchheight,
+	INT32 bpp, RGBA_t *palette)
 {
 	fixed_t yfrac, position, count;
 	UINT8 *dest;
@@ -79,18 +79,18 @@ static void HWR_DrawColumnInCache(const column_t *patchcol, UINT8 *block, GLMipm
 	{
 		post_t *post = &patchcol->posts[i];
 		source = patchcol->pixels + post->data_offset;
-		count  = ((post->length * scale_y) + (FRACUNIT/2)) >> FRACBITS;
+		count = ((post->length * scale_y) + (FRACUNIT / 2)) >> FRACBITS;
 		position = originy + post->topdelta;
 
 		yfrac = 0;
 		if (position < 0)
 		{
-			yfrac = -position<<FRACBITS;
-			count += (((position * scale_y) + (FRACUNIT/2)) >> FRACBITS);
+			yfrac = -position << FRACBITS;
+			count += (((position * scale_y) + (FRACUNIT / 2)) >> FRACBITS);
 			position = 0;
 		}
 
-		position = ((position * scale_y) + (FRACUNIT/2)) >> FRACBITS;
+		position = ((position * scale_y) + (FRACUNIT / 2)) >> FRACBITS;
 
 		if (position < 0)
 			position = 0;
@@ -100,7 +100,7 @@ static void HWR_DrawColumnInCache(const column_t *patchcol, UINT8 *block, GLMipm
 
 		for (dest = block + (position*blockmodulo); count > 0; count--, dest += blockmodulo, yfrac += yfracstep)
 		{
-			texel = source[yfrac>>FRACBITS];
+			texel = source[yfrac >> FRACBITS];
 			alpha = 0xFF;
 
 			// Make pixel transparent if chroma keyed
@@ -112,59 +112,59 @@ static void HWR_DrawColumnInCache(const column_t *patchcol, UINT8 *block, GLMipm
 
 			switch (bpp)
 			{
-				case 2:
+			case 2:
+			{
+					  texelu16 = *((UINT16*)dest);
+					  if ((originPatch != NULL) && (originPatch->style != AST_COPY))
+					  {
+						  if (originPatch->style == AST_TRANSLUCENT && originPatch->alpha < ASTTextureBlendingThreshold[0])
+							  continue;
+						  if (!(texelu16 & 0xFF00) && originPatch->alpha <= ASTTextureBlendingThreshold[1])
+							  continue;
+						  texel = ASTBlendPaletteIndexes(texelu16 & 0xFF, texel, originPatch->style, originPatch->alpha);
+					  }
+					  texelu16 = (UINT16)((alpha << 8) | texel);
+					  memcpy(dest, &texelu16, sizeof(UINT16));
+					  break;
+			}
+			case 3:
+				colortemp = palette[texel];
+				if ((originPatch != NULL) && (originPatch->style != AST_COPY))
 				{
-					texelu16 = *((UINT16*)dest);
-					if ((originPatch != NULL) && (originPatch->style != AST_COPY))
-					{
-						if (originPatch->style == AST_TRANSLUCENT && originPatch->alpha < ASTTextureBlendingThreshold[0])
-							continue;
-						if (!(texelu16 & 0xFF00) && originPatch->alpha <= ASTTextureBlendingThreshold[1])
-							continue;
-						texel = ASTBlendPaletteIndexes(texelu16 & 0xFF, texel, originPatch->style, originPatch->alpha);
-					}
-					texelu16 = (UINT16)((alpha<<8) | texel);
-					memcpy(dest, &texelu16, sizeof(UINT16));
-					break;
+					RGBA_t rgbatexel;
+					rgbatexel.rgba = *(UINT32 *)dest;
+					colortemp.rgba = ASTBlendTexturePixel(rgbatexel, colortemp, originPatch->style, originPatch->alpha);
 				}
-				case 3:
-					colortemp = palette[texel];
-					if ((originPatch != NULL) && (originPatch->style != AST_COPY))
-					{
-						RGBA_t rgbatexel;
-						rgbatexel.rgba = *(UINT32 *)dest;
-						colortemp.rgba = ASTBlendTexturePixel(rgbatexel, colortemp, originPatch->style, originPatch->alpha);
-					}
-					memcpy(dest, &colortemp, sizeof(RGBA_t)-sizeof(UINT8));
-					break;
-				case 4:
-					colortemp = palette[texel];
-					colortemp.s.alpha = alpha;
-					if ((originPatch != NULL) && (originPatch->style != AST_COPY))
-					{
-						RGBA_t rgbatexel;
-						rgbatexel.rgba = *(UINT32 *)dest;
-						colortemp.rgba = ASTBlendTexturePixel(rgbatexel, colortemp, originPatch->style, originPatch->alpha);
-					}
-					memcpy(dest, &colortemp, sizeof(RGBA_t));
-					break;
+				memcpy(dest, &colortemp, sizeof(RGBA_t)-sizeof(UINT8));
+				break;
+			case 4:
+				colortemp = palette[texel];
+				colortemp.s.alpha = alpha;
+				if ((originPatch != NULL) && (originPatch->style != AST_COPY))
+				{
+					RGBA_t rgbatexel;
+					rgbatexel.rgba = *(UINT32 *)dest;
+					colortemp.rgba = ASTBlendTexturePixel(rgbatexel, colortemp, originPatch->style, originPatch->alpha);
+				}
+				memcpy(dest, &colortemp, sizeof(RGBA_t));
+				break;
 				// default is 1
-				default:
-					if ((originPatch != NULL) && (originPatch->style != AST_COPY))
-						*dest = ASTBlendPaletteIndexes(*dest, texel, originPatch->style, originPatch->alpha);
-					else
-						*dest = texel;
-					break;
+			default:
+				if ((originPatch != NULL) && (originPatch->style != AST_COPY))
+					*dest = ASTBlendPaletteIndexes(*dest, texel, originPatch->style, originPatch->alpha);
+				else
+					*dest = texel;
+				break;
 			}
 		}
 	}
 }
 
 static void HWR_DrawFlippedColumnInCache(const column_t *patchcol, UINT8 *block, GLMipmap_t *mipmap,
-								INT32 pblockheight, INT32 blockmodulo,
-								fixed_t yfracstep, fixed_t scale_y,
-								texpatch_t *originPatch, INT32 patchheight,
-								INT32 bpp, RGBA_t *palette)
+	INT32 pblockheight, INT32 blockmodulo,
+	fixed_t yfracstep, fixed_t scale_y,
+	texpatch_t *originPatch, INT32 patchheight,
+	INT32 bpp, RGBA_t *palette)
 {
 	fixed_t yfrac, position, count;
 	UINT8 *dest;
@@ -185,20 +185,20 @@ static void HWR_DrawFlippedColumnInCache(const column_t *patchcol, UINT8 *block,
 	{
 		post_t *post = &patchcol->posts[i];
 		source = patchcol->pixels + post->data_offset;
-		topdelta = patchheight-post->length-post->topdelta;
-		count  = ((post->length * scale_y) + (FRACUNIT/2)) >> FRACBITS;
+		topdelta = patchheight - post->length - post->topdelta;
+		count = ((post->length * scale_y) + (FRACUNIT / 2)) >> FRACBITS;
 		position = originy + topdelta;
 
-		yfrac = (post->length-1) << FRACBITS;
+		yfrac = (post->length - 1) << FRACBITS;
 
 		if (position < 0)
 		{
-			yfrac += position<<FRACBITS;
-			count += (((position * scale_y) + (FRACUNIT/2)) >> FRACBITS);
+			yfrac += position << FRACBITS;
+			count += (((position * scale_y) + (FRACUNIT / 2)) >> FRACBITS);
 			position = 0;
 		}
 
-		position = ((position * scale_y) + (FRACUNIT/2)) >> FRACBITS;
+		position = ((position * scale_y) + (FRACUNIT / 2)) >> FRACBITS;
 
 		if (position < 0)
 			position = 0;
@@ -208,7 +208,7 @@ static void HWR_DrawFlippedColumnInCache(const column_t *patchcol, UINT8 *block,
 
 		for (dest = block + (position*blockmodulo); count > 0; count--, dest += blockmodulo, yfrac -= yfracstep)
 		{
-			texel = source[yfrac>>FRACBITS];
+			texel = source[yfrac >> FRACBITS];
 			alpha = 0xFF;
 
 			// Make pixel transparent if chroma keyed
@@ -220,47 +220,47 @@ static void HWR_DrawFlippedColumnInCache(const column_t *patchcol, UINT8 *block,
 
 			switch (bpp)
 			{
-				case 2:
-					texelu16 = *((UINT16*)dest);
-					if ((originPatch != NULL) && (originPatch->style != AST_COPY))
-					{
-						if (originPatch->style == AST_TRANSLUCENT && originPatch->alpha < ASTTextureBlendingThreshold[0])
-							continue;
-						if (!(texelu16 & 0xFF00) && originPatch->alpha <= ASTTextureBlendingThreshold[1])
-							continue;
-						texel = ASTBlendPaletteIndexes(texelu16 & 0xFF, texel, originPatch->style, originPatch->alpha);
-					}
-					texelu16 = (UINT16)((alpha<<8) | texel);
-					memcpy(dest, &texelu16, sizeof(UINT16));
-					break;
-				case 3:
-					colortemp = palette[texel];
-					if ((originPatch != NULL) && (originPatch->style != AST_COPY))
-					{
-						RGBA_t rgbatexel;
-						rgbatexel.rgba = *(UINT32 *)dest;
-						colortemp.rgba = ASTBlendTexturePixel(rgbatexel, colortemp, originPatch->style, originPatch->alpha);
-					}
-					memcpy(dest, &colortemp, sizeof(RGBA_t)-sizeof(UINT8));
-					break;
-				case 4:
-					colortemp = palette[texel];
-					colortemp.s.alpha = alpha;
-					if ((originPatch != NULL) && (originPatch->style != AST_COPY))
-					{
-						RGBA_t rgbatexel;
-						rgbatexel.rgba = *(UINT32 *)dest;
-						colortemp.rgba = ASTBlendTexturePixel(rgbatexel, colortemp, originPatch->style, originPatch->alpha);
-					}
-					memcpy(dest, &colortemp, sizeof(RGBA_t));
-					break;
+			case 2:
+				texelu16 = *((UINT16*)dest);
+				if ((originPatch != NULL) && (originPatch->style != AST_COPY))
+				{
+					if (originPatch->style == AST_TRANSLUCENT && originPatch->alpha < ASTTextureBlendingThreshold[0])
+						continue;
+					if (!(texelu16 & 0xFF00) && originPatch->alpha <= ASTTextureBlendingThreshold[1])
+						continue;
+					texel = ASTBlendPaletteIndexes(texelu16 & 0xFF, texel, originPatch->style, originPatch->alpha);
+				}
+				texelu16 = (UINT16)((alpha << 8) | texel);
+				memcpy(dest, &texelu16, sizeof(UINT16));
+				break;
+			case 3:
+				colortemp = palette[texel];
+				if ((originPatch != NULL) && (originPatch->style != AST_COPY))
+				{
+					RGBA_t rgbatexel;
+					rgbatexel.rgba = *(UINT32 *)dest;
+					colortemp.rgba = ASTBlendTexturePixel(rgbatexel, colortemp, originPatch->style, originPatch->alpha);
+				}
+				memcpy(dest, &colortemp, sizeof(RGBA_t)-sizeof(UINT8));
+				break;
+			case 4:
+				colortemp = palette[texel];
+				colortemp.s.alpha = alpha;
+				if ((originPatch != NULL) && (originPatch->style != AST_COPY))
+				{
+					RGBA_t rgbatexel;
+					rgbatexel.rgba = *(UINT32 *)dest;
+					colortemp.rgba = ASTBlendTexturePixel(rgbatexel, colortemp, originPatch->style, originPatch->alpha);
+				}
+				memcpy(dest, &colortemp, sizeof(RGBA_t));
+				break;
 				// default is 1
-				default:
-					if ((originPatch != NULL) && (originPatch->style != AST_COPY))
-						*dest = ASTBlendPaletteIndexes(*dest, texel, originPatch->style, originPatch->alpha);
-					else
-						*dest = texel;
-					break;
+			default:
+				if ((originPatch != NULL) && (originPatch->style != AST_COPY))
+					*dest = ASTBlendPaletteIndexes(*dest, texel, originPatch->style, originPatch->alpha);
+				else
+					*dest = texel;
+				break;
 			}
 		}
 	}
@@ -296,12 +296,12 @@ static void HWR_DrawPatchInCache(GLMipmap_t *mipmap,
 	xfrac = 0;
 	xfracstep = FRACUNIT;
 	yfracstep = FRACUNIT;
-	scale_y   = FRACUNIT;
+	scale_y = FRACUNIT;
 
 	bpp = format2bpp(mipmap->format);
 
 	if (bpp < 1 || bpp > 4)
-		I_Error("HWR_DrawPatchInCache: no drawer defined for this bpp (%d)\n",bpp);
+		I_Error("HWR_DrawPatchInCache: no drawer defined for this bpp (%d)\n", bpp);
 
 	// NOTE: should this actually be pblockwidth*bpp?
 	blockmodulo = pblockwidth*bpp;
@@ -309,13 +309,13 @@ static void HWR_DrawPatchInCache(GLMipmap_t *mipmap,
 	// Draw each column to the block cache
 	for (; ncols--; block += bpp, xfrac += xfracstep)
 	{
-		patchcol = &realpatch->columns[xfrac>>FRACBITS];
+		patchcol = &realpatch->columns[xfrac >> FRACBITS];
 
 		HWR_DrawColumnInCache(patchcol, block, mipmap,
-								pblockheight, blockmodulo,
-								yfracstep, scale_y,
-								NULL, pheight, // not that pheight is going to get used anyway...
-								bpp, palette);
+			pblockheight, blockmodulo,
+			yfracstep, scale_y,
+			NULL, pheight, // not that pheight is going to get used anyway...
+			bpp, palette);
 	}
 }
 
@@ -336,11 +336,11 @@ static void HWR_DrawTexturePatchInCache(GLMipmap_t *mipmap,
 	INT32 width, height;
 	RGBA_t *palette;
 	// Column drawing function pointer.
-	static void (*ColumnDrawerPointer)(const column_t *patchcol, UINT8 *block, GLMipmap_t *mipmap,
-								INT32 pblockheight, INT32 blockmodulo,
-								fixed_t yfracstep, fixed_t scale_y,
-								texpatch_t *originPatch, INT32 patchheight,
-								INT32 bpp, RGBA_t *palette);
+	static void(*ColumnDrawerPointer)(const column_t *patchcol, UINT8 *block, GLMipmap_t *mipmap,
+		INT32 pblockheight, INT32 blockmodulo,
+		fixed_t yfracstep, fixed_t scale_y,
+		texpatch_t *originPatch, INT32 patchheight,
+		INT32 bpp, RGBA_t *palette);
 
 	if (texture->width <= 0 || texture->height <= 0)
 		return;
@@ -380,16 +380,16 @@ static void HWR_DrawTexturePatchInCache(GLMipmap_t *mipmap,
 	// source advance
 	xfrac = 0;
 	if (x1 < 0)
-		xfrac = -x1<<FRACBITS;
+		xfrac = -x1 << FRACBITS;
 
 	xfracstep = (texture->width << FRACBITS) / pblockwidth;
-	yfracstep = (texture->height<< FRACBITS) / pblockheight;
-	scale_y   = (pblockheight  << FRACBITS) / texture->height;
+	yfracstep = (texture->height << FRACBITS) / pblockheight;
+	scale_y = (pblockheight << FRACBITS) / texture->height;
 
 	bpp = format2bpp(mipmap->format);
 
 	if (bpp < 1 || bpp > 4)
-		I_Error("HWR_DrawTexturePatchInCache: no drawer defined for this bpp (%d)\n",bpp);
+		I_Error("HWR_DrawTexturePatchInCache: no drawer defined for this bpp (%d)\n", bpp);
 
 	// NOTE: should this actually be pblockwidth*bpp?
 	blockmodulo = pblockwidth*bpp;
@@ -398,15 +398,15 @@ static void HWR_DrawTexturePatchInCache(GLMipmap_t *mipmap,
 	for (block += col*bpp; ncols--; block += bpp, xfrac += xfracstep)
 	{
 		if (patch->flip & 1)
-			patchcol = &realpatch->columns[(width-1)-(xfrac>>FRACBITS)];
+			patchcol = &realpatch->columns[(width - 1) - (xfrac >> FRACBITS)];
 		else
-			patchcol = &realpatch->columns[xfrac>>FRACBITS];
+			patchcol = &realpatch->columns[xfrac >> FRACBITS];
 
 		ColumnDrawerPointer(patchcol, block, mipmap,
-								pblockheight, blockmodulo,
-								yfracstep, scale_y,
-								patch, height,
-								bpp, palette);
+			pblockheight, blockmodulo,
+			yfracstep, scale_y,
+			patch, height,
+			bpp, palette);
 	}
 }
 
@@ -414,22 +414,22 @@ static UINT8 *MakeBlock(GLMipmap_t *grMipmap)
 {
 	UINT8 *block;
 	INT32 bpp, i;
-	UINT16 bu16 = ((0x00 <<8) | HWR_PATCHES_CHROMAKEY_COLORINDEX);
+	UINT16 bu16 = ((0x00 << 8) | HWR_PATCHES_CHROMAKEY_COLORINDEX);
 	INT32 blocksize = (grMipmap->width * grMipmap->height);
 
-	bpp =  format2bpp(grMipmap->format);
+	bpp = format2bpp(grMipmap->format);
 	block = Z_Malloc(blocksize*bpp, PU_HWRCACHE, &(grMipmap->data));
 
 	switch (bpp)
 	{
-		case 1: memset(block, HWR_PATCHES_CHROMAKEY_COLORINDEX, blocksize); break;
-		case 2:
-				// fill background with chromakey, alpha = 0
-				for (i = 0; i < blocksize; i++)
-				//[segabor]
-					memcpy(block+i*sizeof(UINT16), &bu16, sizeof(UINT16));
-				break;
-		case 4: memset(block, 0x00, blocksize*sizeof(UINT32)); break;
+	case 1: memset(block, HWR_PATCHES_CHROMAKEY_COLORINDEX, blocksize); break;
+	case 2:
+		// fill background with chromakey, alpha = 0
+		for (i = 0; i < blocksize; i++)
+			//[segabor]
+			memcpy(block + i*sizeof(UINT16), &bu16, sizeof(UINT16));
+		break;
+	case 4: memset(block, 0x00, blocksize*sizeof(UINT32)); break;
 	}
 
 	return block;
@@ -489,9 +489,9 @@ static void HWR_GenerateTexture(INT32 texnum, GLMapTexture_t *grtex, GLMipmap_t 
 			Patch_Free(realpatch);
 	}
 	//Hurdler: not efficient at all but I don't remember exactly how HWR_DrawPatchInCache works :(
-	if (format2bpp(mipmap->format)==4)
+	if (format2bpp(mipmap->format) == 4)
 	{
-		for (i = 3; i < blocksize*4; i += 4) // blocksize*4 because blocksize doesn't include the bpp
+		for (i = 3; i < blocksize * 4; i += 4) // blocksize*4 because blocksize doesn't include the bpp
 		{
 			if (block[i] == 0)
 			{
@@ -501,12 +501,12 @@ static void HWR_GenerateTexture(INT32 texnum, GLMapTexture_t *grtex, GLMipmap_t 
 		}
 	}
 
-	grtex->scaleX = 1.0f/(texture->width*FRACUNIT);
-	grtex->scaleY = 1.0f/(texture->height*FRACUNIT);
+	grtex->scaleX = 1.0f / (texture->width*FRACUNIT);
+	grtex->scaleY = 1.0f / (texture->height*FRACUNIT);
 }
 
 // patch may be NULL if grMipmap has been initialised already and makebitmap is false
-void HWR_MakePatch (const patch_t *patch, GLPatch_t *grPatch, GLMipmap_t *grMipmap, boolean makebitmap)
+void HWR_MakePatch(const patch_t *patch, GLPatch_t *grPatch, GLMipmap_t *grMipmap, boolean makebitmap)
 {
 	if (grMipmap->width == 0)
 	{
@@ -647,7 +647,7 @@ static boolean FreeColormapsCallback(void *mem)
 
 static void HWR_FreePatchCache(boolean freeall)
 {
-	boolean (*callback)(void *mem) = FreeTextureCallback;
+	boolean(*callback)(void *mem) = FreeTextureCallback;
 
 	if (!freeall)
 		callback = FreeColormapsCallback;
@@ -836,7 +836,7 @@ static void MakeLevelFlatMipmap(GLMipmap_t *grMipmap, INT32 texturenum, UINT16 f
 	grMipmap->format = GL_TEXFMT_P_8;
 	grMipmap->flags = flags;
 
-	grMipmap->width  = (UINT16)textures[texturenum]->width;
+	grMipmap->width = (UINT16)textures[texturenum]->width;
 	grMipmap->height = (UINT16)textures[texturenum]->height;
 }
 
@@ -968,7 +968,7 @@ void HWR_GetMappedPatch(patch_t *patch, const UINT8 *colormap)
 
 	// search for the mipmap
 	// skip the first (no colormap translated)
-	for (grMipmap = grPatch->mipmap; grMipmap->nextcolormap; )
+	for (grMipmap = grPatch->mipmap; grMipmap->nextcolormap;)
 	{
 		grMipmap = grMipmap->nextcolormap;
 		if (grMipmap->colormap && grMipmap->colormap->source == colormap)
@@ -1024,14 +1024,14 @@ patch_t *HWR_GetCachedGLPatchPwad(UINT16 wadnum, UINT16 lumpnum)
 
 patch_t *HWR_GetCachedGLPatch(lumpnum_t lumpnum)
 {
-	return HWR_GetCachedGLPatchPwad(WADFILENUM(lumpnum),LUMPNUM(lumpnum));
+	return HWR_GetCachedGLPatchPwad(WADFILENUM(lumpnum), LUMPNUM(lumpnum));
 }
 
 // Need to do this because they aren't powers of 2
 static void HWR_DrawFadeMaskInCache(GLMipmap_t *mipmap, INT32 pblockwidth, INT32 pblockheight,
 	lumpnum_t fademasklumpnum, UINT16 fmwidth, UINT16 fmheight)
 {
-	INT32 i,j;
+	INT32 i, j;
 	fixed_t posx, posy, stepx, stepy;
 	UINT8 *block = mipmap->data; // places the data directly into here
 	UINT8 *flat;
@@ -1043,18 +1043,18 @@ static void HWR_DrawFadeMaskInCache(GLMipmap_t *mipmap, INT32 pblockwidth, INT32
 	W_ReadLump(fademasklumpnum, Z_Malloc(W_LumpLength(fademasklumpnum),
 		PU_HWRCACHE, &flat));
 
-	stepy = ((INT32)fmheight<<FRACBITS)/pblockheight;
-	stepx = ((INT32)fmwidth<<FRACBITS)/pblockwidth;
+	stepy = ((INT32)fmheight << FRACBITS) / pblockheight;
+	stepx = ((INT32)fmwidth << FRACBITS) / pblockwidth;
 	posy = 0;
 	for (j = 0; j < pblockheight; j++)
 	{
 		posx = 0;
 		dest = &block[j*(mipmap->width)]; // 1bpp
-		src = &flat[(posy>>FRACBITS)*SHORT(fmwidth)];
-		for (i = 0; i < pblockwidth;i++)
+		src = &flat[(posy >> FRACBITS)*SHORT(fmwidth)];
+		for (i = 0; i < pblockwidth; i++)
 		{
 			// fademask bpp is always 1, and is used just for alpha
-			texel = src[(posx)>>FRACBITS];
+			texel = src[(posx) >> FRACBITS];
 			col = palette[texel];
 			*dest = col.s.red; // take the red level of the colour and use it for alpha, as fademasks do
 
@@ -1081,29 +1081,29 @@ static void HWR_CacheFadeMask(GLMipmap_t *grMipmap, lumpnum_t fademasklumpnum)
 	switch (size)
 	{
 		// None of these are powers of 2, so I'll need to do what is done for textures and make them powers of 2 before they can be used
-		case 256000: // 640x400
-			fmwidth = 640;
-			fmheight = 400;
-			break;
-		case 64000: // 320x200
-			fmwidth = 320;
-			fmheight = 200;
-			break;
-		case 16000: // 160x100
-			fmwidth = 160;
-			fmheight = 100;
-			break;
-		case 4000: // 80x50 (minimum)
-			fmwidth = 80;
-			fmheight = 50;
-			break;
-		default: // Bad lump
-			CONS_Alert(CONS_WARNING, "Fade mask lump of incorrect size, ignored\n"); // I should avoid this by checking the lumpnum in HWR_RunWipe
-			break;
+	case 256000: // 640x400
+		fmwidth = 640;
+		fmheight = 400;
+		break;
+	case 64000: // 320x200
+		fmwidth = 320;
+		fmheight = 200;
+		break;
+	case 16000: // 160x100
+		fmwidth = 160;
+		fmheight = 100;
+		break;
+	case 4000: // 80x50 (minimum)
+		fmwidth = 80;
+		fmheight = 50;
+		break;
+	default: // Bad lump
+		CONS_Alert(CONS_WARNING, "Fade mask lump of incorrect size, ignored\n"); // I should avoid this by checking the lumpnum in HWR_RunWipe
+		break;
 	}
 
 	// Thankfully, this will still work for this scenario
-	grMipmap->width  = fmwidth;
+	grMipmap->width = fmwidth;
 	grMipmap->height = fmheight;
 
 	MakeBlock(grMipmap);
@@ -1195,7 +1195,7 @@ static void HWR_SetPaletteLookup(RGBA_t *palette)
 		{
 			for (r = 0; r < HWR_PALETTE_LUT_SIZE; r++)
 			{
-				lut[b*HWR_PALETTE_LUT_SIZE*HWR_PALETTE_LUT_SIZE+g*HWR_PALETTE_LUT_SIZE+r] =
+				lut[b*HWR_PALETTE_LUT_SIZE*HWR_PALETTE_LUT_SIZE + g*HWR_PALETTE_LUT_SIZE + r] =
 					NearestPaletteColor(r*STEP_SIZE, g*STEP_SIZE, b*STEP_SIZE, palette);
 			}
 		}
