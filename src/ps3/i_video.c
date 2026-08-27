@@ -33,7 +33,7 @@ void *hwSym(const char *funcName, void *handle)
 
 static void PS3_DebugLog(const char *msg)
 {
-	FILE *f = fopen("/dev_hdd0/game/SRB222PS3/USRDIR/log.txt", "a");
+	FILE *f = fopen("", "a");
 	if (f)
 	{
 		fputs(msg, f);
@@ -75,7 +75,7 @@ static void PS3_glMultiTexCoord2fv(GLenum target, const GLfloat *v)
 static void PS3_glColor4ubv(const GLubyte *v)
 {
 	if (v)
-		glColor4ub(v[0], v[1], v[2], v[3]);
+		glColor4ub(v[1], v[2], v[3], v[0]);
 }
 
 static void PS3_glMateriali(GLenum face, GLenum pname, GLint param)
@@ -282,26 +282,17 @@ void I_StartupGraphics(void)
 	if (display_height <= 0) display_height = 720;
 
 	memset(&options, 0, sizeof(PSGLinitOptions));
-	options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_PERSISTENT_MEMORY_SIZE | PSGL_INIT_TRANSIENT_MEMORY_SIZE | PSGL_INIT_FIFO_SIZE | PSGL_INIT_HOST_MEMORY_SIZE;
+	options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_HOST_MEMORY_SIZE,
 	options.maxSPUs = 1;
-	options.initializeSPUs = true;
-	// Previously 1MB/1MB: too small to hold even a single 1024x1024 RGBA
-	// screen texture (4MB) from MakeScreenTexture(). PSGL likely defers the
-	// real upload of texture data into these pools until the texture is
-	// actually used by a draw call, so an undersized pool here can manifest
-	// as a hang on the first draw referencing a texture, rather than a clean
-	// allocation error at TexImage2D time.
-	options.persistentMemorySize = 16 * 1024 * 1024;
-	options.transientMemorySize = 16 * 1024 * 1024;
+	options.initializeSPUs = false;
+	options.persistentMemorySize = 0;
+	options.transientMemorySize = 0;
 	options.errorConsole = 0;
-	options.fifoSize = 2 * 1024 * 1024;
-	options.hostMemorySize = 16 * 1024 * 1024;
+	options.fifoSize = 0;
+	options.hostMemorySize = 4 * 1024 * 1024;
 
 	psglInit(&options);
 
-	// Hook PSGL's own internal diagnostics (texture/framebuffer completeness,
-	// GPU memory allocation failures, Cg errors, etc.) into our debug log,
-	// instead of guessing blindly from the outside.
 	psglSetReportFunction(PS3_PSGLReportCallback);
 	psglEnableReport(PSGL_REPORT_ALL);
 	PS3_DBG("I_StartupGraphics: PSGL report function hooked, PSGL_REPORT_ALL enabled\n");
@@ -310,7 +301,7 @@ void I_StartupGraphics(void)
 	params.enable = PSGL_DEVICE_PARAMETERS_COLOR_FORMAT | PSGL_DEVICE_PARAMETERS_DEPTH_FORMAT | PSGL_DEVICE_PARAMETERS_MULTISAMPLING_MODE | PSGL_DEVICE_PARAMETERS_BUFFERING_MODE | PSGL_DEVICE_PARAMETERS_RESC_ADJUST_ASPECT_RATIO;
 	params.bufferingMode = PSGL_BUFFERING_MODE_TRIPLE;
 	params.colorFormat = GL_ARGB_SCE;
-	params.depthFormat = GL_NONE;
+	params.depthFormat = GL_DEPTH_COMPONENT24;
 	params.multisamplingMode = GL_MULTISAMPLING_NONE_SCE;
 	params.enable |= PSGL_DEVICE_PARAMETERS_RESC_RATIO_MODE;
 	params.rescRatioMode = RESC_RATIO_MODE_FULLSCREEN;

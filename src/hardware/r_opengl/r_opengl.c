@@ -1714,7 +1714,7 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 			if (update)
 				pglTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
 			else
-				pglTexImage2D(GL_TEXTURE_2D, 0, textureformatGL, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
+				pglTexImage2D(GL_TEXTURE_2D, 0, textureformatGL, w, h, 0, textureformatGL, GL_UNSIGNED_BYTE, ptex);
 		}
 	}
 
@@ -3042,7 +3042,7 @@ EXPORT void HWRAPI(DrawScreenTexture)(int tex, FSurfaceInfo *surf, FBITFIELD pol
 
 // Do screen fades!
 EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
-		FBITFIELD polyFlags)
+	FBITFIELD polyFlags)
 {
 	INT32 texsize = 512;
 	float xfix, yfix;
@@ -3077,8 +3077,8 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 	while (texsize < screen_width || texsize < screen_height)
 		texsize <<= 1;
 
-	xfix = 1/((float)(texsize)/((float)((screen_width))));
-	yfix = 1/((float)(texsize)/((float)((screen_height))));
+	xfix = 1 / ((float)(texsize) / ((float)((screen_width))));
+	yfix = 1 / ((float)(texsize) / ((float)((screen_height))));
 
 	// const float screenVerts[12]
 
@@ -3092,9 +3092,9 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 	fix[6] = xfix;
 	fix[7] = 0.0f;
 
-	pglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	pglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	SetBlend(PF_Modulated|PF_NoDepthTest);
+	SetBlend(PF_Modulated | PF_NoDepthTest);
 	pglEnable(GL_TEXTURE_2D);
 
 	pglBindTexture(GL_TEXTURE_2D, screenTextures[firstScreen]);
@@ -3116,7 +3116,7 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 	}
 	else // Blend wipeEnd into screen with the fade mask
 	{
-		SetBlend(PF_Modulated|PF_Translucent|PF_NoDepthTest);
+		SetBlend(PF_Modulated | PF_Translucent | PF_NoDepthTest);
 
 		// Draw the end screen that fades in
 		pglActiveTexture(GL_TEXTURE0);

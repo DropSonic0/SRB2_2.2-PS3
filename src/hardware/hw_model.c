@@ -232,7 +232,6 @@ model_t *LoadModel(const char *filename, int ztag)
 
 void HWR_ReloadModels(void)
 {
-#ifdef HWRENDER
 	size_t i;
 
 	HWR_LoadModels();
@@ -248,7 +247,6 @@ void HWR_ReloadModels(void)
 		if (md2_models[i].model)
 			LoadModelInterpolationSettings(md2_models[i].model);
 	}
-#endif
 }
 
 void LoadModelInterpolationSettings(model_t *model)
