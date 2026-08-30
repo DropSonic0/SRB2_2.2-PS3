@@ -887,8 +887,13 @@ static void SetNoTexture(void)
 	if (tex_downloaded != NOTEXTURE_NUM)
 	{
 		if (NOTEXTURE_NUM == 0)
+		{
 			pglGenTextures(1, &NOTEXTURE_NUM);
-		pglBindTexture(GL_TEXTURE_2D, NOTEXTURE_NUM);
+			pglBindTexture(GL_TEXTURE_2D, NOTEXTURE_NUM);
+			pglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, white);
+		}
+		else
+			pglBindTexture(GL_TEXTURE_2D, NOTEXTURE_NUM);
 		tex_downloaded = NOTEXTURE_NUM;
 	}
 }
@@ -1066,7 +1071,11 @@ EXPORT void HWRAPI(DeleteTexture) (GLMipmap_t *pTexInfo)
 	if (!pTexInfo)
 		return;
 	else if (pTexInfo->downloaded)
+	{
+		if (pTexInfo->downloaded == tex_downloaded)
+			tex_downloaded = 0;
 		pglDeleteTextures(1, (GLuint *)&pTexInfo->downloaded);
+	}
 
 	while (head)
 	{
@@ -1115,6 +1124,12 @@ void Flush(void)
 
 		TexCacheHead = pTexInfo->next;
 		free(pTexInfo);
+	}
+
+	if (NOTEXTURE_NUM)
+	{
+		pglDeleteTextures(1, &NOTEXTURE_NUM);
+		NOTEXTURE_NUM = 0;
 	}
 
 	TexCacheTail = TexCacheHead = NULL; //Hurdler: well, TexCacheHead is already NULL
@@ -1714,7 +1729,7 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 			if (update)
 				pglTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
 			else
-				pglTexImage2D(GL_TEXTURE_2D, 0, textureformatGL, w, h, 0, textureformatGL, GL_UNSIGNED_BYTE, ptex);
+				pglTexImage2D(GL_TEXTURE_2D, 0, textureformatGL, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
 		}
 	}
 

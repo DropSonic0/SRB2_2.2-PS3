@@ -65,7 +65,7 @@ typedef char GLchar;
 
 static inline void pglColor4ubv(const GLubyte *v)
 {
-	glColor4ub(v[1], v[2], v[3], v[0]); // red, green, blue, alpha
+	glColor4ub(v[0], v[1], v[2], v[3]);
 }
 
 static inline void pglPolygonMode(GLenum face, GLenum mode)

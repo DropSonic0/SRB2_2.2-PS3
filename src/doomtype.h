@@ -352,50 +352,41 @@ extern "C" {
 #define ATTRNOINLINE
 #endif
 
-	/* Miscellaneous types that don't fit anywhere else (Can this be changed?) */
+/* Miscellaneous types that don't fit anywhere else (Can this be changed?) */
 
-	typedef struct
-	{
-#ifdef __CELLOS_LV2__
-		UINT8 alpha;
-		UINT8 red;
-		UINT8 green;
-		UINT8 blue;
-#else
-		UINT8 red;
-		UINT8 green;
-		UINT8 blue;
-		UINT8 alpha;
-#endif
-	} byteColor_t;
+typedef struct
+{
+	UINT8 red;
+	UINT8 green;
+	UINT8 blue;
+	UINT8 alpha;
+} byteColor_t;
 
-	union FColorRGBA
-	{
-		UINT32 rgba;
-		byteColor_t s;
-	} ATTRPACK;
-	typedef union FColorRGBA RGBA_t;
+union FColorRGBA
+{
+	UINT32 rgba;
+	byteColor_t s;
+} ATTRPACK;
+typedef union FColorRGBA RGBA_t;
 
-	typedef enum
-	{
-		postimg_none,
-		postimg_water,
-		postimg_motion,
-		postimg_flip,
-		postimg_heat
-	} postimg_t;
+typedef enum
+{
+	postimg_none,
+	postimg_water,
+	postimg_motion,
+	postimg_flip,
+	postimg_heat
+} postimg_t;
 
-	typedef UINT32 lumpnum_t; // 16 : 16 unsigned long (wad num: lump num)
+typedef UINT32 lumpnum_t; // 16 : 16 unsigned long (wad num: lump num)
 #define LUMPERROR UINT32_MAX
 
-	typedef UINT32 tic_t;
+typedef UINT32 tic_t;
 #define INFTICS UINT32_MAX
 
 #include "endian.h" // This is needed to make sure the below macro acts correctly in big endian builds
 
-#ifdef __CELLOS_LV2__
-#define UINT2RGBA(a) (UINT32)(((a & 0xFF) << 24) | (((a >> 24) & 0xFF) << 16) | (((a >> 16) & 0xFF) << 8) | ((a >> 8) & 0xFF))
-#elif defined(SRB2_BIG_ENDIAN)
+#ifdef SRB2_BIG_ENDIAN
 #define UINT2RGBA(a) a
 #else
 #define UINT2RGBA(a) (UINT32)((a&0xff)<<24)|((a&0xff00)<<8)|((a&0xff0000)>>8)|(((UINT32)a&0xff000000)>>24)
