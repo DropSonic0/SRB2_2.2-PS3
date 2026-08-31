@@ -6125,8 +6125,27 @@ void HWR_DoWipe(UINT8 wipenum, UINT8 scrnnum)
 	}
 	else
 	{
+#ifdef __CELLOS_LV2__
+		FSurfaceInfo surf = { 0 };
+		FBITFIELD polyflags = PF_Modulated | PF_NoDepthTest;
+
+		// Calculate alpha based on frame scrnnum (smooth progression across ~16 frames)
+		UINT8 alpha = (scrnnum + 1) * 16 > 255 ? 255 : (UINT8)((scrnnum + 1) * 16);
+
+		surf.PolyColor.s.red = 255;
+		surf.PolyColor.s.green = 255;
+		surf.PolyColor.s.blue = 255;
+		surf.PolyColor.s.alpha = alpha;
+
+		if (wipestyleflags & WSF_TOWHITE)
+			polyflags |= PF_Additive;
+
+		HWD.pfnDoScreenWipe(HWD_SCREENTEXTURE_WIPE_START, HWD_SCREENTEXTURE_WIPE_END,
+			&surf, polyflags);
+#else
 		HWD.pfnDoScreenWipe(HWD_SCREENTEXTURE_WIPE_START, HWD_SCREENTEXTURE_WIPE_END,
 			NULL, 0);
+#endif
 	}
 }
 

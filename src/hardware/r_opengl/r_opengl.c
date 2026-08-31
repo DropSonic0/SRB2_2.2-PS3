@@ -3070,6 +3070,25 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 
 	INT32 fademaskdownloaded = tex_downloaded; // the fade mask that has been set
 
+#ifdef __CELLOS_LV2__
+	static float ps3_screenVerts[12] __attribute__((aligned(128))) =
+	{
+		-1.0f, -1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 1.0f
+	};
+
+	static float ps3_defaultST[8] __attribute__((aligned(128))) =
+	{
+		0.0f, 1.0f,
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f
+	};
+
+	static float ps3_fix[8] __attribute__((aligned(128)));
+#else
 	const float screenVerts[12] =
 	{
 		-1.0f, -1.0f, 1.0f,
@@ -3087,6 +3106,7 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 		1.0f, 0.0f,
 		1.0f, 1.0f
 	};
+#endif
 
 	int firstScreen;
 	if (surf && surf->PolyColor.s.alpha == 255)
@@ -3101,9 +3121,16 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 	xfix = 1 / ((float)(texsize) / ((float)((screen_width))));
 	yfix = 1 / ((float)(texsize) / ((float)((screen_height))));
 
-	// const float screenVerts[12]
-
-	// float fix[8];
+#ifdef __CELLOS_LV2__
+	ps3_fix[0] = 0.0f;
+	ps3_fix[1] = 0.0f;
+	ps3_fix[2] = 0.0f;
+	ps3_fix[3] = yfix;
+	ps3_fix[4] = xfix;
+	ps3_fix[5] = yfix;
+	ps3_fix[6] = xfix;
+	ps3_fix[7] = 0.0f;
+#else
 	fix[0] = 0.0f;
 	fix[1] = 0.0f;
 	fix[2] = 0.0f;
@@ -3112,6 +3139,7 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 	fix[5] = yfix;
 	fix[6] = xfix;
 	fix[7] = 0.0f;
+#endif
 
 	pglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -3120,10 +3148,52 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 
 	pglBindTexture(GL_TEXTURE_2D, screenTextures[firstScreen]);
 	pglColor4ubv(white);
+#ifdef __CELLOS_LV2__
+	pglBindBuffer(GL_ARRAY_BUFFER, 0);
+	pglDisableClientState(GL_COLOR_ARRAY);
+	pglDisableClientState(GL_NORMAL_ARRAY);
+	pglEnableClientState(GL_VERTEX_ARRAY);
+	pglEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	pglTexCoordPointer(2, GL_FLOAT, 0, ps3_fix);
+	pglVertexPointer(3, GL_FLOAT, 0, ps3_screenVerts);
+#else
 	pglTexCoordPointer(2, GL_FLOAT, 0, fix);
 	pglVertexPointer(3, GL_FLOAT, 0, screenVerts);
+#endif
 	pglDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
+#ifdef __CELLOS_LV2__
+	// Single-texture blend of wipeEnd onto firstScreen (supports both translucent and additive white fades)
+	FBITFIELD blend = PF_Modulated | PF_NoDepthTest | ((polyFlags & PF_Additive) ? PF_Additive : PF_Translucent);
+	SetBlend(blend);
+	pglEnable(GL_TEXTURE_2D);
+	pglBindTexture(GL_TEXTURE_2D, screenTextures[wipeEnd]);
+
+	if (surf)
+	{
+		UINT8 alpha = surf->PolyColor.s.alpha;
+		GLubyte color[4] = { surf->PolyColor.s.red, surf->PolyColor.s.green, surf->PolyColor.s.blue, alpha };
+		pglColor4ubv(color);
+	}
+	else
+		pglColor4ubv(white);
+
+	pglTexCoordPointer(2, GL_FLOAT, 0, ps3_fix);
+	pglVertexPointer(3, GL_FLOAT, 0, ps3_screenVerts);
+	pglDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+	tex_downloaded = screenTextures[wipeEnd];
+
+	pglColor4ubv(white);
+	CurrentPolyFlags = 0;
+
+	pglActiveTexture(GL_TEXTURE1);
+	pglDisable(GL_TEXTURE_2D);
+	pglActiveTexture(GL_TEXTURE2);
+	pglDisable(GL_TEXTURE_2D);
+	pglActiveTexture(GL_TEXTURE0);
+	pglClientActiveTexture(GL_TEXTURE0);
+#else
 	if (surf)
 	{
 		// Draw fade mask to screen using surf and polyFlags
@@ -3133,7 +3203,6 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 		pglVertexPointer(3, GL_FLOAT, 0, screenVerts);
 		PreparePolygon(surf, NULL, polyFlags);
 		pglDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-#ifndef __CELLOS_LV2__
 	}
 	else // Blend wipeEnd into screen with the fade mask
 	{
@@ -3151,8 +3220,6 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 
 		pglTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-		// const float defaultST[8]
-
 		pglClientActiveTexture(GL_TEXTURE0);
 		pglTexCoordPointer(2, GL_FLOAT, 0, fix);
 		pglVertexPointer(3, GL_FLOAT, 0, screenVerts);
@@ -3167,8 +3234,8 @@ EXPORT void HWRAPI(DoScreenWipe)(int wipeStart, int wipeEnd, FSurfaceInfo *surf,
 		pglActiveTexture(GL_TEXTURE0);
 		pglClientActiveTexture(GL_TEXTURE0);
 		tex_downloaded = screenTextures[wipeEnd];
-#endif
 	}
+#endif
 }
 
 // Create a texture from the screen.
