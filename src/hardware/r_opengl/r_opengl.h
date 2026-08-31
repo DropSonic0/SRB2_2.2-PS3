@@ -63,27 +63,10 @@ typedef char GLchar;
 #define glClearDepth glClearDepthf
 #define glDepthRange glDepthRangef
 
-static inline void pglColor4ubv(const GLubyte *v)
-{
-	glColor4ub(v[0], v[1], v[2], v[3]);
-}
-
 static inline void pglPolygonMode(GLenum face, GLenum mode)
 {
 	(void)face;
 	(void)mode;
-}
-
-static inline void pglTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const GLvoid *pixels)
-{
-	(void)target;
-	(void)level;
-	(void)internalformat;
-	(void)width;
-	(void)border;
-	(void)format;
-	(void)type;
-	(void)pixels;
 }
 
 #elif defined(HAVE_SDL)

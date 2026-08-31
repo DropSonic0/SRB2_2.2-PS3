@@ -4,6 +4,7 @@
 #include "../screen.h"
 #include "../v_video.h"
 #include "../i_system.h"
+#include "../console.h"
 #include "../doomstat.h"
 #include "../s_sound.h"
 #include "../netcode/d_netcmd.h"
@@ -60,37 +61,6 @@ UINT32 display_height = 720;
 boolean LoadGL(void)
 {
 	return true;
-}
-
-static void PS3_glMultiTexCoord2f(GLenum target, GLfloat s, GLfloat t)
-{
-	(void)target; (void)s; (void)t;
-}
-
-static void PS3_glMultiTexCoord2fv(GLenum target, const GLfloat *v)
-{
-	(void)target; (void)v;
-}
-
-static void PS3_glColor4ubv(const GLubyte *v)
-{
-	if (v)
-		glColor4ub(v[1], v[2], v[3], v[0]);
-}
-
-static void PS3_glMateriali(GLenum face, GLenum pname, GLint param)
-{
-	glMaterialf(face, pname, (GLfloat)param);
-}
-
-static void PS3_glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const GLvoid *pixels)
-{
-	(void)target; (void)level; (void)internalformat; (void)width; (void)border; (void)format; (void)type; (void)pixels;
-}
-
-static void PS3_glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLvoid *pixels)
-{
-	(void)target; (void)level; (void)format; (void)type; (void)pixels;
 }
 
 void *GetGLFunc(const char *name)
@@ -157,15 +127,6 @@ void *GetGLFunc(const char *name)
 	MAP_GL(glDeleteBuffers);
 	MAP_GL(glBlendEquation);
 
-#undef MAP_GL
-
-	if (strcmp(name, "glMultiTexCoord2f") == 0) return (void*)PS3_glMultiTexCoord2f;
-	if (strcmp(name, "glMultiTexCoord2fv") == 0) return (void*)PS3_glMultiTexCoord2fv;
-	if (strcmp(name, "glColor4ubv") == 0) return (void*)PS3_glColor4ubv;
-	if (strcmp(name, "glMateriali") == 0) return (void*)PS3_glMateriali;
-	if (strcmp(name, "glTexImage1D") == 0) return (void*)PS3_glTexImage1D;
-	if (strcmp(name, "glGetTexImage") == 0) return (void*)PS3_glGetTexImage;
-
 	return NULL;
 }
 #endif
@@ -189,8 +150,19 @@ static RGBA_t current_palette[256];
 static UINT32 gl_palette[256];
 #endif
 
-static INT32 windowedModes[1][2] = {
-	{ 640, 400 }
+#define MAXWINMODES 9
+
+static INT32 windowedModes[MAXWINMODES][2] =
+{
+	{ 640, 400 },
+	{ 1280, 720 },
+	{ 1152, 864 },
+	{ 1024, 768 },
+	{ 960, 600 },
+	{ 800, 600 },
+	{ 640, 480 },
+	{ 320, 240 },
+	{ 320, 200 },
 };
 
 void VID_StartupOpenGL(void)
@@ -283,7 +255,7 @@ void I_StartupGraphics(void)
 
 	memset(&options, 0, sizeof(PSGLinitOptions));
 	options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_HOST_MEMORY_SIZE,
-	options.maxSPUs = 1;
+		options.maxSPUs = 1;
 	options.initializeSPUs = false;
 	options.persistentMemorySize = 0;
 	options.transientMemorySize = 0;
@@ -436,28 +408,38 @@ void I_SetPalette(RGBA_t *palette)
 
 INT32 VID_NumModes(void)
 {
-	return 1;
+	return MAXWINMODES;
 }
 
 INT32 VID_GetModeForSize(INT32 w, INT32 h)
 {
-	(void)w;
-	(void)h;
-	return 0;
+	int i;
+	for (i = 0; i < MAXWINMODES; i++)
+	{
+		if (windowedModes[i][0] == w && windowedModes[i][1] == h)
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
 void VID_PrepareModeList(void){}
 
 INT32 VID_SetMode(INT32 modenum)
 {
+	if (modenum < 0 || modenum >= MAXWINMODES)
+		modenum = VID_GetModeForSize(640, 400);
+
 	if (modenum < 0)
 		modenum = 0;
 
 	vid.recalc = 1;
+	con_recalc = true;
 	vid.bpp = 1;
-	vid.width = windowedModes[0][0];
-	vid.height = windowedModes[0][1];
-	vid.modenum = 0;
+	vid.width = windowedModes[modenum][0];
+	vid.height = windowedModes[modenum][1];
+	vid.modenum = modenum;
 
 	// Set up game's software render buffer
 	vid.rowbytes = vid.width * vid.bpp;
@@ -517,8 +499,15 @@ void VID_CheckGLLoaded(rendermode_t oldrender)
 
 const char *VID_GetModeName(INT32 modenum)
 {
-	(void)modenum;
-	return "640x400";
+	static char vidModeName[MAXWINMODES][32];
+
+	if (modenum < 0 || modenum >= MAXWINMODES)
+		return NULL;
+
+	snprintf(vidModeName[modenum], sizeof(vidModeName[modenum]), "%dx%d",
+		windowedModes[modenum][0], windowedModes[modenum][1]);
+
+	return vidModeName[modenum];
 }
 
 UINT32 I_GetRefreshRate(void) { return 35; }

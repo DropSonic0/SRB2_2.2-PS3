@@ -281,8 +281,8 @@ FUNCPRINTF static void GL_MSG_Error(const char *format, ...)
 #define pglTranslatef glTranslatef
 
 /* Drawing Functions */
-#ifndef __CELLOS_LV2__
-#define pglColor4ubv glColor4ubv
+#ifndef pglColor4ubv
+#define pglColor4ubv(v) glColor4ub((v)[0], (v)[1], (v)[2], (v)[3])
 #endif
 #define pglVertexPointer glVertexPointer
 #define pglNormalPointer glNormalPointer
@@ -307,6 +307,10 @@ FUNCPRINTF static void GL_MSG_Error(const char *format, ...)
 /* Texture mapping */
 #define pglTexEnvi glTexEnvi
 #define pglTexParameteri glTexParameteri
+#ifndef pglTexImage1D
+#define pglTexImage1D(target, level, internalformat, width, border, format, type, pixels) \
+	glTexImage2D(GL_TEXTURE_2D, level, internalformat, width, 1, border, format, type, pixels)
+#endif
 #define pglTexImage2D glTexImage2D
 #define pglTexSubImage2D glTexSubImage2D
 
@@ -1499,8 +1503,10 @@ EXPORT void HWRAPI(SetBlend) (FBITFIELD PolyFlags)
 				pglTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 			}
 			else
-			{   // colour from texture is unchanged before blending
+			{
+				static const UINT8 white_color[4] = { 255, 255, 255, 255 };
 				pglTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+				pglColor4ubv(white_color);
 			}
 		}
 

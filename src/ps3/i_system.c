@@ -296,17 +296,17 @@ void I_InitPS3Memory(void) {
 	if (ps3_mem_inited) return;
 
 	sys_memory_info_t mem_info;
-	size_t pool_size = 165 * 1024 * 1024; // Default fallback to 170MB
+	size_t pool_size = 160 * 1024 * 1024; // Default fallback to 160MB
 
 	if (sys_memory_get_user_memory_size(&mem_info) == 0) {
 		size_t avail = mem_info.available_user_memory;
-		if (avail > 32 * 1024 * 1024) {
-			pool_size = avail - (32 * 1024 * 1024);
+		if (avail > 35 * 1024 * 1024) {
+			pool_size = avail - (35 * 1024 * 1024);
 		}
 	}
 
 	if (pool_size < 32 * 1024 * 1024) pool_size = 32 * 1024 * 1024;
-	if (pool_size > 165 * 1024 * 1024) pool_size = 165 * 1024 * 1024;
+	if (pool_size > 160 * 1024 * 1024) pool_size = 160 * 1024 * 1024;
 
 	// Align to 1MB boundary
 	pool_size = (pool_size / (1024 * 1024)) * (1024 * 1024);
