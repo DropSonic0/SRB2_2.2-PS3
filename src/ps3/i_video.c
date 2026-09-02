@@ -256,12 +256,12 @@ void I_StartupGraphics(void)
 	memset(&options, 0, sizeof(PSGLinitOptions));
 	options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_HOST_MEMORY_SIZE,
 		options.maxSPUs = 1;
-	options.initializeSPUs = false;
+	options.initializeSPUs = true;
 	options.persistentMemorySize = 0;
 	options.transientMemorySize = 0;
 	options.errorConsole = 0;
 	options.fifoSize = 0;
-	options.hostMemorySize = 4 * 1024 * 1024;
+	options.hostMemorySize = 8 * 1024 * 1024;
 
 	psglInit(&options);
 
@@ -522,10 +522,6 @@ void I_FinishUpdate(void)
 
 	SCR_CalculateFPS();
 
-	if (rendermode == render_soft)
-	{
-		if (screens[0] && vid.width > 0 && vid.height > 0)
-		{
 			if (marathonmode)
 				SCR_DisplayMarathonInfo();
 
@@ -539,7 +535,12 @@ void I_FinishUpdate(void)
 			if (cv_showping.value && netgame && consoleplayer != serverplayer)
 				SCR_DisplayLocalPing();
 
-			static int gl_buffer_w = 0;
+			if (rendermode == render_soft)
+			{
+				if (screens[0] && vid.width > 0 && vid.height > 0)
+				{
+
+					static int gl_buffer_w = 0;
 			static int gl_buffer_h = 0;
 
 			// Allocate gl_buffer with exact dimensions (640x400)

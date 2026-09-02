@@ -803,14 +803,15 @@ GLMapTexture_t *HWR_GetTexture(INT32 tex, boolean chromakeyed)
 		grMipmap = originalMipmap->nextcolormap;
 	}
 
-	if (!grMipmap->data)
+	if (!grMipmap->downloaded && !grMipmap->data)
 		HWR_GenerateTexture(tex, grtex, grMipmap);
 
 	if (!grMipmap->downloaded)
 		HWD.pfnSetTexture(grMipmap);
 	HWR_SetCurrentTexture(grMipmap);
 
-	Z_ChangeTag(grMipmap->data, PU_HWRCACHE_UNLOCKED);
+	if (grMipmap->data)
+		Z_ChangeTag(grMipmap->data, PU_HWRCACHE_UNLOCKED);
 
 	return grtex;
 }
@@ -851,7 +852,8 @@ void HWR_GetRawFlat(lumpnum_t flatlumpnum)
 	HWR_SetCurrentTexture(grmip);
 
 	// The system-memory data can be purged now.
-	Z_ChangeTag(grmip->data, PU_HWRCACHE_UNLOCKED);
+	if (grmip->data)
+		Z_ChangeTag(grmip->data, PU_HWRCACHE_UNLOCKED);
 }
 
 static void MakeLevelFlatMipmap(GLMipmap_t *grMipmap, INT32 texturenum, UINT16 flags)
@@ -881,7 +883,7 @@ void HWR_GetLevelFlat(levelflat_t *levelflat, boolean chromakeyed)
 	if (!originalMipmap->downloaded)
 		MakeLevelFlatMipmap(originalMipmap, texturenum, TF_WRAPXY);
 
-	if (!originalMipmap->data)
+	if (!originalMipmap->downloaded && !originalMipmap->data)
 	{
 		size_t size = originalMipmap->width * originalMipmap->height;
 		memcpy(Z_Malloc(size, PU_HWRCACHE, &originalMipmap->data), R_GetFlatForTexture(texturenum), size);
@@ -890,7 +892,7 @@ void HWR_GetLevelFlat(levelflat_t *levelflat, boolean chromakeyed)
 	// If chroma-keyed, create or use a different mipmap for the variant
 	if (chromakeyed)
 	{
-		if (!originalMipmap->data)
+		if (!originalMipmap->downloaded && !originalMipmap->data)
 		{
 			HWR_SetCurrentTexture(NULL);
 			return;
@@ -909,6 +911,12 @@ void HWR_GetLevelFlat(levelflat_t *levelflat, boolean chromakeyed)
 		// Upload and bind the variant texture instead of the original one
 		grMipmap = originalMipmap->nextcolormap;
 
+		if (!grMipmap->downloaded && !originalMipmap->data)
+		{
+			size_t size = originalMipmap->width * originalMipmap->height;
+			memcpy(Z_Malloc(size, PU_HWRCACHE, &originalMipmap->data), R_GetFlatForTexture(texturenum), size);
+		}
+
 		// Use the original texture's pixel data
 		// It can just be a pointer to it, since the r_opengl backend deals with the pixels
 		// that are supposed to be transparent.
@@ -916,10 +924,14 @@ void HWR_GetLevelFlat(levelflat_t *levelflat, boolean chromakeyed)
 	}
 
 	if (!grMipmap->downloaded)
+	{
 		HWD.pfnSetTexture(grMipmap);
+		originalMipmap->data = NULL;
+	}
 	HWR_SetCurrentTexture(grMipmap);
 
-	Z_ChangeTag(grMipmap->data, PU_HWRCACHE_UNLOCKED);
+	if (grMipmap->data)
+		Z_ChangeTag(grMipmap->data, PU_HWRCACHE_UNLOCKED);
 }
 
 // --------------------+
@@ -937,7 +949,8 @@ static void HWR_LoadPatchMipmap(patch_t *patch, GLMipmap_t *grMipmap)
 	HWR_SetCurrentTexture(grMipmap);
 
 	// The system-memory data can be purged now.
-	Z_ChangeTag(grMipmap->data, PU_HWRCACHE_UNLOCKED);
+	if (grMipmap->data)
+		Z_ChangeTag(grMipmap->data, PU_HWRCACHE_UNLOCKED);
 }
 
 // ----------------------+
@@ -957,7 +970,8 @@ static void HWR_UpdatePatchMipmap(patch_t *patch, GLMipmap_t *grMipmap)
 	HWR_SetCurrentTexture(grMipmap);
 
 	// The system-memory data can be purged now.
-	Z_ChangeTag(grMipmap->data, PU_HWRCACHE_UNLOCKED);
+	if (grMipmap->data)
+		Z_ChangeTag(grMipmap->data, PU_HWRCACHE_UNLOCKED);
 }
 
 // -----------------+

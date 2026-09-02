@@ -8131,7 +8131,8 @@ Z_FreeTags(PU_LEVEL, PU_PURGELEVEL - 1);
 		F_WipeColorFill(levelfadecol);
 
 	if (precache || dedicated)
-		R_PrecacheLevel();
+			R_PrecacheLevel();
+
 
 	nextmapoverride = 0;
 	skipstats = 0;

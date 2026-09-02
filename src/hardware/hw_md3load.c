@@ -1,10 +1,10 @@
 /*
-	From the 'Wizard2' engine by Spaddlewit Inc. ( http://www.spaddlewit.com )
-	An experimental work-in-progress.
+From the 'Wizard2' engine by Spaddlewit Inc. ( http://www.spaddlewit.com )
+An experimental work-in-progress.
 
-	Donated to Sonic Team Junior and adapted to work with
-	Sonic Robo Blast 2. The license of this code matches whatever
-	the licensing is for Sonic Robo Blast 2.
+Donated to Sonic Team Junior and adapted to work with
+Sonic Robo Blast 2. The license of this code matches whatever
+the licensing is for Sonic Robo Blast 2.
 */
 
 #include <stdlib.h>
@@ -187,13 +187,40 @@ model_t *MD3_LoadModel(const char *fileName, int ztag, boolean useFloat)
 	// get pointer to file header
 	mdh = (md3modelHeader*)buffer;
 
+#ifdef SRB2_BIG_ENDIAN
+	mdh->ident = LONG(mdh->ident);
+	mdh->version = LONG(mdh->version);
+	mdh->flags = LONG(mdh->flags);
+	mdh->numFrames = LONG(mdh->numFrames);
+	mdh->numTags = LONG(mdh->numTags);
+	mdh->numSurfaces = LONG(mdh->numSurfaces);
+	mdh->numSkins = LONG(mdh->numSkins);
+	mdh->offsetFrames = LONG(mdh->offsetFrames);
+	mdh->offsetTags = LONG(mdh->offsetTags);
+	mdh->offsetSurfaces = LONG(mdh->offsetSurfaces);
+	mdh->offsetEnd = LONG(mdh->offsetEnd);
+#endif
+
 	retModel->numMeshes = mdh->numSurfaces;
 
 	retModel->numMaterials = 0;
 	surfEnd = 0;
 	for (i = 0; i < mdh->numSurfaces; i++)
 	{
-		md3Surface *mdS = (md3Surface*)&buffer[mdh->offsetSurfaces];
+		md3Surface *mdS = (md3Surface*)&buffer[mdh->offsetSurfaces + surfEnd];
+#ifdef SRB2_BIG_ENDIAN
+		mdS->ident = LONG(mdS->ident);
+		mdS->flags = LONG(mdS->flags);
+		mdS->numFrames = LONG(mdS->numFrames);
+		mdS->numShaders = LONG(mdS->numShaders);
+		mdS->numVerts = LONG(mdS->numVerts);
+		mdS->numTriangles = LONG(mdS->numTriangles);
+		mdS->offsetTriangles = LONG(mdS->offsetTriangles);
+		mdS->offsetShaders = LONG(mdS->offsetShaders);
+		mdS->offsetST = LONG(mdS->offsetST);
+		mdS->offsetXYZNormal = LONG(mdS->offsetXYZNormal);
+		mdS->offsetEnd = LONG(mdS->offsetEnd);
+#endif
 		surfEnd += mdS->offsetEnd;
 
 		retModel->numMaterials += mdS->numShaders;
@@ -230,7 +257,7 @@ model_t *MD3_LoadModel(const char *fileName, int ztag, boolean useFloat)
 	retModel->meshes = (mesh_t*)Z_Calloc(sizeof(mesh_t)*retModel->numMeshes, ztag, 0);
 
 	frames = (md3Frame*)&buffer[mdh->offsetFrames];
-	retModel->frameNames = (char*)Z_Calloc(mdh->numFrames*16, ztag, 0);
+	retModel->frameNames = (char*)Z_Calloc(mdh->numFrames * 16, ztag, 0);
 	fname = retModel->frameNames;
 	for (i = 0; i < mdh->numFrames; i++)
 	{
@@ -251,56 +278,90 @@ model_t *MD3_LoadModel(const char *fileName, int ztag, boolean useFloat)
 
 		for (j = 0; j < mdS->numShaders; j++, matCount++)
 		{
+#ifdef SRB2_BIG_ENDIAN
+			mdShader[j].shaderIndex = LONG(mdShader[j].shaderIndex);
+#endif
 			size_t len = strlen(mdShader[j].name);
-			mdShader[j].name[len-1] = 'z';
-			mdShader[j].name[len-2] = 'u';
-			mdShader[j].name[len-3] = 'b';
+			mdShader[j].name[len - 1] = 'z';
+			mdShader[j].name[len - 2] = 'u';
+			mdShader[j].name[len - 3] = 'b';
 
 			// Load material
-/*			retModel->materials[matCount].texture = Texture::ReadTexture(mdShader[j].name, ZT_TEXTURE);
+			/*			retModel->materials[matCount].texture = Texture::ReadTexture(mdShader[j].name, ZT_TEXTURE);
 
 			if (!systemSucks)
 			{
-				// Check for a normal map...??
-				char openfilename[1024];
-				char normalMapName[1024];
-				strcpy(normalMapName, mdShader[j].name);
-				len = strlen(normalMapName);
-				char *ptr = &normalMapName[len];
-				ptr--; // z
-				ptr--; // u
-				ptr--; // b
-				ptr--; // .
-				*ptr++ = '_';
-				*ptr++ = 'n';
-				*ptr++ = '.';
-				*ptr++ = 'b';
-				*ptr++ = 'u';
-				*ptr++ = 'z';
-				*ptr++ = '\0';
+			// Check for a normal map...??
+			char openfilename[1024];
+			char normalMapName[1024];
+			strcpy(normalMapName, mdShader[j].name);
+			len = strlen(normalMapName);
+			char *ptr = &normalMapName[len];
+			ptr--; // z
+			ptr--; // u
+			ptr--; // b
+			ptr--; // .
+			*ptr++ = '_';
+			*ptr++ = 'n';
+			*ptr++ = '.';
+			*ptr++ = 'b';
+			*ptr++ = 'u';
+			*ptr++ = 'z';
+			*ptr++ = '\0';
 
-				sprintf(openfilename, "%s/%s", "textures", normalMapName);
-				// Convert backslashes to forward slashes
-				for (int k = 0; k < 1024; k++)
-				{
-					if (openfilename[k] == '\0')
-						break;
+			sprintf(openfilename, "%s/%s", "textures", normalMapName);
+			// Convert backslashes to forward slashes
+			for (int k = 0; k < 1024; k++)
+			{
+			if (openfilename[k] == '\0')
+			break;
 
-					if (openfilename[k] == '\\')
-						openfilename[k] = '/';
-				}
+			if (openfilename[k] == '\\')
+			openfilename[k] = '/';
+			}
 
-				Resource::resource_t *res = Resource::Open(openfilename);
-				if (res)
-				{
-					Resource::Close(res);
-					retModel->materials[matCount].lightmap = Texture::ReadTexture(normalMapName, ZT_TEXTURE);
-				}
+			Resource::resource_t *res = Resource::Open(openfilename);
+			if (res)
+			{
+			Resource::Close(res);
+			retModel->materials[matCount].lightmap = Texture::ReadTexture(normalMapName, ZT_TEXTURE);
+			}
 			}*/
 		}
 
 		retModel->meshes[i].numFrames = mdS->numFrames;
 		retModel->meshes[i].numTriangles = mdS->numTriangles;
+
+#ifdef SRB2_BIG_ENDIAN
+		{
+			md3Triangle *mdT_swap = (md3Triangle*)((char*)mdS + mdS->offsetTriangles);
+			md3TexCoord *mdST_swap = (md3TexCoord*)((char*)mdS + mdS->offsetST);
+			int k_swap, f_swap;
+
+			for (j = 0; j < mdS->numTriangles; j++)
+			{
+				mdT_swap[j].index[0] = LONG(mdT_swap[j].index[0]);
+				mdT_swap[j].index[1] = LONG(mdT_swap[j].index[1]);
+				mdT_swap[j].index[2] = LONG(mdT_swap[j].index[2]);
+			}
+			for (j = 0; j < mdS->numVerts; j++)
+			{
+				mdST_swap[j].st[0] = SwapFloat(mdST_swap[j].st[0]);
+				mdST_swap[j].st[1] = SwapFloat(mdST_swap[j].st[1]);
+			}
+			for (f_swap = 0; f_swap < mdS->numFrames; f_swap++)
+			{
+				md3Vertex *mdV_swap = (md3Vertex*)((char*)mdS + mdS->offsetXYZNormal + (mdS->numVerts * f_swap * sizeof(md3Vertex)));
+				for (k_swap = 0; k_swap < mdS->numVerts; k_swap++)
+				{
+					mdV_swap[k_swap].x = SHORT(mdV_swap[k_swap].x);
+					mdV_swap[k_swap].y = SHORT(mdV_swap[k_swap].y);
+					mdV_swap[k_swap].z = SHORT(mdV_swap[k_swap].z);
+					mdV_swap[k_swap].n = SHORT(mdV_swap[k_swap].n);
+				}
+			}
+		}
+#endif
 
 		if (!useFloat) // 'tinyframe' mode with indices
 		{
@@ -312,7 +373,7 @@ model_t *MD3_LoadModel(const char *fileName, int ztag, boolean useFloat)
 
 			retModel->meshes[i].tinyframes = (tinyframe_t*)Z_Calloc(sizeof(tinyframe_t)*mdS->numFrames, ztag, 0);
 			retModel->meshes[i].numVertices = mdS->numVerts;
-			retModel->meshes[i].uvs = (float*)Z_Malloc(sizeof(float)*2*mdS->numVerts, ztag, 0);
+			retModel->meshes[i].uvs = (float*)Z_Malloc(sizeof(float)* 2 * mdS->numVerts, ztag, 0);
 			for (j = 0; j < mdS->numFrames; j++)
 			{
 				short *vertptr;
@@ -320,16 +381,16 @@ model_t *MD3_LoadModel(const char *fileName, int ztag, boolean useFloat)
 				// char *tanptr;
 				int k;
 				md3Vertex *mdV = (md3Vertex*)((char*)mdS + mdS->offsetXYZNormal + (mdS->numVerts*j*sizeof(md3Vertex)));
-				retModel->meshes[i].tinyframes[j].vertices = (short*)Z_Malloc(sizeof(short)*3*mdS->numVerts, ztag, 0);
-				retModel->meshes[i].tinyframes[j].normals = (char*)Z_Malloc(sizeof(char)*3*mdS->numVerts, ztag, 0);
+				retModel->meshes[i].tinyframes[j].vertices = (short*)Z_Malloc(sizeof(short)* 3 * mdS->numVerts, ztag, 0);
+				retModel->meshes[i].tinyframes[j].normals = (char*)Z_Malloc(sizeof(char)* 3 * mdS->numVerts, ztag, 0);
 
-//				if (retModel->materials[0].lightmap)
-//					retModel->meshes[i].tinyframes[j].tangents = (char*)malloc(sizeof(char));//(char*)Z_Malloc(sizeof(char)*3*mdS->numVerts, ztag);
-				retModel->meshes[i].indices = (unsigned short*)Z_Malloc(sizeof(unsigned short) * 3 * mdS->numTriangles, ztag, 0);
+				//				if (retModel->materials[0].lightmap)
+				//					retModel->meshes[i].tinyframes[j].tangents = (char*)malloc(sizeof(char));//(char*)Z_Malloc(sizeof(char)*3*mdS->numVerts, ztag);
+				retModel->meshes[i].indices = (unsigned short*)Z_Malloc(sizeof(unsigned short)* 3 * mdS->numTriangles, ztag, 0);
 				vertptr = retModel->meshes[i].tinyframes[j].vertices;
 				normptr = retModel->meshes[i].tinyframes[j].normals;
 
-//				tanptr = retModel->meshes[i].tinyframes[j].tangents;
+				//				tanptr = retModel->meshes[i].tinyframes[j].tangents;
 				retModel->meshes[i].tinyframes[j].material = &retModel->materials[i];
 
 				for (k = 0; k < mdS->numVerts; k++)
@@ -387,17 +448,17 @@ model_t *MD3_LoadModel(const char *fileName, int ztag, boolean useFloat)
 
 			retModel->meshes[i].numVertices = mdS->numTriangles * 3;//mdS->numVerts;
 			retModel->meshes[i].frames = (mdlframe_t*)Z_Calloc(sizeof(mdlframe_t)*mdS->numFrames, ztag, 0);
-			retModel->meshes[i].uvs = (float*)Z_Malloc(sizeof(float)*2*mdS->numTriangles*3, ztag, 0);
+			retModel->meshes[i].uvs = (float*)Z_Malloc(sizeof(float)* 2 * mdS->numTriangles * 3, ztag, 0);
 
 			for (j = 0; j < mdS->numFrames; j++)
 			{
 				float *vertptr;
 				float *normptr;
 				md3Vertex *mdV = (md3Vertex*)((char*)mdS + mdS->offsetXYZNormal + (mdS->numVerts*j*sizeof(md3Vertex)));
-				retModel->meshes[i].frames[j].vertices = (float*)Z_Malloc(sizeof(float)*3*mdS->numTriangles*3, ztag, 0);
-				retModel->meshes[i].frames[j].normals = (float*)Z_Malloc(sizeof(float)*3*mdS->numTriangles*3, ztag, 0);
-//				if (retModel->materials[i].lightmap)
-//					retModel->meshes[i].frames[j].tangents = (float*)malloc(sizeof(float));//(float*)Z_Malloc(sizeof(float)*3*mdS->numTriangles*3, ztag);
+				retModel->meshes[i].frames[j].vertices = (float*)Z_Malloc(sizeof(float)* 3 * mdS->numTriangles * 3, ztag, 0);
+				retModel->meshes[i].frames[j].normals = (float*)Z_Malloc(sizeof(float)* 3 * mdS->numTriangles * 3, ztag, 0);
+				//				if (retModel->materials[i].lightmap)
+				//					retModel->meshes[i].frames[j].tangents = (float*)malloc(sizeof(float));//(float*)Z_Malloc(sizeof(float)*3*mdS->numTriangles*3, ztag);
 				vertptr = retModel->meshes[i].frames[j].vertices;
 				normptr = retModel->meshes[i].frames[j].normals;
 				retModel->meshes[i].frames[j].material = &retModel->materials[i];
@@ -492,27 +553,27 @@ model_t *MD3_LoadModel(const char *fileName, int ztag, boolean useFloat)
 	tag_t *curTag = retModel->tags;
 	for (i = 0; i < mdh->numFrames; i++)
 	{
-		int j;
-		for (j = 0; j < retModel->numTags; j++, mdTag++)
-		{
-			strcpys(curTag->name, mdTag->name, sizeof(curTag->name) / sizeof(char));
-			curTag->transform.m[0][0] = mdTag->axis[0];
-			curTag->transform.m[0][1] = mdTag->axis[1];
-			curTag->transform.m[0][2] = mdTag->axis[2];
-			curTag->transform.m[1][0] = mdTag->axis[3];
-			curTag->transform.m[1][1] = mdTag->axis[4];
-			curTag->transform.m[1][2] = mdTag->axis[5];
-			curTag->transform.m[2][0] = mdTag->axis[6];
-			curTag->transform.m[2][1] = mdTag->axis[7];
-			curTag->transform.m[2][2] = mdTag->axis[8];
-			curTag->transform.m[3][0] = mdTag->origin[0] * WUNITS;
-			curTag->transform.m[3][1] = mdTag->origin[1] * WUNITS;
-			curTag->transform.m[3][2] = mdTag->origin[2] * WUNITS;
-			curTag->transform.m[3][3] = 1.0f;
+	int j;
+	for (j = 0; j < retModel->numTags; j++, mdTag++)
+	{
+	strcpys(curTag->name, mdTag->name, sizeof(curTag->name) / sizeof(char));
+	curTag->transform.m[0][0] = mdTag->axis[0];
+	curTag->transform.m[0][1] = mdTag->axis[1];
+	curTag->transform.m[0][2] = mdTag->axis[2];
+	curTag->transform.m[1][0] = mdTag->axis[3];
+	curTag->transform.m[1][1] = mdTag->axis[4];
+	curTag->transform.m[1][2] = mdTag->axis[5];
+	curTag->transform.m[2][0] = mdTag->axis[6];
+	curTag->transform.m[2][1] = mdTag->axis[7];
+	curTag->transform.m[2][2] = mdTag->axis[8];
+	curTag->transform.m[3][0] = mdTag->origin[0] * WUNITS;
+	curTag->transform.m[3][1] = mdTag->origin[1] * WUNITS;
+	curTag->transform.m[3][2] = mdTag->origin[2] * WUNITS;
+	curTag->transform.m[3][3] = 1.0f;
 
-			Matrix::Rotate(&curTag->transform, 90.0f, &Vector::Xaxis);
-			curTag++;
-		}
+	Matrix::Rotate(&curTag->transform, 90.0f, &Vector::Xaxis);
+	curTag++;
+	}
 	}*/
 
 

@@ -1,10 +1,10 @@
 /*
-	From the 'Wizard2' engine by Spaddlewit Inc. ( http://www.spaddlewit.com )
-	An experimental work-in-progress.
+From the 'Wizard2' engine by Spaddlewit Inc. ( http://www.spaddlewit.com )
+An experimental work-in-progress.
 
-	Donated to Sonic Team Junior and adapted to work with
-	Sonic Robo Blast 2. The license of this code matches whatever
-	the licensing is for Sonic Robo Blast 2.
+Donated to Sonic Team Junior and adapted to work with
+Sonic Robo Blast 2. The license of this code matches whatever
+the licensing is for Sonic Robo Blast 2.
 */
 
 #include <stdlib.h>
@@ -20,168 +20,168 @@
 // Quake 2 normals are indexed. Use avertexnormals[normalindex][x/y/z] and
 // you'll have your normals.
 float avertexnormals[NUMVERTEXNORMALS][3] = {
-{-0.525731f, 0.000000f, 0.850651f},
-{-0.442863f, 0.238856f, 0.864188f},
-{-0.295242f, 0.000000f, 0.955423f},
-{-0.309017f, 0.500000f, 0.809017f},
-{-0.162460f, 0.262866f, 0.951056f},
-{0.000000f, 0.000000f, 1.000000f},
-{0.000000f, 0.850651f, 0.525731f},
-{-0.147621f, 0.716567f, 0.681718f},
-{0.147621f, 0.716567f, 0.681718f},
-{0.000000f, 0.525731f, 0.850651f},
-{0.309017f, 0.500000f, 0.809017f},
-{0.525731f, 0.000000f, 0.850651f},
-{0.295242f, 0.000000f, 0.955423f},
-{0.442863f, 0.238856f, 0.864188f},
-{0.162460f, 0.262866f, 0.951056f},
-{-0.681718f, 0.147621f, 0.716567f},
-{-0.809017f, 0.309017f, 0.500000f},
-{-0.587785f, 0.425325f, 0.688191f},
-{-0.850651f, 0.525731f, 0.000000f},
-{-0.864188f, 0.442863f, 0.238856f},
-{-0.716567f, 0.681718f, 0.147621f},
-{-0.688191f, 0.587785f, 0.425325f},
-{-0.500000f, 0.809017f, 0.309017f},
-{-0.238856f, 0.864188f, 0.442863f},
-{-0.425325f, 0.688191f, 0.587785f},
-{-0.716567f, 0.681718f, -0.147621f},
-{-0.500000f, 0.809017f, -0.309017f},
-{-0.525731f, 0.850651f, 0.000000f},
-{0.000000f, 0.850651f, -0.525731f},
-{-0.238856f, 0.864188f, -0.442863f},
-{0.000000f, 0.955423f, -0.295242f},
-{-0.262866f, 0.951056f, -0.162460f},
-{0.000000f, 1.000000f, 0.000000f},
-{0.000000f, 0.955423f, 0.295242f},
-{-0.262866f, 0.951056f, 0.162460f},
-{0.238856f, 0.864188f, 0.442863f},
-{0.262866f, 0.951056f, 0.162460f},
-{0.500000f, 0.809017f, 0.309017f},
-{0.238856f, 0.864188f, -0.442863f},
-{0.262866f, 0.951056f, -0.162460f},
-{0.500000f, 0.809017f, -0.309017f},
-{0.850651f, 0.525731f, 0.000000f},
-{0.716567f, 0.681718f, 0.147621f},
-{0.716567f, 0.681718f, -0.147621f},
-{0.525731f, 0.850651f, 0.000000f},
-{0.425325f, 0.688191f, 0.587785f},
-{0.864188f, 0.442863f, 0.238856f},
-{0.688191f, 0.587785f, 0.425325f},
-{0.809017f, 0.309017f, 0.500000f},
-{0.681718f, 0.147621f, 0.716567f},
-{0.587785f, 0.425325f, 0.688191f},
-{0.955423f, 0.295242f, 0.000000f},
-{1.000000f, 0.000000f, 0.000000f},
-{0.951056f, 0.162460f, 0.262866f},
-{0.850651f, -0.525731f, 0.000000f},
-{0.955423f, -0.295242f, 0.000000f},
-{0.864188f, -0.442863f, 0.238856f},
-{0.951056f, -0.162460f, 0.262866f},
-{0.809017f, -0.309017f, 0.500000f},
-{0.681718f, -0.147621f, 0.716567f},
-{0.850651f, 0.000000f, 0.525731f},
-{0.864188f, 0.442863f, -0.238856f},
-{0.809017f, 0.309017f, -0.500000f},
-{0.951056f, 0.162460f, -0.262866f},
-{0.525731f, 0.000000f, -0.850651f},
-{0.681718f, 0.147621f, -0.716567f},
-{0.681718f, -0.147621f, -0.716567f},
-{0.850651f, 0.000000f, -0.525731f},
-{0.809017f, -0.309017f, -0.500000f},
-{0.864188f, -0.442863f, -0.238856f},
-{0.951056f, -0.162460f, -0.262866f},
-{0.147621f, 0.716567f, -0.681718f},
-{0.309017f, 0.500000f, -0.809017f},
-{0.425325f, 0.688191f, -0.587785f},
-{0.442863f, 0.238856f, -0.864188f},
-{0.587785f, 0.425325f, -0.688191f},
-{0.688191f, 0.587785f, -0.425325f},
-{-0.147621f, 0.716567f, -0.681718f},
-{-0.309017f, 0.500000f, -0.809017f},
-{0.000000f, 0.525731f, -0.850651f},
-{-0.525731f, 0.000000f, -0.850651f},
-{-0.442863f, 0.238856f, -0.864188f},
-{-0.295242f, 0.000000f, -0.955423f},
-{-0.162460f, 0.262866f, -0.951056f},
-{0.000000f, 0.000000f, -1.000000f},
-{0.295242f, 0.000000f, -0.955423f},
-{0.162460f, 0.262866f, -0.951056f},
-{-0.442863f, -0.238856f, -0.864188f},
-{-0.309017f, -0.500000f, -0.809017f},
-{-0.162460f, -0.262866f, -0.951056f},
-{0.000000f, -0.850651f, -0.525731f},
-{-0.147621f, -0.716567f, -0.681718f},
-{0.147621f, -0.716567f, -0.681718f},
-{0.000000f, -0.525731f, -0.850651f},
-{0.309017f, -0.500000f, -0.809017f},
-{0.442863f, -0.238856f, -0.864188f},
-{0.162460f, -0.262866f, -0.951056f},
-{0.238856f, -0.864188f, -0.442863f},
-{0.500000f, -0.809017f, -0.309017f},
-{0.425325f, -0.688191f, -0.587785f},
-{0.716567f, -0.681718f, -0.147621f},
-{0.688191f, -0.587785f, -0.425325f},
-{0.587785f, -0.425325f, -0.688191f},
-{0.000000f, -0.955423f, -0.295242f},
-{0.000000f, -1.000000f, 0.000000f},
-{0.262866f, -0.951056f, -0.162460f},
-{0.000000f, -0.850651f, 0.525731f},
-{0.000000f, -0.955423f, 0.295242f},
-{0.238856f, -0.864188f, 0.442863f},
-{0.262866f, -0.951056f, 0.162460f},
-{0.500000f, -0.809017f, 0.309017f},
-{0.716567f, -0.681718f, 0.147621f},
-{0.525731f, -0.850651f, 0.000000f},
-{-0.238856f, -0.864188f, -0.442863f},
-{-0.500000f, -0.809017f, -0.309017f},
-{-0.262866f, -0.951056f, -0.162460f},
-{-0.850651f, -0.525731f, 0.000000f},
-{-0.716567f, -0.681718f, -0.147621f},
-{-0.716567f, -0.681718f, 0.147621f},
-{-0.525731f, -0.850651f, 0.000000f},
-{-0.500000f, -0.809017f, 0.309017f},
-{-0.238856f, -0.864188f, 0.442863f},
-{-0.262866f, -0.951056f, 0.162460f},
-{-0.864188f, -0.442863f, 0.238856f},
-{-0.809017f, -0.309017f, 0.500000f},
-{-0.688191f, -0.587785f, 0.425325f},
-{-0.681718f, -0.147621f, 0.716567f},
-{-0.442863f, -0.238856f, 0.864188f},
-{-0.587785f, -0.425325f, 0.688191f},
-{-0.309017f, -0.500000f, 0.809017f},
-{-0.147621f, -0.716567f, 0.681718f},
-{-0.425325f, -0.688191f, 0.587785f},
-{-0.162460f, -0.262866f, 0.951056f},
-{0.442863f, -0.238856f, 0.864188f},
-{0.162460f, -0.262866f, 0.951056f},
-{0.309017f, -0.500000f, 0.809017f},
-{0.147621f, -0.716567f, 0.681718f},
-{0.000000f, -0.525731f, 0.850651f},
-{0.425325f, -0.688191f, 0.587785f},
-{0.587785f, -0.425325f, 0.688191f},
-{0.688191f, -0.587785f, 0.425325f},
-{-0.955423f, 0.295242f, 0.000000f},
-{-0.951056f, 0.162460f, 0.262866f},
-{-1.000000f, 0.000000f, 0.000000f},
-{-0.850651f, 0.000000f, 0.525731f},
-{-0.955423f, -0.295242f, 0.000000f},
-{-0.951056f, -0.162460f, 0.262866f},
-{-0.864188f, 0.442863f, -0.238856f},
-{-0.951056f, 0.162460f, -0.262866f},
-{-0.809017f, 0.309017f, -0.500000f},
-{-0.864188f, -0.442863f, -0.238856f},
-{-0.951056f, -0.162460f, -0.262866f},
-{-0.809017f, -0.309017f, -0.500000f},
-{-0.681718f, 0.147621f, -0.716567f},
-{-0.681718f, -0.147621f, -0.716567f},
-{-0.850651f, 0.000000f, -0.525731f},
-{-0.688191f, 0.587785f, -0.425325f},
-{-0.587785f, 0.425325f, -0.688191f},
-{-0.425325f, 0.688191f, -0.587785f},
-{-0.425325f, -0.688191f, -0.587785f},
-{-0.587785f, -0.425325f, -0.688191f},
-{-0.688191f, -0.587785f, -0.425325f},
+	{ -0.525731f, 0.000000f, 0.850651f },
+	{ -0.442863f, 0.238856f, 0.864188f },
+	{ -0.295242f, 0.000000f, 0.955423f },
+	{ -0.309017f, 0.500000f, 0.809017f },
+	{ -0.162460f, 0.262866f, 0.951056f },
+	{ 0.000000f, 0.000000f, 1.000000f },
+	{ 0.000000f, 0.850651f, 0.525731f },
+	{ -0.147621f, 0.716567f, 0.681718f },
+	{ 0.147621f, 0.716567f, 0.681718f },
+	{ 0.000000f, 0.525731f, 0.850651f },
+	{ 0.309017f, 0.500000f, 0.809017f },
+	{ 0.525731f, 0.000000f, 0.850651f },
+	{ 0.295242f, 0.000000f, 0.955423f },
+	{ 0.442863f, 0.238856f, 0.864188f },
+	{ 0.162460f, 0.262866f, 0.951056f },
+	{ -0.681718f, 0.147621f, 0.716567f },
+	{ -0.809017f, 0.309017f, 0.500000f },
+	{ -0.587785f, 0.425325f, 0.688191f },
+	{ -0.850651f, 0.525731f, 0.000000f },
+	{ -0.864188f, 0.442863f, 0.238856f },
+	{ -0.716567f, 0.681718f, 0.147621f },
+	{ -0.688191f, 0.587785f, 0.425325f },
+	{ -0.500000f, 0.809017f, 0.309017f },
+	{ -0.238856f, 0.864188f, 0.442863f },
+	{ -0.425325f, 0.688191f, 0.587785f },
+	{ -0.716567f, 0.681718f, -0.147621f },
+	{ -0.500000f, 0.809017f, -0.309017f },
+	{ -0.525731f, 0.850651f, 0.000000f },
+	{ 0.000000f, 0.850651f, -0.525731f },
+	{ -0.238856f, 0.864188f, -0.442863f },
+	{ 0.000000f, 0.955423f, -0.295242f },
+	{ -0.262866f, 0.951056f, -0.162460f },
+	{ 0.000000f, 1.000000f, 0.000000f },
+	{ 0.000000f, 0.955423f, 0.295242f },
+	{ -0.262866f, 0.951056f, 0.162460f },
+	{ 0.238856f, 0.864188f, 0.442863f },
+	{ 0.262866f, 0.951056f, 0.162460f },
+	{ 0.500000f, 0.809017f, 0.309017f },
+	{ 0.238856f, 0.864188f, -0.442863f },
+	{ 0.262866f, 0.951056f, -0.162460f },
+	{ 0.500000f, 0.809017f, -0.309017f },
+	{ 0.850651f, 0.525731f, 0.000000f },
+	{ 0.716567f, 0.681718f, 0.147621f },
+	{ 0.716567f, 0.681718f, -0.147621f },
+	{ 0.525731f, 0.850651f, 0.000000f },
+	{ 0.425325f, 0.688191f, 0.587785f },
+	{ 0.864188f, 0.442863f, 0.238856f },
+	{ 0.688191f, 0.587785f, 0.425325f },
+	{ 0.809017f, 0.309017f, 0.500000f },
+	{ 0.681718f, 0.147621f, 0.716567f },
+	{ 0.587785f, 0.425325f, 0.688191f },
+	{ 0.955423f, 0.295242f, 0.000000f },
+	{ 1.000000f, 0.000000f, 0.000000f },
+	{ 0.951056f, 0.162460f, 0.262866f },
+	{ 0.850651f, -0.525731f, 0.000000f },
+	{ 0.955423f, -0.295242f, 0.000000f },
+	{ 0.864188f, -0.442863f, 0.238856f },
+	{ 0.951056f, -0.162460f, 0.262866f },
+	{ 0.809017f, -0.309017f, 0.500000f },
+	{ 0.681718f, -0.147621f, 0.716567f },
+	{ 0.850651f, 0.000000f, 0.525731f },
+	{ 0.864188f, 0.442863f, -0.238856f },
+	{ 0.809017f, 0.309017f, -0.500000f },
+	{ 0.951056f, 0.162460f, -0.262866f },
+	{ 0.525731f, 0.000000f, -0.850651f },
+	{ 0.681718f, 0.147621f, -0.716567f },
+	{ 0.681718f, -0.147621f, -0.716567f },
+	{ 0.850651f, 0.000000f, -0.525731f },
+	{ 0.809017f, -0.309017f, -0.500000f },
+	{ 0.864188f, -0.442863f, -0.238856f },
+	{ 0.951056f, -0.162460f, -0.262866f },
+	{ 0.147621f, 0.716567f, -0.681718f },
+	{ 0.309017f, 0.500000f, -0.809017f },
+	{ 0.425325f, 0.688191f, -0.587785f },
+	{ 0.442863f, 0.238856f, -0.864188f },
+	{ 0.587785f, 0.425325f, -0.688191f },
+	{ 0.688191f, 0.587785f, -0.425325f },
+	{ -0.147621f, 0.716567f, -0.681718f },
+	{ -0.309017f, 0.500000f, -0.809017f },
+	{ 0.000000f, 0.525731f, -0.850651f },
+	{ -0.525731f, 0.000000f, -0.850651f },
+	{ -0.442863f, 0.238856f, -0.864188f },
+	{ -0.295242f, 0.000000f, -0.955423f },
+	{ -0.162460f, 0.262866f, -0.951056f },
+	{ 0.000000f, 0.000000f, -1.000000f },
+	{ 0.295242f, 0.000000f, -0.955423f },
+	{ 0.162460f, 0.262866f, -0.951056f },
+	{ -0.442863f, -0.238856f, -0.864188f },
+	{ -0.309017f, -0.500000f, -0.809017f },
+	{ -0.162460f, -0.262866f, -0.951056f },
+	{ 0.000000f, -0.850651f, -0.525731f },
+	{ -0.147621f, -0.716567f, -0.681718f },
+	{ 0.147621f, -0.716567f, -0.681718f },
+	{ 0.000000f, -0.525731f, -0.850651f },
+	{ 0.309017f, -0.500000f, -0.809017f },
+	{ 0.442863f, -0.238856f, -0.864188f },
+	{ 0.162460f, -0.262866f, -0.951056f },
+	{ 0.238856f, -0.864188f, -0.442863f },
+	{ 0.500000f, -0.809017f, -0.309017f },
+	{ 0.425325f, -0.688191f, -0.587785f },
+	{ 0.716567f, -0.681718f, -0.147621f },
+	{ 0.688191f, -0.587785f, -0.425325f },
+	{ 0.587785f, -0.425325f, -0.688191f },
+	{ 0.000000f, -0.955423f, -0.295242f },
+	{ 0.000000f, -1.000000f, 0.000000f },
+	{ 0.262866f, -0.951056f, -0.162460f },
+	{ 0.000000f, -0.850651f, 0.525731f },
+	{ 0.000000f, -0.955423f, 0.295242f },
+	{ 0.238856f, -0.864188f, 0.442863f },
+	{ 0.262866f, -0.951056f, 0.162460f },
+	{ 0.500000f, -0.809017f, 0.309017f },
+	{ 0.716567f, -0.681718f, 0.147621f },
+	{ 0.525731f, -0.850651f, 0.000000f },
+	{ -0.238856f, -0.864188f, -0.442863f },
+	{ -0.500000f, -0.809017f, -0.309017f },
+	{ -0.262866f, -0.951056f, -0.162460f },
+	{ -0.850651f, -0.525731f, 0.000000f },
+	{ -0.716567f, -0.681718f, -0.147621f },
+	{ -0.716567f, -0.681718f, 0.147621f },
+	{ -0.525731f, -0.850651f, 0.000000f },
+	{ -0.500000f, -0.809017f, 0.309017f },
+	{ -0.238856f, -0.864188f, 0.442863f },
+	{ -0.262866f, -0.951056f, 0.162460f },
+	{ -0.864188f, -0.442863f, 0.238856f },
+	{ -0.809017f, -0.309017f, 0.500000f },
+	{ -0.688191f, -0.587785f, 0.425325f },
+	{ -0.681718f, -0.147621f, 0.716567f },
+	{ -0.442863f, -0.238856f, 0.864188f },
+	{ -0.587785f, -0.425325f, 0.688191f },
+	{ -0.309017f, -0.500000f, 0.809017f },
+	{ -0.147621f, -0.716567f, 0.681718f },
+	{ -0.425325f, -0.688191f, 0.587785f },
+	{ -0.162460f, -0.262866f, 0.951056f },
+	{ 0.442863f, -0.238856f, 0.864188f },
+	{ 0.162460f, -0.262866f, 0.951056f },
+	{ 0.309017f, -0.500000f, 0.809017f },
+	{ 0.147621f, -0.716567f, 0.681718f },
+	{ 0.000000f, -0.525731f, 0.850651f },
+	{ 0.425325f, -0.688191f, 0.587785f },
+	{ 0.587785f, -0.425325f, 0.688191f },
+	{ 0.688191f, -0.587785f, 0.425325f },
+	{ -0.955423f, 0.295242f, 0.000000f },
+	{ -0.951056f, 0.162460f, 0.262866f },
+	{ -1.000000f, 0.000000f, 0.000000f },
+	{ -0.850651f, 0.000000f, 0.525731f },
+	{ -0.955423f, -0.295242f, 0.000000f },
+	{ -0.951056f, -0.162460f, 0.262866f },
+	{ -0.864188f, 0.442863f, -0.238856f },
+	{ -0.951056f, 0.162460f, -0.262866f },
+	{ -0.809017f, 0.309017f, -0.500000f },
+	{ -0.864188f, -0.442863f, -0.238856f },
+	{ -0.951056f, -0.162460f, -0.262866f },
+	{ -0.809017f, -0.309017f, -0.500000f },
+	{ -0.681718f, 0.147621f, -0.716567f },
+	{ -0.681718f, -0.147621f, -0.716567f },
+	{ -0.850651f, 0.000000f, -0.525731f },
+	{ -0.688191f, 0.587785f, -0.425325f },
+	{ -0.587785f, 0.425325f, -0.688191f },
+	{ -0.425325f, 0.688191f, -0.587785f },
+	{ -0.425325f, -0.688191f, -0.587785f },
+	{ -0.587785f, -0.425325f, -0.688191f },
+	{ -0.688191f, -0.587785f, -0.425325f },
 };
 
 typedef struct
@@ -311,14 +311,34 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 
 	// read in file
 	buffer = malloc(fileLen);
-	if (fread(buffer, fileLen, 1, f)) { } // squash ignored fread error
+	if (fread(buffer, fileLen, 1, f)) {} // squash ignored fread error
 	fclose(f);
 
 	// get pointer to file header
 	header = (md2header_t*)buffer;
 
+#ifdef SRB2_BIG_ENDIAN
+	header->ident = LONG(header->ident);
+	header->version = LONG(header->version);
+	header->skinwidth = LONG(header->skinwidth);
+	header->skinheight = LONG(header->skinheight);
+	header->framesize = LONG(header->framesize);
+	header->numSkins = LONG(header->numSkins);
+	header->numXYZ = LONG(header->numXYZ);
+	header->numST = LONG(header->numST);
+	header->numTris = LONG(header->numTris);
+	header->numGLcmds = LONG(header->numGLcmds);
+	header->numFrames = LONG(header->numFrames);
+	header->offsetSkins = LONG(header->offsetSkins);
+	header->offsetST = LONG(header->offsetST);
+	header->offsetTris = LONG(header->offsetTris);
+	header->offsetFrames = LONG(header->offsetFrames);
+	header->offsetGLcmds = LONG(header->offsetGLcmds);
+	header->offsetEnd = LONG(header->offsetEnd);
+#endif
+
 	retModel->numMeshes = 1; // MD2 only has one mesh
-	retModel->meshes = (mesh_t*)Z_Calloc(sizeof(mesh_t) * retModel->numMeshes, ztag, 0);
+	retModel->meshes = (mesh_t*)Z_Calloc(sizeof(mesh_t)* retModel->numMeshes, ztag, 0);
 	retModel->meshes[0].numFrames = header->numFrames;
 	// const float WUNITS = 1.0f;
 	// float dataScale = WUNITS;
@@ -328,13 +348,30 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 	texcoords = (md2texcoord_t*)&buffer[header->offsetST];
 	frames = (md2frame_t*)&buffer[header->offsetFrames];
 
-	retModel->frameNames = (char*)Z_Calloc(header->numFrames*16, ztag, 0);
+#ifdef SRB2_BIG_ENDIAN
+	for (i = 0; i < header->numTris; i++)
+	{
+		tris[i].meshIndex[0] = SHORT(tris[i].meshIndex[0]);
+		tris[i].meshIndex[1] = SHORT(tris[i].meshIndex[1]);
+		tris[i].meshIndex[2] = SHORT(tris[i].meshIndex[2]);
+		tris[i].stIndex[0] = SHORT(tris[i].stIndex[0]);
+		tris[i].stIndex[1] = SHORT(tris[i].stIndex[1]);
+		tris[i].stIndex[2] = SHORT(tris[i].stIndex[2]);
+	}
+	for (i = 0; i < header->numST; i++)
+	{
+		texcoords[i].s = SHORT(texcoords[i].s);
+		texcoords[i].t = SHORT(texcoords[i].t);
+	}
+#endif
+
+	retModel->frameNames = (char*)Z_Calloc(header->numFrames * 16, ztag, 0);
 	fname = retModel->frameNames;
 	for (i = 0; i < header->numFrames; i++)
 	{
 		md2frame_t *fr = (md2frame_t*)&buffer[header->offsetFrames + foffset];
 		memcpy(fname, fr->name, 16);
-		foffset += sizeof(md2frame_t) + (sizeof(md2vertex_t) * header->numXYZ);
+		foffset += sizeof(md2frame_t)+(sizeof(md2vertex_t)* header->numXYZ);
 		fname += 16;
 	}
 
@@ -370,44 +407,44 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 
 		/*		retModel->materials[t].texture = Texture::ReadTexture((char*)texturefilename, ZT_TEXTURE);
 
-				if (!systemSucks)
-				{
-					// Check for a normal map...??
-					char openfilename[1024];
-					char normalMapName[1024];
-					strcpy(normalMapName, texturefilename);
-					size_t len = strlen(normalMapName);
-					char *ptr = &normalMapName[len];
-					ptr--; // z
-					ptr--; // u
-					ptr--; // b
-					ptr--; // .
-					*ptr++ = '_';
-					*ptr++ = 'n';
-					*ptr++ = '.';
-					*ptr++ = 'b';
-					*ptr++ = 'u';
-					*ptr++ = 'z';
-					*ptr++ = '\0';
+		if (!systemSucks)
+		{
+		// Check for a normal map...??
+		char openfilename[1024];
+		char normalMapName[1024];
+		strcpy(normalMapName, texturefilename);
+		size_t len = strlen(normalMapName);
+		char *ptr = &normalMapName[len];
+		ptr--; // z
+		ptr--; // u
+		ptr--; // b
+		ptr--; // .
+		*ptr++ = '_';
+		*ptr++ = 'n';
+		*ptr++ = '.';
+		*ptr++ = 'b';
+		*ptr++ = 'u';
+		*ptr++ = 'z';
+		*ptr++ = '\0';
 
-					sprintf(openfilename, "%s/%s", "textures", normalMapName);
-					// Convert backslashes to forward slashes
-					for (int k = 0; k < 1024; k++)
-					{
-						if (openfilename[k] == '\0')
-							break;
+		sprintf(openfilename, "%s/%s", "textures", normalMapName);
+		// Convert backslashes to forward slashes
+		for (int k = 0; k < 1024; k++)
+		{
+		if (openfilename[k] == '\0')
+		break;
 
-						if (openfilename[k] == '\\')
-							openfilename[k] = '/';
-					}
+		if (openfilename[k] == '\\')
+		openfilename[k] = '/';
+		}
 
-					Resource::resource_t *res = Resource::Open(openfilename);
-					if (res)
-					{
-						Resource::Close(res);
-						retModel->materials[t].lightmap = Texture::ReadTexture(normalMapName, ZT_TEXTURE);
-					}
-				}*/
+		Resource::resource_t *res = Resource::Open(openfilename);
+		if (res)
+		{
+		Resource::Close(res);
+		retModel->materials[t].lightmap = Texture::ReadTexture(normalMapName, ZT_TEXTURE);
+		}
+		}*/
 	}
 
 	retModel->meshes[0].numTriangles = header->numTris;
@@ -423,7 +460,7 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 		dataScale = 0.015624f; // 1 / 64.0f
 		retModel->meshes[0].tinyframes = (tinyframe_t*)Z_Calloc(sizeof(tinyframe_t)*header->numFrames, ztag, 0);
 		retModel->meshes[0].numVertices = header->numXYZ;
-		retModel->meshes[0].uvs = (float*)Z_Malloc(sizeof(float) * 2 * retModel->meshes[0].numVertices, ztag, 0);
+		retModel->meshes[0].uvs = (float*)Z_Malloc(sizeof(float)* 2 * retModel->meshes[0].numVertices, ztag, 0);
 
 		ptr = (char*)frames;
 		for (i = 0; i < header->numFrames; i++, ptr += header->framesize)
@@ -435,12 +472,12 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 			md2vertex_t *vertex;
 
 			md2frame_t *framePtr = (md2frame_t*)ptr;
-			retModel->meshes[0].tinyframes[i].vertices = (short*)Z_Malloc(sizeof(short) * 3 * header->numXYZ, ztag, 0);
-			retModel->meshes[0].tinyframes[i].normals = (char*)Z_Malloc(sizeof(char) * 3 * header->numXYZ, ztag, 0);
+			retModel->meshes[0].tinyframes[i].vertices = (short*)Z_Malloc(sizeof(short)* 3 * header->numXYZ, ztag, 0);
+			retModel->meshes[0].tinyframes[i].normals = (char*)Z_Malloc(sizeof(char)* 3 * header->numXYZ, ztag, 0);
 
 			//			if (retModel->materials[0].lightmap)
 			//				retModel->meshes[0].tinyframes[i].tangents = (char*)malloc(sizeof(char));//(char*)Z_Malloc(sizeof(char)*3*header->numVerts, ztag);
-			retModel->meshes[0].indices = (unsigned short*)Z_Malloc(sizeof(unsigned short) * 3 * header->numTris, ztag, 0);
+			retModel->meshes[0].indices = (unsigned short*)Z_Malloc(sizeof(unsigned short)* 3 * header->numTris, ztag, 0);
 
 			vertptr = retModel->meshes[0].tinyframes[i].vertices;
 			normptr = retModel->meshes[0].tinyframes[i].normals;
@@ -448,16 +485,24 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 			//			tanptr = retModel->meshes[0].tinyframes[i].tangents;
 			retModel->meshes[0].tinyframes[i].material = &retModel->materials[0];
 
+			float scale[3], translate[3];
+			scale[0] = SwapFloat(framePtr->scale[0]);
+			scale[1] = SwapFloat(framePtr->scale[1]);
+			scale[2] = SwapFloat(framePtr->scale[2]);
+			translate[0] = SwapFloat(framePtr->translate[0]);
+			translate[1] = SwapFloat(framePtr->translate[1]);
+			translate[2] = SwapFloat(framePtr->translate[2]);
+
 			framePtr++; // Advance to vertex list
 			vertex = (md2vertex_t*)framePtr;
 			framePtr--;
 			for (j = 0; j < header->numXYZ; j++, vertex++)
 			{
-				*vertptr = (short)(((vertex->v[0] * framePtr->scale[0]) + framePtr->translate[0]) / dataScale);
+				*vertptr = (short)(((vertex->v[0] * scale[0]) + translate[0]) / dataScale);
 				vertptr++;
-				*vertptr = (short)(((vertex->v[2] * framePtr->scale[2]) + framePtr->translate[2]) / dataScale);
+				*vertptr = (short)(((vertex->v[2] * scale[2]) + translate[2]) / dataScale);
 				vertptr++;
-				*vertptr = -1.0f * (short)(((vertex->v[1] * framePtr->scale[1]) + framePtr->translate[1]) / dataScale);
+				*vertptr = -1.0f * (short)(((vertex->v[1] * scale[1]) + translate[1]) / dataScale);
 				vertptr++;
 
 				// Normal
@@ -497,7 +542,7 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 
 		retModel->meshes[0].numVertices = header->numTris * 3;
 		retModel->meshes[0].frames = (mdlframe_t*)Z_Calloc(sizeof(mdlframe_t)*header->numFrames, ztag, 0);
-		retModel->meshes[0].uvs = (float*)Z_Malloc(sizeof(float) * 2 * retModel->meshes[0].numVertices, ztag, 0);
+		retModel->meshes[0].uvs = (float*)Z_Malloc(sizeof(float)* 2 * retModel->meshes[0].numVertices, ztag, 0);
 
 		trisPtr = tris;
 		uvptr = retModel->meshes[0].uvs;
@@ -519,8 +564,8 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 			md2vertex_t *vertex;
 
 			md2frame_t *framePtr = (md2frame_t*)ptr;
-			retModel->meshes[0].frames[i].normals = (float*)Z_Malloc(sizeof(float) * 3 * header->numTris * 3, ztag, 0);
-			retModel->meshes[0].frames[i].vertices = (float*)Z_Malloc(sizeof(float) * 3 * header->numTris * 3, ztag, 0);
+			retModel->meshes[0].frames[i].normals = (float*)Z_Malloc(sizeof(float)* 3 * header->numTris * 3, ztag, 0);
+			retModel->meshes[0].frames[i].vertices = (float*)Z_Malloc(sizeof(float)* 3 * header->numTris * 3, ztag, 0);
 			//			if (retModel->materials[0].lightmap)
 			//				retModel->meshes[0].frames[i].tangents = (float*)malloc(sizeof(float));//(float*)Z_Malloc(sizeof(float)*3*header->numTris*3, ztag);
 			//float *vertptr, *normptr;
@@ -530,30 +575,38 @@ model_t *MD2_LoadModel(const char *fileName, int ztag, boolean useFloat)
 
 			retModel->meshes[0].frames[i].material = &retModel->materials[0];
 
+			float scale[3], translate[3];
+			scale[0] = SwapFloat(framePtr->scale[0]);
+			scale[1] = SwapFloat(framePtr->scale[1]);
+			scale[2] = SwapFloat(framePtr->scale[2]);
+			translate[0] = SwapFloat(framePtr->translate[0]);
+			translate[1] = SwapFloat(framePtr->translate[1]);
+			translate[2] = SwapFloat(framePtr->translate[2]);
+
 			framePtr++; // Advance to vertex list
 			vertex = (md2vertex_t*)framePtr;
 			framePtr--;
 			for (j = 0; j < header->numTris; j++, trisPtr++)
 			{
-				*vertptr = ((vertex[trisPtr->meshIndex[0]].v[0] * framePtr->scale[0]) + framePtr->translate[0]) * WUNITS;
+				*vertptr = ((vertex[trisPtr->meshIndex[0]].v[0] * scale[0]) + translate[0]) * WUNITS;
 				vertptr++;
-				*vertptr = ((vertex[trisPtr->meshIndex[0]].v[2] * framePtr->scale[2]) + framePtr->translate[2]) * WUNITS;
+				*vertptr = ((vertex[trisPtr->meshIndex[0]].v[2] * scale[2]) + translate[2]) * WUNITS;
 				vertptr++;
-				*vertptr = -1.0f * ((vertex[trisPtr->meshIndex[0]].v[1] * framePtr->scale[1]) + framePtr->translate[1]) * WUNITS;
-				vertptr++;
-
-				*vertptr = ((vertex[trisPtr->meshIndex[1]].v[0] * framePtr->scale[0]) + framePtr->translate[0]) * WUNITS;
-				vertptr++;
-				*vertptr = ((vertex[trisPtr->meshIndex[1]].v[2] * framePtr->scale[2]) + framePtr->translate[2]) * WUNITS;
-				vertptr++;
-				*vertptr = -1.0f * ((vertex[trisPtr->meshIndex[1]].v[1] * framePtr->scale[1]) + framePtr->translate[1]) * WUNITS;
+				*vertptr = -1.0f * ((vertex[trisPtr->meshIndex[0]].v[1] * scale[1]) + translate[1]) * WUNITS;
 				vertptr++;
 
-				*vertptr = ((vertex[trisPtr->meshIndex[2]].v[0] * framePtr->scale[0]) + framePtr->translate[0]) * WUNITS;
+				*vertptr = ((vertex[trisPtr->meshIndex[1]].v[0] * scale[0]) + translate[0]) * WUNITS;
 				vertptr++;
-				*vertptr = ((vertex[trisPtr->meshIndex[2]].v[2] * framePtr->scale[2]) + framePtr->translate[2]) * WUNITS;
+				*vertptr = ((vertex[trisPtr->meshIndex[1]].v[2] * scale[2]) + translate[2]) * WUNITS;
 				vertptr++;
-				*vertptr = -1.0f * ((vertex[trisPtr->meshIndex[2]].v[1] * framePtr->scale[1]) + framePtr->translate[1]) * WUNITS;
+				*vertptr = -1.0f * ((vertex[trisPtr->meshIndex[1]].v[1] * scale[1]) + translate[1]) * WUNITS;
+				vertptr++;
+
+				*vertptr = ((vertex[trisPtr->meshIndex[2]].v[0] * scale[0]) + translate[0]) * WUNITS;
+				vertptr++;
+				*vertptr = ((vertex[trisPtr->meshIndex[2]].v[2] * scale[2]) + translate[2]) * WUNITS;
+				vertptr++;
+				*vertptr = -1.0f * ((vertex[trisPtr->meshIndex[2]].v[1] * scale[1]) + translate[1]) * WUNITS;
 				vertptr++;
 
 				*normptr++ = avertexnormals[vertex[trisPtr->meshIndex[0]].lightNormalIndex][0];

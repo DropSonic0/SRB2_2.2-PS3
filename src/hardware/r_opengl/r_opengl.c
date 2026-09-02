@@ -1751,6 +1751,16 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 
 	if (maximumAnisotropy)
 		pglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropic_filter);
+
+#ifdef __CELLOS_LV2__
+	// PS3 XDR RAM Optimization: Free CPU RAM texture buffer after VRAM upload.
+	// RSX renders directly from VRAM (GDDR3), so keeping duplicate pixel data in Cell XDR RAM wastes memory.
+	if (pTexInfo->data)
+	{
+		Z_Free(pTexInfo->data);
+		pTexInfo->data = NULL;
+	}
+#endif
 }
 
 // -----------------+

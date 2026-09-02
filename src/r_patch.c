@@ -212,8 +212,9 @@ void *Patch_AllocateHardwarePatch(patch_t *patch)
 void *Patch_CreateGL(patch_t *patch)
 {
 	GLPatch_t *grPatch = (GLPatch_t *)Patch_AllocateHardwarePatch(patch);
-	if (!grPatch->mipmap->data) // Run HWR_MakePatch in all cases, to recalculate some things
+	if (!grPatch->mipmap->downloaded && !grPatch->mipmap->data) // Run HWR_MakePatch in all cases, to recalculate some things
 		HWR_MakePatch(patch, grPatch, grPatch->mipmap, false);
 	return grPatch;
 }
 #endif // HWRENDER
+
