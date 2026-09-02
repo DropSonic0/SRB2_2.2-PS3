@@ -6,7 +6,12 @@
 #include <sys/event.h>
 #include <pthread.h>
 #include <sys/timer.h>
+#include <sys/spu_thread.h>
+#include <sys/spu_initialize.h>
+#include <sys/spu_image.h>
 #include <stdlib.h>
+
+#include "SPUS/spu_audio_types.h"
 
 #ifdef true
 #undef true
@@ -63,6 +68,11 @@ typedef struct
 } ps3_audio_t;
 
 static ps3_audio_t *aud = NULL;
+
+static boolean g_spu_audio_enabled = false;
+static sys_spu_thread_t g_spu_thread_id;
+static sys_spu_thread_group_t g_spu_group_id;
+static spu_audio_control_t g_spu_control_block __attribute__((aligned(128)));
 
 static inline fifo_buffer_t *fifo_new(size_t size)
 {
@@ -952,6 +962,9 @@ void I_StartupSound(void)
 		return;
 	}
 
+	memset(&g_spu_control_block, 0, sizeof(g_spu_control_block));
+	g_spu_audio_enabled = false;
+
 	sound_started = 1;
 }
 
@@ -959,6 +972,13 @@ void I_ShutdownSound(void)
 {
 	if (!sound_started)
 		return;
+
+	if (g_spu_audio_enabled) {
+		sys_spu_thread_write_snr(g_spu_thread_id, 0, 0xFFFFFFFF);
+		sys_spu_thread_group_join(g_spu_group_id, NULL, NULL);
+		sys_spu_thread_group_destroy(g_spu_group_id);
+		g_spu_audio_enabled = false;
+	}
 
 	cellAudioPortExit();
 	sound_started = 0;
