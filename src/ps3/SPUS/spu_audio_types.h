@@ -11,6 +11,8 @@
 #define SPU_AUDIO_MAX_CHANNELS 32
 #define SPU_AUDIO_BLOCK_SAMPLES 256
 
+#define SPU_MUSIC_SRC_MAX_FRAMES 512
+
 /*
  * SPU Audio Channel parameters.
  * Must be aligned to 16 bytes and size must be a multiple of 16 bytes for DMA transfers.
@@ -38,12 +40,21 @@ typedef struct __attribute__((aligned(16))) spu_audio_channel
 typedef struct __attribute__((aligned(128))) spu_audio_control
 {
 	uint64_t ea_out_stream;    /* PPU EA of output PCM stream buffer (int16_t stereo) */
-	uint64_t ea_music_stream;  /* PPU EA of input music PCM stream buffer (int16_t stereo) */
+	uint64_t ea_music_stream;  /* PPU EA of input music PCM buffer, NATIVE sample rate,
+	                              int16_t stereo (NOT pre-resampled to 48kHz) */
 
 	uint32_t num_frames;       /* Number of stereo frames to mix (e.g. 256) */
 	uint32_t num_channels;     /* Number of active SFX channels */
 	int32_t  music_vol_left;   /* Music left volume (0..255) */
 	int32_t  music_vol_right;  /* Music right volume (0..255) */
+
+	uint32_t music_step;            /* [in]  Fixed point 16.16: (native_rate << 16) / 48000 */
+	uint32_t music_step_remainder;  /* [in/out]*/
+	uint32_t music_frames_avail;    /* [in]*/
+	uint32_t music_frames_consumed; /* [out]*/
+
+	volatile uint32_t block_done;   /* [out]*/
+	volatile uint32_t spu_heartbeat; /* [out]*/
 
 	spu_audio_channel_t channels[SPU_AUDIO_MAX_CHANNELS];
 } spu_audio_control_t;

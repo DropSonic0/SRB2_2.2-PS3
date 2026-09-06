@@ -1124,7 +1124,14 @@ void Flush(void)
 		}
 
 		if (texture)
-			texture->downloaded = 0;
+		{
+			GLMipmap_t *mip = texture;
+			while (mip)
+			{
+				mip->downloaded = 0;
+				mip = mip->nextcolormap;
+			}
+		}
 
 		TexCacheHead = pTexInfo->next;
 		free(pTexInfo);
@@ -1138,6 +1145,7 @@ void Flush(void)
 
 	TexCacheTail = TexCacheHead = NULL; //Hurdler: well, TexCacheHead is already NULL
 	tex_downloaded = 0;
+	lt_downloaded = 0;
 
 	free(textureBuffer);
 	textureBuffer = NULL;

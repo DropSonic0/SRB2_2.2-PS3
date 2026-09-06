@@ -255,8 +255,8 @@ void I_StartupGraphics(void)
 
 	memset(&options, 0, sizeof(PSGLinitOptions));
 	options.enable = PSGL_INIT_MAX_SPUS | PSGL_INIT_INITIALIZE_SPUS | PSGL_INIT_HOST_MEMORY_SIZE,
-		options.maxSPUs = 1;
-	options.initializeSPUs = true;
+		options.maxSPUs = 0;
+	options.initializeSPUs = false;
 	options.persistentMemorySize = 0;
 	options.transientMemorySize = 0;
 	options.errorConsole = 0;
