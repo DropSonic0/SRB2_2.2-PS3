@@ -39,24 +39,24 @@
 #endif
 typedef struct
 {
-	UINT8 id_field_length ; // 1
-	UINT8 color_map_type  ; // 2
-	UINT8 image_type      ; // 3
-	UINT8 dummy[5]        ; // 4,  8
-	INT16 x_origin        ; // 9, 10
-	INT16 y_origin        ; //11, 12
-	INT16 width           ; //13, 14
-	INT16 height          ; //15, 16
-	UINT8 image_pix_size  ; //17
+	UINT8 id_field_length; // 1
+	UINT8 color_map_type; // 2
+	UINT8 image_type; // 3
+	UINT8 dummy[5]; // 4,  8
+	INT16 x_origin; // 9, 10
+	INT16 y_origin; //11, 12
+	INT16 width; //13, 14
+	INT16 height; //15, 16
+	UINT8 image_pix_size; //17
 	UINT8 image_descriptor; //18
 } ATTRPACK TGAHeader; // sizeof is 18
 #if defined(_MSC_VER)
 #pragma pack()
 #endif
 
-static UINT8 softwaretranstogl[11]    = {  0, 25, 51, 76,102,127,153,178,204,229,255};
-static UINT8 softwaretranstogl_hi[11] = {  0, 51,102,153,204,255,255,255,255,255,255};
-static UINT8 softwaretranstogl_lo[11] = {  0, 12, 24, 36, 48, 60, 71, 83, 95,111,127};
+static UINT8 softwaretranstogl[11] = { 0, 25, 51, 76, 102, 127, 153, 178, 204, 229, 255 };
+static UINT8 softwaretranstogl_hi[11] = { 0, 51, 102, 153, 204, 255, 255, 255, 255, 255, 255 };
+static UINT8 softwaretranstogl_lo[11] = { 0, 12, 24, 36, 48, 60, 71, 83, 95, 111, 127 };
 
 void HWR_DrawStretchyFixedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale, fixed_t vscale, INT32 option, const UINT8 *colormap)
 {
@@ -69,10 +69,10 @@ void HWR_DrawStretchyFixedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t p
 	UINT8 opacity = 0xFF;
 	GLPatch_t *hwrPatch;
 
-//  3--2
-//  | /|
-//  |/ |
-//  0--1
+	//  3--2
+	//  | /|
+	//  |/ |
+	//  0--1
 	float dup, fscalew, fscaleh, fwidth, fheight;
 
 	UINT8 perplayershuffle = 0;
@@ -90,7 +90,7 @@ void HWR_DrawStretchyFixedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t p
 		if (alphalevel == 10) opacity = softwaretranstogl_lo[st_translucency]; // V_HUDTRANSHALF
 		else if (alphalevel == 11) opacity = softwaretranstogl[st_translucency]; // V_HUDTRANS
 		else if (alphalevel == 12) opacity = softwaretranstogl_hi[st_translucency]; // V_HUDTRANSDOUBLE
-		else opacity = softwaretranstogl[10-alphalevel];
+		else opacity = softwaretranstogl[10 - alphalevel];
 	}
 
 	dup = (float)vid.dup;
@@ -133,65 +133,65 @@ void HWR_DrawStretchyFixedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t p
 
 	if (splitscreen && (option & V_PERPLAYER))
 	{
-		float adjusty = ((option & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT)/2.0f;
+		float adjusty = ((option & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT) / 2.0f;
 		fscaleh /= 2;
 		cy /= 2;
 #ifdef QUADS
 		if (splitscreen > 1) // 3 or 4 players
 		{
-			float adjustx = ((option & V_NOSCALESTART) ? vid.width : BASEVIDWIDTH)/2.0f;
+			float adjustx = ((option & V_NOSCALESTART) ? vid.width : BASEVIDWIDTH) / 2.0f;
 			fscalew /= 2;
 			cx /= 2;
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(option & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(option & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
-				option &= ~V_SNAPTOBOTTOM|V_SNAPTORIGHT;
+				option &= ~V_SNAPTOBOTTOM | V_SNAPTORIGHT;
 			}
 			else if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(option & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(option & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				cx += adjustx;
-				option &= ~V_SNAPTOBOTTOM|V_SNAPTOLEFT;
+				option &= ~V_SNAPTOBOTTOM | V_SNAPTOLEFT;
 			}
 			else if (stplyr == &players[thirddisplayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(option & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(option & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
 				cy += adjusty;
-				option &= ~V_SNAPTOTOP|V_SNAPTORIGHT;
+				option &= ~V_SNAPTOTOP | V_SNAPTORIGHT;
 			}
 			else if (stplyr == &players[fourthdisplayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(option & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(option & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				cx += adjustx;
 				cy += adjusty;
-				option &= ~V_SNAPTOTOP|V_SNAPTOLEFT;
+				option &= ~V_SNAPTOTOP | V_SNAPTOLEFT;
 			}
 		}
 		else
 #endif
-		// 2 players
+			// 2 players
 		{
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle = 1;
 				option &= ~V_SNAPTOBOTTOM;
 			}
 			else //if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle = 2;
 				cy += adjusty;
 				option &= ~V_SNAPTOTOP;
@@ -224,22 +224,22 @@ void HWR_DrawStretchyFixedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t p
 				if (option & V_SNAPTORIGHT)
 					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup));
 				else if (!(option & V_SNAPTOLEFT))
-					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup))/2;
+					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup)) / 2;
 				if (perplayershuffle & 4)
-					cx -= ((float)vid.width - ((float)BASEVIDWIDTH * dup))/4;
+					cx -= ((float)vid.width - ((float)BASEVIDWIDTH * dup)) / 4;
 				else if (perplayershuffle & 8)
-					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup))/4;
+					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup)) / 4;
 			}
 			if (fabsf((float)vid.height - (float)BASEVIDHEIGHT * dup) > 1.0E-36f)
 			{
 				if (option & V_SNAPTOBOTTOM)
 					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup));
 				else if (!(option & V_SNAPTOTOP))
-					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup))/2;
+					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup)) / 2;
 				if (perplayershuffle & 1)
-					cy -= ((float)vid.height - ((float)BASEVIDHEIGHT * dup))/4;
+					cy -= ((float)vid.height - ((float)BASEVIDHEIGHT * dup)) / 4;
 				else if (perplayershuffle & 2)
-					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup))/4;
+					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup)) / 4;
 			}
 		}
 	}
@@ -256,8 +256,8 @@ void HWR_DrawStretchyFixedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t p
 	}
 
 	// positions of the cx, cy, are between 0 and vid.width/vid.height now, we need them to be between -1 and 1
-	cx = -1 + (cx / (vid.width/2));
-	cy = 1 - (cy / (vid.height/2));
+	cx = -1 + (cx / (vid.width / 2));
+	cy = 1 - (cy / (vid.height / 2));
 
 	// fwidth and fheight are similar
 	fwidth /= vid.width / 2;
@@ -287,7 +287,7 @@ void HWR_DrawStretchyFixedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t p
 	v[2].t = v[3].t = hwrPatch->max_t;
 
 	// clip it since it is used for bunny scroll in doom I
-	flags = HWR_GetBlendModeFlag(blendmode+1)|PF_NoDepthTest;
+	flags = HWR_GetBlendModeFlag(blendmode + 1) | PF_NoDepthTest;
 
 	if (alphalevel)
 	{
@@ -311,10 +311,10 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 	UINT8 blendmode = ((option & V_BLENDMASK) >> V_BLENDSHIFT);
 	GLPatch_t *hwrPatch;
 
-//  3--2
-//  | /|
-//  |/ |
-//  0--1
+	//  3--2
+	//  | /|
+	//  |/ |
+	//  0--1
 	float dup, fscalew, fscaleh, fwidth, fheight;
 
 	UINT8 perplayershuffle = 0;
@@ -351,65 +351,65 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 
 	if (splitscreen && (option & V_PERPLAYER))
 	{
-		float adjusty = ((option & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT)/2.0f;
+		float adjusty = ((option & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT) / 2.0f;
 		fscaleh /= 2;
 		cy /= 2;
 #ifdef QUADS
 		if (splitscreen > 1) // 3 or 4 players
 		{
-			float adjustx = ((option & V_NOSCALESTART) ? vid.width : BASEVIDWIDTH)/2.0f;
+			float adjustx = ((option & V_NOSCALESTART) ? vid.width : BASEVIDWIDTH) / 2.0f;
 			fscalew /= 2;
 			cx /= 2;
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(option & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(option & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
-				option &= ~V_SNAPTOBOTTOM|V_SNAPTORIGHT;
+				option &= ~V_SNAPTOBOTTOM | V_SNAPTORIGHT;
 			}
 			else if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(option & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(option & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				cx += adjustx;
-				option &= ~V_SNAPTOBOTTOM|V_SNAPTOLEFT;
+				option &= ~V_SNAPTOBOTTOM | V_SNAPTOLEFT;
 			}
 			else if (stplyr == &players[thirddisplayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(option & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(option & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
 				cy += adjusty;
-				option &= ~V_SNAPTOTOP|V_SNAPTORIGHT;
+				option &= ~V_SNAPTOTOP | V_SNAPTORIGHT;
 			}
 			else if (stplyr == &players[fourthdisplayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(option & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(option & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				cx += adjustx;
 				cy += adjusty;
-				option &= ~V_SNAPTOTOP|V_SNAPTOLEFT;
+				option &= ~V_SNAPTOTOP | V_SNAPTOLEFT;
 			}
 		}
 		else
 #endif
-		// 2 players
+			// 2 players
 		{
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle = 1;
 				option &= ~V_SNAPTOBOTTOM;
 			}
 			else //if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(option & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(option & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle = 2;
 				cy += adjusty;
 				option &= ~V_SNAPTOTOP;
@@ -433,22 +433,22 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 				if (option & V_SNAPTORIGHT)
 					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup));
 				else if (!(option & V_SNAPTOLEFT))
-					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup))/2;
+					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup)) / 2;
 				if (perplayershuffle & 4)
-					cx -= ((float)vid.width - ((float)BASEVIDWIDTH * dup))/4;
+					cx -= ((float)vid.width - ((float)BASEVIDWIDTH * dup)) / 4;
 				else if (perplayershuffle & 8)
-					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup))/4;
+					cx += ((float)vid.width - ((float)BASEVIDWIDTH * dup)) / 4;
 			}
 			if (fabsf((float)vid.height - (float)BASEVIDHEIGHT * dup) > 1.0E-36f)
 			{
 				if (option & V_SNAPTOBOTTOM)
 					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup));
 				else if (!(option & V_SNAPTOTOP))
-					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup))/2;
+					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup)) / 2;
 				if (perplayershuffle & 1)
-					cy -= ((float)vid.height - ((float)BASEVIDHEIGHT * dup))/4;
+					cy -= ((float)vid.height - ((float)BASEVIDHEIGHT * dup)) / 4;
 				else if (perplayershuffle & 2)
-					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup))/4;
+					cy += ((float)vid.height - ((float)BASEVIDHEIGHT * dup)) / 4;
 			}
 		}
 	}
@@ -456,11 +456,11 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 	fwidth = FIXED_TO_FLOAT(w);
 	fheight = FIXED_TO_FLOAT(h);
 
-	if (sx + w > gpatch->width<<FRACBITS)
-		fwidth = FIXED_TO_FLOAT((gpatch->width<<FRACBITS) - sx);
+	if (sx + w > gpatch->width << FRACBITS)
+		fwidth = FIXED_TO_FLOAT((gpatch->width << FRACBITS) - sx);
 
-	if (sy + h > gpatch->height<<FRACBITS)
-		fheight = FIXED_TO_FLOAT((gpatch->height<<FRACBITS) - sy);
+	if (sy + h > gpatch->height << FRACBITS)
+		fheight = FIXED_TO_FLOAT((gpatch->height << FRACBITS) - sy);
 
 	if (pscale != FRACUNIT || vscale != FRACUNIT || (splitscreen && option & V_PERPLAYER))
 	{
@@ -474,8 +474,8 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 	}
 
 	// positions of the cx, cy, are between 0 and vid.width/vid.height now, we need them to be between -1 and 1
-	cx = -1 + (cx / (vid.width/2));
-	cy = 1 - (cy / (vid.height/2));
+	cx = -1 + (cx / (vid.width / 2));
+	cy = 1 - (cy / (vid.height / 2));
 
 	// fwidth and fheight are similar
 	fwidth /= vid.width / 2;
@@ -490,17 +490,17 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 
 	v[0].z = v[1].z = v[2].z = v[3].z = 1.0f;
 
-	v[0].s = v[3].s = (FIXED_TO_FLOAT(sx)/(float)(gpatch->width))*hwrPatch->max_s;
-	if (sx + w > gpatch->width<<FRACBITS)
+	v[0].s = v[3].s = (FIXED_TO_FLOAT(sx) / (float)(gpatch->width))*hwrPatch->max_s;
+	if (sx + w > gpatch->width << FRACBITS)
 		v[2].s = v[1].s = hwrPatch->max_s;
 	else
-		v[2].s = v[1].s = (FIXED_TO_FLOAT(sx+w)/(float)(gpatch->width))*hwrPatch->max_s;
+		v[2].s = v[1].s = (FIXED_TO_FLOAT(sx + w) / (float)(gpatch->width))*hwrPatch->max_s;
 
-	v[0].t = v[1].t = (FIXED_TO_FLOAT(sy)/(float)(gpatch->height))*hwrPatch->max_t;
-	if (sy + h > gpatch->height<<FRACBITS)
+	v[0].t = v[1].t = (FIXED_TO_FLOAT(sy) / (float)(gpatch->height))*hwrPatch->max_t;
+	if (sy + h > gpatch->height << FRACBITS)
 		v[2].t = v[3].t = hwrPatch->max_t;
 	else
-		v[2].t = v[3].t = (FIXED_TO_FLOAT(sy+h)/(float)(gpatch->height))*hwrPatch->max_t;
+		v[2].t = v[3].t = (FIXED_TO_FLOAT(sy + h) / (float)(gpatch->height))*hwrPatch->max_t;
 
 	// Auto-crop at splitscreen borders!
 	if (splitscreen && (option & V_PERPLAYER))
@@ -510,13 +510,13 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 #ifdef QUADS
 		if (splitscreen > 1) // 3 or 4 players
 		{
-			#error Auto-cropping doesnt take quadscreen into account! Fix it!
+#error Auto-cropping doesnt take quadscreen into account! Fix it!
 			// Hint: For player 1/2, copy player 1's code below. For player 3/4, copy player 2's code below
 			// For player 1/3 and 2/4, mangle the below code to apply horizontally instead of vertically
 		}
 		else
 #endif
-		// 2 players
+			// 2 players
 		{
 			if (stplyr == &players[displayplayer]) // Player 1's screen, crop at the bottom
 			{
@@ -541,7 +541,7 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 					// By swapping v[2] and v[0], we can use remaining_percentage for less operations
 					//v[2].t = v[3].t = lerp(v[0].t, v[2].t, remaining_percentage);
 
-					v[2].t = v[3].t = flerp(v[0].t, v[2].t, cy/fheight);
+					v[2].t = v[3].t = flerp(v[0].t, v[2].t, cy / fheight);
 				}
 			}
 			else //if (stplyr == &players[secondarydisplayplayer]) // Player 2's screen, crop at the top
@@ -565,7 +565,7 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 					//float remaining_percentage = (fheight - cy) / fheight;
 					//v[0].t = v[1].t = lerp(v[0].t, v[2].t, cropped_percentage);
 
-					v[0].t = v[1].t = flerp(v[0].t, v[2].t, cy/fheight);
+					v[0].t = v[1].t = flerp(v[0].t, v[2].t, cy / fheight);
 				}
 			}
 		}
@@ -573,7 +573,7 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 	}
 
 	// clip it since it is used for bunny scroll in doom I
-	flags = HWR_GetBlendModeFlag(blendmode+1)|PF_NoDepthTest;
+	flags = HWR_GetBlendModeFlag(blendmode + 1) | PF_NoDepthTest;
 
 	if (alphalevel)
 	{
@@ -583,7 +583,7 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 		if (alphalevel == 10) Surf.PolyColor.s.alpha = softwaretranstogl_lo[st_translucency]; // V_HUDTRANSHALF
 		else if (alphalevel == 11) Surf.PolyColor.s.alpha = softwaretranstogl[st_translucency]; // V_HUDTRANS
 		else if (alphalevel == 12) Surf.PolyColor.s.alpha = softwaretranstogl_hi[st_translucency]; // V_HUDTRANSDOUBLE
-		else Surf.PolyColor.s.alpha = softwaretranstogl[10-alphalevel];
+		else Surf.PolyColor.s.alpha = softwaretranstogl[10 - alphalevel];
 
 		flags |= PF_Modulated;
 		HWD.pfnDrawPolygon(&Surf, v, 4, flags);
@@ -599,29 +599,29 @@ void HWR_DrawCroppedPatch(patch_t *gpatch, fixed_t x, fixed_t y, fixed_t pscale,
 // --------------------------------------------------------------------------
 // Fills a box of pixels using a flat texture as a pattern
 // --------------------------------------------------------------------------
-void HWR_DrawFlatFill (INT32 x, INT32 y, INT32 w, INT32 h, lumpnum_t flatlumpnum)
+void HWR_DrawFlatFill(INT32 x, INT32 y, INT32 w, INT32 h, lumpnum_t flatlumpnum)
 {
 	FOutVector v[4];
 	const size_t len = W_LumpLength(flatlumpnum);
 	UINT16 flatflag = R_GetFlatSize(len) - 1;
 	double dflatsize = (double)(flatflag + 1);
 
-//  3--2
-//  | /|
-//  |/ |
-//  0--1
+	//  3--2
+	//  | /|
+	//  |/ |
+	//  0--1
 
-	v[0].x = v[3].x = (x - 160.0f)/160.0f;
-	v[2].x = v[1].x = ((x+w) - 160.0f)/160.0f;
-	v[0].y = v[1].y = -(y - 100.0f)/100.0f;
-	v[2].y = v[3].y = -((y+h) - 100.0f)/100.0f;
+	v[0].x = v[3].x = (x - 160.0f) / 160.0f;
+	v[2].x = v[1].x = ((x + w) - 160.0f) / 160.0f;
+	v[0].y = v[1].y = -(y - 100.0f) / 100.0f;
+	v[2].y = v[3].y = -((y + h) - 100.0f) / 100.0f;
 
 	v[0].z = v[1].z = v[2].z = v[3].z = 1.0f;
 
-	v[0].s = v[3].s = (float)((x & flatflag)/dflatsize);
-	v[2].s = v[1].s = (float)(v[0].s + w/dflatsize);
-	v[0].t = v[1].t = (float)((y & flatflag)/dflatsize);
-	v[2].t = v[3].t = (float)(v[0].t + h/dflatsize);
+	v[0].s = v[3].s = (float)((x & flatflag) / dflatsize);
+	v[2].s = v[1].s = (float)(v[0].s + w / dflatsize);
+	v[0].t = v[1].t = (float)((y & flatflag) / dflatsize);
+	v[2].t = v[3].t = (float)(v[0].t + h / dflatsize);
 
 	HWR_GetRawFlat(flatlumpnum);
 
@@ -646,12 +646,12 @@ void HWR_FadeScreenMenuBack(UINT16 color, UINT8 strength)
 {
 	FOutVector  v[4];
 	FSurfaceInfo Surf;
-	FBITFIELD poly_flags = PF_NoTexture|PF_Modulated|PF_NoDepthTest;
+	FBITFIELD poly_flags = PF_NoTexture | PF_Modulated | PF_NoDepthTest;
 
 	v[0].x = v[3].x = -1.0f;
-	v[2].x = v[1].x =  1.0f;
+	v[2].x = v[1].x = 1.0f;
 	v[0].y = v[1].y = -1.0f;
-	v[2].y = v[3].y =  1.0f;
+	v[2].y = v[3].y = 1.0f;
 	v[0].z = v[1].z = v[2].z = v[3].z = 1.0f;
 
 	v[0].s = v[3].s = 0.0f;
@@ -667,9 +667,9 @@ void HWR_FadeScreenMenuBack(UINT16 color, UINT8 strength)
 			INT32 r, g, b;
 			int fade = strength * 8;
 
-			r = FADEREDFACTOR*fade/10;
-			g = FADEGREENFACTOR*fade/10;
-			b = FADEBLUEFACTOR*fade/10;
+			r = FADEREDFACTOR*fade / 10;
+			g = FADEGREENFACTOR*fade / 10;
+			b = FADEBLUEFACTOR*fade / 10;
 
 			Surf.PolyColor.s.red = min(r, 255);
 			Surf.PolyColor.s.green = min(g, 255);
@@ -691,7 +691,7 @@ void HWR_FadeScreenMenuBack(UINT16 color, UINT8 strength)
 				Surf.LightInfo.light_level = strength;
 				HWD.pfnMakeScreenTexture(scr_tex);
 				HWD.pfnSetShader(HWR_GetShaderFromTarget(SHADER_UI_COLORMAP_FADE));
-				HWD.pfnDrawScreenTexture(scr_tex, &Surf, PF_ColorMapped|PF_NoDepthTest);
+				HWD.pfnDrawScreenTexture(scr_tex, &Surf, PF_ColorMapped | PF_NoDepthTest);
 				HWD.pfnUnSetShader();
 
 				return;
@@ -699,7 +699,7 @@ void HWR_FadeScreenMenuBack(UINT16 color, UINT8 strength)
 			else
 			{
 				Surf.PolyColor.rgba = UINT2RGBA(0x01010160);
-				Surf.PolyColor.s.alpha = (strength*8);
+				Surf.PolyColor.s.alpha = (strength * 8);
 				poly_flags |= PF_Translucent;
 			}
 		}
@@ -707,7 +707,7 @@ void HWR_FadeScreenMenuBack(UINT16 color, UINT8 strength)
 	else // Do TRANSMAP** fade.
 	{
 		RGBA_t *palette = HWR_GetTexturePalette();
-		Surf.PolyColor.rgba = palette[color&0xFF].rgba;
+		Surf.PolyColor.rgba = palette[color & 0xFF].rgba;
 		Surf.PolyColor.s.alpha = softwaretranstogl[strength];
 		poly_flags |= PF_Translucent;
 	}
@@ -725,72 +725,72 @@ void HWR_DrawFadeFill(INT32 x, INT32 y, INT32 w, INT32 h, INT32 color, UINT16 ac
 
 	UINT8 perplayershuffle = 0;
 
-//  3--2
-//  | /|
-//  |/ |
-//  0--1
+	//  3--2
+	//  | /|
+	//  |/ |
+	//  0--1
 
 	if (splitscreen && (color & V_PERPLAYER))
 	{
-		fixed_t adjusty = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT)/2.0f;
+		fixed_t adjusty = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT) / 2.0f;
 		h >>= 1;
 		y >>= 1;
 #ifdef QUADS
 		if (splitscreen > 1) // 3 or 4 players
 		{
-			fixed_t adjustx = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT)/2.0f;
+			fixed_t adjustx = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT) / 2.0f;
 			w >>= 1;
 			x >>= 1;
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
-				color &= ~V_SNAPTOBOTTOM|V_SNAPTORIGHT;
+				color &= ~V_SNAPTOBOTTOM | V_SNAPTORIGHT;
 			}
 			else if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				x += adjustx;
-				color &= ~V_SNAPTOBOTTOM|V_SNAPTOLEFT;
+				color &= ~V_SNAPTOBOTTOM | V_SNAPTOLEFT;
 			}
 			else if (stplyr == &players[thirddisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
 				y += adjusty;
-				color &= ~V_SNAPTOTOP|V_SNAPTORIGHT;
+				color &= ~V_SNAPTOTOP | V_SNAPTORIGHT;
 			}
 			else //if (stplyr == &players[fourthdisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				x += adjustx;
 				y += adjusty;
-				color &= ~V_SNAPTOTOP|V_SNAPTOLEFT;
+				color &= ~V_SNAPTOTOP | V_SNAPTOLEFT;
 			}
 		}
 		else
 #endif
-		// 2 players
+			// 2 players
 		{
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
 				color &= ~V_SNAPTOBOTTOM;
 			}
 			else //if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
 				y += adjusty;
 				color &= ~V_SNAPTOTOP;
@@ -875,15 +875,15 @@ void HWR_DrawFadeFill(INT32 x, INT32 y, INT32 w, INT32 h, INT32 color, UINT16 ac
 	if (actualcolor & 0xFF00) // Do COLORMAP fade.
 	{
 		Surf.PolyColor.rgba = UINT2RGBA(0x01010160);
-		Surf.PolyColor.s.alpha = (strength*8);
+		Surf.PolyColor.s.alpha = (strength * 8);
 	}
 	else // Do TRANSMAP** fade.
 	{
 		RGBA_t *palette = HWR_GetTexturePalette();
-		Surf.PolyColor.rgba = palette[actualcolor&0xFF].rgba;
+		Surf.PolyColor.rgba = palette[actualcolor & 0xFF].rgba;
 		Surf.PolyColor.s.alpha = softwaretranstogl[strength];
 	}
-	HWD.pfnDrawPolygon(&Surf, v, 4, PF_NoTexture|PF_Modulated|PF_Translucent|PF_NoDepthTest);
+	HWD.pfnDrawPolygon(&Surf, v, 4, PF_NoTexture | PF_Modulated | PF_Translucent | PF_NoDepthTest);
 }
 
 // Draw the console background with translucency support
@@ -897,9 +897,9 @@ void HWR_DrawConsoleBack(UINT32 color, INT32 height)
 		height = vid.height;
 
 	v[0].x = v[3].x = -1.0f;
-	v[2].x = v[1].x =  1.0f;
-	v[0].y = v[1].y =  1.0f-((height<<1)/(float)vid.height);
-	v[2].y = v[3].y =  1.0f;
+	v[2].x = v[1].x = 1.0f;
+	v[0].y = v[1].y = 1.0f - ((height << 1) / (float)vid.height);
+	v[2].y = v[3].y = 1.0f;
 	v[0].z = v[1].z = v[2].z = v[3].z = 1.0f;
 
 	v[0].s = v[3].s = 0.0f;
@@ -910,7 +910,7 @@ void HWR_DrawConsoleBack(UINT32 color, INT32 height)
 	Surf.PolyColor.rgba = UINT2RGBA(color);
 	Surf.PolyColor.s.alpha = 0x80;
 
-	HWD.pfnDrawPolygon(&Surf, v, 4, PF_NoTexture|PF_Modulated|PF_Translucent|PF_NoDepthTest);
+	HWD.pfnDrawPolygon(&Surf, v, 4, PF_NoTexture | PF_Modulated | PF_Translucent | PF_NoDepthTest);
 }
 
 // Very similar to HWR_DrawConsoleBack, except we draw from the middle(-ish) of the screen to the bottom.
@@ -922,14 +922,14 @@ void HWR_DrawTutorialBack(UINT32 color, INT32 boxheight)
 	if (boxheight < 0)
 		height = -boxheight;
 	else
-		height = (boxheight * 4) + (boxheight/2)*5; // 4 lines of space plus gaps between and some leeway
+		height = (boxheight * 4) + (boxheight / 2) * 5; // 4 lines of space plus gaps between and some leeway
 
 	// setup some neat-o translucency effect
 
 	v[0].x = v[3].x = -1.0f;
-	v[2].x = v[1].x =  1.0f;
-	v[0].y = v[1].y =  -1.0f;
-	v[2].y = v[3].y =  -1.0f+((height<<1)/(float)vid.height);
+	v[2].x = v[1].x = 1.0f;
+	v[0].y = v[1].y = -1.0f;
+	v[2].y = v[3].y = -1.0f + ((height << 1) / (float)vid.height);
 	v[0].z = v[1].z = v[2].z = v[3].z = 1.0f;
 
 	v[0].s = v[3].s = 0.0f;
@@ -940,7 +940,7 @@ void HWR_DrawTutorialBack(UINT32 color, INT32 boxheight)
 	Surf.PolyColor.rgba = UINT2RGBA(color);
 	Surf.PolyColor.s.alpha = (color == 0 ? 0xC0 : 0x80); // make black darker, like software
 
-	HWD.pfnDrawPolygon(&Surf, v, 4, PF_NoTexture|PF_Modulated|PF_Translucent|PF_NoDepthTest);
+	HWD.pfnDrawPolygon(&Surf, v, 4, PF_NoTexture | PF_Modulated | PF_Translucent | PF_NoDepthTest);
 }
 
 // ==========================================================================
@@ -957,13 +957,13 @@ void HWR_drawAMline(const fline_t *fl, INT32 color)
 	RGBA_t color_rgba;
 	RGBA_t *palette = HWR_GetTexturePalette();
 
-	color_rgba = palette[color&0xFF];
+	color_rgba = palette[color & 0xFF];
 
-	v1.x = ((float)fl->a.x-(vid.width/2.0f))*(2.0f/vid.width);
-	v1.y = ((float)fl->a.y-(vid.height/2.0f))*(2.0f/vid.height);
+	v1.x = ((float)fl->a.x - (vid.width / 2.0f))*(2.0f / vid.width);
+	v1.y = ((float)fl->a.y - (vid.height / 2.0f))*(2.0f / vid.height);
 
-	v2.x = ((float)fl->b.x-(vid.width/2.0f))*(2.0f/vid.width);
-	v2.y = ((float)fl->b.y-(vid.height/2.0f))*(2.0f/vid.height);
+	v2.x = ((float)fl->b.x - (vid.width / 2.0f))*(2.0f / vid.width);
+	v2.y = ((float)fl->b.y - (vid.height / 2.0f))*(2.0f / vid.height);
 
 	HWD.pfnDraw2DLine(&v1, &v2, color_rgba);
 }
@@ -979,72 +979,72 @@ void HWR_DrawConsoleFill(INT32 x, INT32 y, INT32 w, INT32 h, INT32 color, UINT32
 
 	UINT8 perplayershuffle = 0;
 
-//  3--2
-//  | /|
-//  |/ |
-//  0--1
+	//  3--2
+	//  | /|
+	//  |/ |
+	//  0--1
 
 	if (splitscreen && (color & V_PERPLAYER))
 	{
-		fixed_t adjusty = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT)/2.0f;
+		fixed_t adjusty = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT) / 2.0f;
 		h >>= 1;
 		y >>= 1;
 #ifdef QUADS
 		if (splitscreen > 1) // 3 or 4 players
 		{
-			fixed_t adjustx = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT)/2.0f;
+			fixed_t adjustx = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT) / 2.0f;
 			w >>= 1;
 			x >>= 1;
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
-				color &= ~V_SNAPTOBOTTOM|V_SNAPTORIGHT;
+				color &= ~V_SNAPTOBOTTOM | V_SNAPTORIGHT;
 			}
 			else if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				x += adjustx;
-				color &= ~V_SNAPTOBOTTOM|V_SNAPTOLEFT;
+				color &= ~V_SNAPTOBOTTOM | V_SNAPTOLEFT;
 			}
 			else if (stplyr == &players[thirddisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
 				y += adjusty;
-				color &= ~V_SNAPTOTOP|V_SNAPTORIGHT;
+				color &= ~V_SNAPTOTOP | V_SNAPTORIGHT;
 			}
 			else //if (stplyr == &players[fourthdisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				x += adjustx;
 				y += adjusty;
-				color &= ~V_SNAPTOTOP|V_SNAPTOLEFT;
+				color &= ~V_SNAPTOTOP | V_SNAPTOLEFT;
 			}
 		}
 		else
 #endif
-		// 2 players
+			// 2 players
 		{
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
 				color &= ~V_SNAPTOBOTTOM;
 			}
 			else //if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
 				y += adjusty;
 				color &= ~V_SNAPTOTOP;
@@ -1131,7 +1131,7 @@ void HWR_DrawConsoleFill(INT32 x, INT32 y, INT32 w, INT32 h, INT32 color, UINT32
 	Surf.PolyColor.rgba = UINT2RGBA(actualcolor);
 	Surf.PolyColor.s.alpha = 0x80;
 
-	HWD.pfnDrawPolygon(&Surf, v, 4, PF_NoTexture|PF_Modulated|PF_Translucent|PF_NoDepthTest);
+	HWD.pfnDrawPolygon(&Surf, v, 4, PF_NoTexture | PF_Modulated | PF_Translucent | PF_NoDepthTest);
 }
 
 // -----------------+
@@ -1147,72 +1147,72 @@ void HWR_DrawFill(INT32 x, INT32 y, INT32 w, INT32 h, INT32 color)
 
 	UINT8 perplayershuffle = 0;
 
-//  3--2
-//  | /|
-//  |/ |
-//  0--1
+	//  3--2
+	//  | /|
+	//  |/ |
+	//  0--1
 
 	if (splitscreen && (color & V_PERPLAYER))
 	{
-		fixed_t adjusty = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT)/2.0f;
+		fixed_t adjusty = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT) / 2.0f;
 		h >>= 1;
 		y >>= 1;
 #ifdef QUADS
 		if (splitscreen > 1) // 3 or 4 players
 		{
-			fixed_t adjustx = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT)/2.0f;
+			fixed_t adjustx = ((color & V_NOSCALESTART) ? vid.height : BASEVIDHEIGHT) / 2.0f;
 			w >>= 1;
 			x >>= 1;
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
-				color &= ~V_SNAPTOBOTTOM|V_SNAPTORIGHT;
+				color &= ~V_SNAPTOBOTTOM | V_SNAPTORIGHT;
 			}
 			else if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				x += adjustx;
-				color &= ~V_SNAPTOBOTTOM|V_SNAPTOLEFT;
+				color &= ~V_SNAPTOBOTTOM | V_SNAPTOLEFT;
 			}
 			else if (stplyr == &players[thirddisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 4;
 				y += adjusty;
-				color &= ~V_SNAPTOTOP|V_SNAPTORIGHT;
+				color &= ~V_SNAPTOTOP | V_SNAPTORIGHT;
 			}
 			else //if (stplyr == &players[fourthdisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
-				if (!(color & (V_SNAPTOLEFT|V_SNAPTORIGHT)))
+				if (!(color & (V_SNAPTOLEFT | V_SNAPTORIGHT)))
 					perplayershuffle |= 8;
 				x += adjustx;
 				y += adjusty;
-				color &= ~V_SNAPTOTOP|V_SNAPTOLEFT;
+				color &= ~V_SNAPTOTOP | V_SNAPTOLEFT;
 			}
 		}
 		else
 #endif
-		// 2 players
+			// 2 players
 		{
 			if (stplyr == &players[displayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 1;
 				color &= ~V_SNAPTOBOTTOM;
 			}
 			else //if (stplyr == &players[secondarydisplayplayer])
 			{
-				if (!(color & (V_SNAPTOTOP|V_SNAPTOBOTTOM)))
+				if (!(color & (V_SNAPTOTOP | V_SNAPTOBOTTOM)))
 					perplayershuffle |= 2;
 				y += adjusty;
 				color &= ~V_SNAPTOTOP;
@@ -1229,7 +1229,7 @@ void HWR_DrawFill(INT32 x, INT32 y, INT32 w, INT32 h, INT32 color)
 	{
 		if (x == 0 && y == 0 && w == BASEVIDWIDTH && h == BASEVIDHEIGHT)
 		{
-			RGBA_t rgbaColour = palette[color&0xFF];
+			RGBA_t rgbaColour = palette[color & 0xFF];
 			FRGBAFloat clearColour;
 			clearColour.red = (float)rgbaColour.s.red / 255;
 			clearColour.green = (float)rgbaColour.s.green / 255;
@@ -1306,18 +1306,18 @@ void HWR_DrawFill(INT32 x, INT32 y, INT32 w, INT32 h, INT32 color)
 	v[0].t = v[1].t = 0.0f;
 	v[2].t = v[3].t = 1.0f;
 
-	Surf.PolyColor = palette[color&0xFF];
+	Surf.PolyColor = palette[color & 0xFF];
 
 	if (alphalevel)
 	{
 		if (alphalevel == 10) Surf.PolyColor.s.alpha = softwaretranstogl_lo[st_translucency]; // V_HUDTRANSHALF
 		else if (alphalevel == 11) Surf.PolyColor.s.alpha = softwaretranstogl[st_translucency]; // V_HUDTRANS
 		else if (alphalevel == 12) Surf.PolyColor.s.alpha = softwaretranstogl_hi[st_translucency]; // V_HUDTRANSDOUBLE
-		else Surf.PolyColor.s.alpha = softwaretranstogl[10-alphalevel];
+		else Surf.PolyColor.s.alpha = softwaretranstogl[10 - alphalevel];
 	}
 
 	HWD.pfnDrawPolygon(&Surf, v, 4,
-		PF_Modulated|PF_NoTexture|PF_NoDepthTest|PF_Translucent);
+		PF_Modulated | PF_NoTexture | PF_NoDepthTest | PF_Translucent);
 }
 
 #ifdef HAVE_PNG
@@ -1336,10 +1336,16 @@ void HWR_DrawFill(INT32 x, INT32 y, INT32 w, INT32 h, INT32 color)
 #define _FILE_OFFSET_BITS 0
 #endif
 
- #include "png.h"
- #ifdef PNG_WRITE_SUPPORTED
-  #define USE_PNG // PNG is only used if write is supported (see ../m_misc.c)
- #endif
+#ifdef __CELLOS_LV2__
+#include <cell/codec.h>
+#include <cell/sysmodule.h>
+#define USE_PNG
+#else
+#include "png.h"
+#ifdef PNG_WRITE_SUPPORTED
+#define USE_PNG // PNG is only used if write is supported (see ../m_misc.c)
+#endif
+#endif
 #endif
 
 #ifndef USE_PNG
@@ -1365,19 +1371,19 @@ static inline boolean saveTGA(const char *file_name, void *buffer,
 	tga_hdr.image_type = 2;
 	tga_hdr.image_descriptor = 32;
 
-	if ( -1 == write(fd, &tga_hdr, sizeof (TGAHeader)))
+	if (-1 == write(fd, &tga_hdr, sizeof (TGAHeader)))
 	{
 		close(fd);
 		return false;
 	}
 	// format to 888 BGR
-	for (i = 0; i < width * height * 3; i+=3)
+	for (i = 0; i < width * height * 3; i += 3)
 	{
 		const UINT8 temp = buf8[i];
-		buf8[i] = buf8[i+2];
-		buf8[i+2] = temp;
+		buf8[i] = buf8[i + 2];
+		buf8[i + 2] = temp;
 	}
-	if ( -1 == write(fd, buffer, width * height * 3))
+	if (-1 == write(fd, buffer, width * height * 3))
 	{
 		close(fd);
 		return false;

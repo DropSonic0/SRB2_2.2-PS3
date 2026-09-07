@@ -2495,21 +2495,29 @@ void *W_GetCachedPatchNumPwad(UINT16 wad, UINT16 lump)
 
 boolean W_ReadPatchHeaderPwad(UINT16 wadnum, UINT16 lumpnum, INT16 *width, INT16 *height, INT16 *topoffset, INT16 *leftoffset)
 {
-	UINT8 header[PNG_HEADER_SIZE];
+	UINT8 header[128];
 
 	if (!TestValidLump(wadnum, lumpnum))
 		return false;
 
-	W_ReadLumpHeaderPwad(wadnum, lumpnum, header, sizeof header, 0);
-
 	size_t len = W_LumpLengthPwad(wadnum, lumpnum);
+	size_t readlen = len < sizeof(header) ? len : sizeof(header);
+
+	W_ReadLumpHeaderPwad(wadnum, lumpnum, header, readlen, 0);
 
 	if (Picture_IsLumpPNG(header, len))
 	{
 #ifndef NO_PNG_LUMPS
-		UINT8 *png = W_CacheLumpNumPwad(wadnum, lumpnum, PU_CACHE);
-
 		INT32 pwidth = 0, pheight = 0;
+
+		if (Picture_PNGDimensions(header, &pwidth, &pheight, topoffset, leftoffset, readlen))
+		{
+			*width = (INT16)pwidth;
+			*height = (INT16)pheight;
+			return true;
+		}
+
+		UINT8 *png = W_CacheLumpNumPwad(wadnum, lumpnum, PU_CACHE);
 
 		if (!Picture_PNGDimensions(png, &pwidth, &pheight, topoffset, leftoffset, len))
 		{

@@ -59,12 +59,19 @@
 #define _FILE_OFFSET_BITS 0
 #endif
 
+#ifdef __CELLOS_LV2__
+#include <cell/codec/pngdec.h>
+#include <cell/codec/pngenc.h>
+#include <cell/codec/pngcom.h>
+#include <cell/sysmodule.h>
+#else
 #include "png.h"
 #ifndef PNG_READ_SUPPORTED
 #undef HAVE_PNG
 #endif
 #if PNG_LIBPNG_VER < 100207
 //#undef HAVE_PNG
+#endif
 #endif
 #endif
 
@@ -139,6 +146,7 @@ static inline void md2_printModelInfo(model_t *model)
 }
 
 #ifdef HAVE_PNG
+#ifndef __CELLOS_LV2__
 static void PNG_error(png_structp PNG, png_const_charp pngtext)
 {
 	CONS_Debug(DBG_RENDER, "libpng error at %p: %s", PNG, pngtext);
@@ -149,7 +157,326 @@ static void PNG_warn(png_structp PNG, png_const_charp pngtext)
 {
 	CONS_Debug(DBG_RENDER, "libpng warning at %p: %s", PNG, pngtext);
 }
+#endif
 
+#ifdef __CELLOS_LV2__
+typedef struct {
+	uint8_t r, g, b, a;
+} ps3_md2_palette_entry_t;
+
+typedef struct {
+	int has_trns;
+	int has_plte;
+	ps3_md2_palette_entry_t palette[256];
+	int num_palette;
+	uint8_t keyR, keyG, keyB;
+	uint8_t keyGray;
+} ps3_md2_png_ext_t;
+
+static void PS3_MD2_ParsePNG_Chunks(FILE *f, int colorSpace, ps3_md2_png_ext_t *info)
+{
+	int i;
+	uint8_t header[12];
+	memset(info, 0, sizeof(*info));
+	for (i = 0; i < 256; i++)
+	{
+		info->palette[i].r = 0;
+		info->palette[i].g = 0;
+		info->palette[i].b = 0;
+		info->palette[i].a = 0xFF;
+	}
+
+	if (!f) return;
+
+	fseek(f, 8, SEEK_SET);
+
+	while (fread(header, 1, 8, f) == 8)
+	{
+		uint32_t len = (header[0] << 24) | (header[1] << 16) | (header[2] << 8) | header[3];
+		uint8_t *type = &header[4];
+
+		if (type[0] == 'P' && type[1] == 'L' && type[2] == 'T' && type[3] == 'E')
+		{
+			uint8_t data[768];
+			uint32_t readLen = (len > 768) ? 768 : len;
+			if (fread(data, 1, readLen, f) == readLen)
+			{
+				uint32_t entries = readLen / 3;
+				uint32_t j;
+				if (entries > 256) entries = 256;
+				info->has_plte = 1;
+				info->num_palette = (int)entries;
+				for (j = 0; j < entries; j++)
+				{
+					info->palette[j].r = data[j * 3 + 0];
+					info->palette[j].g = data[j * 3 + 1];
+					info->palette[j].b = data[j * 3 + 2];
+					info->palette[j].a = 0xFF;
+				}
+			}
+			fseek(f, len - readLen + 4, SEEK_CUR);
+		}
+		else if (type[0] == 't' && type[1] == 'R' && type[2] == 'N' && type[3] == 'S')
+		{
+			uint8_t data[256];
+			uint32_t readLen = (len > 256) ? 256 : len;
+			if (fread(data, 1, readLen, f) == readLen)
+			{
+				info->has_trns = 1;
+				if (colorSpace == CELL_PNGDEC_PALETTE)
+				{
+					uint32_t j;
+					for (j = 0; j < readLen; j++)
+						info->palette[j].a = data[j];
+				}
+				else if (colorSpace == CELL_PNGDEC_RGB && readLen >= 6)
+				{
+					info->keyR = data[1];
+					info->keyG = data[3];
+					info->keyB = data[5];
+				}
+				else if (colorSpace == CELL_PNGDEC_GRAYSCALE && readLen >= 2)
+				{
+					info->keyGray = data[1];
+				}
+			}
+			fseek(f, len - readLen + 4, SEEK_CUR);
+		}
+		else if (type[0] == 'I' && type[1] == 'D' && type[2] == 'A' && type[3] == 'T')
+		{
+			break;
+		}
+		else
+		{
+			fseek(f, len + 4, SEEK_CUR);
+		}
+	}
+}
+
+static void *ps3_md2_pngdec_malloc(uint32_t size, void *cbCtrlCbArg)
+{
+	(void)cbCtrlCbArg;
+	return malloc(size);
+}
+
+static int32_t ps3_md2_pngdec_free(void *ptr, void *cbCtrlCbArg)
+{
+	(void)cbCtrlCbArg;
+	free(ptr);
+	return 0;
+}
+
+static GLTextureFormat_t PNG_Load(const char *filename, int *w, int *h, GLPatch_t *grpatch)
+{
+	int ret;
+	CellPngDecMainHandle mainHandle;
+	CellPngDecSubHandle subHandle;
+	CellPngDecThreadInParam threadInParam;
+	CellPngDecThreadOutParam threadOutParam;
+	CellPngDecSrc pngdecSrc;
+	CellPngDecOpnInfo pngdecOpenInfo;
+	CellPngDecInfo pngdecInfo;
+	CellPngDecInParam pngdecInParam;
+	CellPngDecOutParam pngdecOutParam;
+	CellPngDecDataCtrlParam pngdecCtrlParam;
+	CellPngDecDataOutInfo pngdecDataOutInfo;
+	uint32_t width, height, pitch;
+	uint8_t *PNG_image;
+	ps3_md2_png_ext_t pngExt;
+
+	char *pngfilename = va("%s"PATHSEP"models"PATHSEP"%s", srb2home, filename);
+	FIL_ForceExtension(pngfilename, ".png");
+
+	FILE *f = fopen(pngfilename, "rb");
+	if (!f)
+	{
+		pngfilename = va("%s"PATHSEP"models"PATHSEP"%s", srb2path, filename);
+		FIL_ForceExtension(pngfilename, ".png");
+		f = fopen(pngfilename, "rb");
+		if (!f)
+			return 0;
+	}
+
+	ret = cellSysmoduleLoadModule(CELL_SYSMODULE_PNGDEC);
+	if (ret != CELL_OK && ret != (int)0x80010003 /* CELL_SYSMODULE_ERROR_DUPLICATED */)
+	{
+		fclose(f);
+		return 0;
+	}
+
+	memset(&threadInParam, 0, sizeof(threadInParam));
+	memset(&threadOutParam, 0, sizeof(threadOutParam));
+	threadInParam.spuThreadEnable = CELL_PNGDEC_SPU_THREAD_DISABLE;
+	threadInParam.ppuThreadPriority = 512;
+	threadInParam.spuThreadPriority = 200;
+	threadInParam.cbCtrlMallocFunc = ps3_md2_pngdec_malloc;
+	threadInParam.cbCtrlMallocArg = NULL;
+	threadInParam.cbCtrlFreeFunc = ps3_md2_pngdec_free;
+	threadInParam.cbCtrlFreeArg = NULL;
+
+	ret = cellPngDecCreate(&mainHandle, &threadInParam, &threadOutParam);
+	if (ret != CELL_OK)
+	{
+		fclose(f);
+		return 0;
+	}
+
+	memset(&pngdecSrc, 0, sizeof(pngdecSrc));
+	pngdecSrc.srcSelect = CELL_PNGDEC_FILE;
+	pngdecSrc.fileName = pngfilename;
+	pngdecSrc.fileOffset = 0;
+	pngdecSrc.fileSize = 0;
+	pngdecSrc.streamPtr = NULL;
+	pngdecSrc.streamSize = 0;
+	pngdecSrc.spuThreadEnable = CELL_PNGDEC_SPU_THREAD_DISABLE;
+
+	ret = cellPngDecOpen(mainHandle, &subHandle, &pngdecSrc, &pngdecOpenInfo);
+	if (ret != CELL_OK)
+	{
+		cellPngDecDestroy(mainHandle);
+		fclose(f);
+		return 0;
+	}
+
+	ret = cellPngDecReadHeader(mainHandle, subHandle, &pngdecInfo);
+	if (ret != CELL_OK)
+	{
+		cellPngDecClose(mainHandle, subHandle);
+		cellPngDecDestroy(mainHandle);
+		fclose(f);
+		return 0;
+	}
+
+	PS3_MD2_ParsePNG_Chunks(f, pngdecInfo.colorSpace, &pngExt);
+	fclose(f);
+
+	memset(&pngdecInParam, 0, sizeof(pngdecInParam));
+	pngdecInParam.commandPtr = NULL;
+	pngdecInParam.outputMode = CELL_PNGDEC_TOP_TO_BOTTOM;
+
+	if (pngdecInfo.colorSpace == CELL_PNGDEC_PALETTE)
+	{
+		pngdecInParam.outputColorSpace = CELL_PNGDEC_PALETTE;
+		pngdecInParam.outputBitDepth = 8;
+		pngdecInParam.outputPackFlag = CELL_PNGDEC_1BYTE_PER_1PIXEL;
+		pngdecInParam.outputAlphaSelect = CELL_PNGDEC_FIX_ALPHA;
+		pngdecInParam.outputColorAlpha = 0xff;
+	}
+	else if (pngdecInfo.colorSpace == CELL_PNGDEC_RGBA ||
+		pngdecInfo.colorSpace == CELL_PNGDEC_GRAYSCALE_ALPHA)
+	{
+		pngdecInParam.outputColorSpace = CELL_PNGDEC_RGBA;
+		pngdecInParam.outputBitDepth = 8;
+		pngdecInParam.outputPackFlag = CELL_PNGDEC_1BYTE_PER_1PIXEL;
+		pngdecInParam.outputAlphaSelect = CELL_PNGDEC_STREAM_ALPHA;
+		pngdecInParam.outputColorAlpha = 0xff;
+	}
+	else
+	{
+		pngdecInParam.outputColorSpace = CELL_PNGDEC_RGBA;
+		pngdecInParam.outputBitDepth = 8;
+		pngdecInParam.outputPackFlag = CELL_PNGDEC_1BYTE_PER_1PIXEL;
+		pngdecInParam.outputAlphaSelect = CELL_PNGDEC_FIX_ALPHA;
+		pngdecInParam.outputColorAlpha = 0xff;
+	}
+
+	ret = cellPngDecSetParameter(mainHandle, subHandle, &pngdecInParam, &pngdecOutParam);
+	if (ret != CELL_OK)
+	{
+		cellPngDecClose(mainHandle, subHandle);
+		cellPngDecDestroy(mainHandle);
+		return 0;
+	}
+
+	width = pngdecOutParam.outputWidth;
+	height = pngdecOutParam.outputHeight;
+
+	if (pngdecInfo.colorSpace == CELL_PNGDEC_PALETTE)
+		pitch = width;
+	else
+		pitch = width * 4;
+
+	if (pngdecInfo.colorSpace == CELL_PNGDEC_PALETTE)
+	{
+		uint8_t *rawBuf = malloc(pitch * height);
+		memset(&pngdecCtrlParam, 0, sizeof(pngdecCtrlParam));
+		pngdecCtrlParam.outputBytesPerLine = pitch;
+
+		ret = cellPngDecDecodeData(mainHandle, subHandle, rawBuf, &pngdecCtrlParam, &pngdecDataOutInfo);
+
+		cellPngDecClose(mainHandle, subHandle);
+		cellPngDecDestroy(mainHandle);
+
+		if (ret != CELL_OK)
+		{
+			free(rawBuf);
+			return 0;
+		}
+
+		PNG_image = Z_Malloc(width * height * 4, PU_HWRMODELTEXTURE, &grpatch->mipmap->data);
+		uint32_t pxCount = width * height;
+		uint32_t p;
+		for (p = 0; p < pxCount; p++)
+		{
+			uint8_t idx = rawBuf[p];
+			PNG_image[p * 4 + 0] = pngExt.palette[idx].r;
+			PNG_image[p * 4 + 1] = pngExt.palette[idx].g;
+			PNG_image[p * 4 + 2] = pngExt.palette[idx].b;
+			PNG_image[p * 4 + 3] = pngExt.palette[idx].a;
+		}
+		free(rawBuf);
+	}
+	else
+	{
+		PNG_image = Z_Malloc(pitch * height, PU_HWRMODELTEXTURE, &grpatch->mipmap->data);
+
+		memset(&pngdecCtrlParam, 0, sizeof(pngdecCtrlParam));
+		pngdecCtrlParam.outputBytesPerLine = pitch;
+
+		ret = cellPngDecDecodeData(mainHandle, subHandle, PNG_image, &pngdecCtrlParam, &pngdecDataOutInfo);
+
+		cellPngDecClose(mainHandle, subHandle);
+		cellPngDecDestroy(mainHandle);
+
+		if (ret != CELL_OK)
+		{
+			Z_Free(grpatch->mipmap->data);
+			return 0;
+		}
+
+		if (pngdecInfo.colorSpace == CELL_PNGDEC_RGB && pngExt.has_trns)
+		{
+			uint32_t pxCount = width * height;
+			uint32_t p;
+			for (p = 0; p < pxCount; p++)
+			{
+				if (PNG_image[p * 4 + 0] == pngExt.keyR &&
+					PNG_image[p * 4 + 1] == pngExt.keyG &&
+					PNG_image[p * 4 + 2] == pngExt.keyB)
+				{
+					PNG_image[p * 4 + 3] = 0x00;
+				}
+			}
+		}
+		else if (pngdecInfo.colorSpace == CELL_PNGDEC_GRAYSCALE && pngExt.has_trns)
+		{
+			uint32_t pxCount = width * height;
+			uint32_t p;
+			for (p = 0; p < pxCount; p++)
+			{
+				if (PNG_image[p * 4 + 0] == pngExt.keyGray)
+				{
+					PNG_image[p * 4 + 3] = 0x00;
+				}
+			}
+		}
+	}
+
+	*w = (int)width;
+	*h = (int)height;
+	return GL_TEXFMT_RGBA;
+}
+#else
 static GLTextureFormat_t PNG_Load(const char *filename, int *w, int *h, GLPatch_t *grpatch)
 {
 	png_structp png_ptr;
@@ -260,6 +587,7 @@ static GLTextureFormat_t PNG_Load(const char *filename, int *w, int *h, GLPatch_
 	*h = (int)height;
 	return GL_TEXFMT_RGBA;
 }
+#endif
 #endif
 
 typedef struct

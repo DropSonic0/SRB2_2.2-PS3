@@ -225,7 +225,7 @@ static char returnWadPath[256];
 #include "../z_zone.h"
 
 #ifndef SYS_MEMORY_PAGE_SIZE_1M
-#define SYS_MEMORY_PAGE_SIZE_1M 0x200ULL
+#define SYS_MEMORY_PAGE_SIZE_1M 0x0000000000000400ULL
 #endif
 
 #define PS3_ALIGNMENT 16
@@ -293,20 +293,24 @@ static void bin_remove(ps3_mem_block_t *block) {
 }
 
 void I_InitPS3Memory(void) {
-	if (ps3_mem_inited) return;
+	pthread_mutex_lock(&ps3_mem_mutex);
+	if (ps3_mem_inited) {
+		pthread_mutex_unlock(&ps3_mem_mutex);
+		return;
+	}
 
 	sys_memory_info_t mem_info;
-	size_t pool_size = 145 * 1024 * 1024; // Default fallback to 145MB
+	size_t pool_size = 167 * 1024 * 1024; // Default fallback to 167MB
 
 	if (sys_memory_get_user_memory_size(&mem_info) == 0) {
 		size_t avail = mem_info.available_user_memory;
-		if (avail > 50 * 1024 * 1024) {
-			pool_size = avail - (50 * 1024 * 1024);
+		if (avail > 16 * 1024 * 1024) {
+			pool_size = avail - (16 * 1024 * 1024);
 		}
 	}
 
-	if (pool_size < 32 * 1024 * 1024) pool_size = 32 * 1024 * 1024;
-	if (pool_size > 145 * 1024 * 1024) pool_size = 145 * 1024 * 1024;
+	if (pool_size < 16 * 1024 * 1024) pool_size = 16 * 1024 * 1024;
+	if (pool_size > 167 * 1024 * 1024) pool_size = 167 * 1024 * 1024;
 
 	// Align to 1MB boundary
 	pool_size = (pool_size / (1024 * 1024)) * (1024 * 1024);
@@ -333,14 +337,16 @@ void I_InitPS3Memory(void) {
 		bin_insert(initial_block);
 
 		ps3_mem_inited = 1;
-		printf("[PS3 MEM] Custom segregated pool of %u MB initialized successfully at 0x%08llX.\n",
+		CONS_Printf("[PS3 MEM] Custom segregated pool of %u MB initialized successfully at 0x%08llX.\n",
 			(unsigned int)(pool_size >> 20), (unsigned long long)ps3_pool_start);
 	}
 	else {
-		printf("[PS3 MEM ERROR] Failed to allocate contiguous pool of %u MB: %d. Standard OS heap will be used.\n",
+		CONS_Printf("[PS3 MEM ERROR] Failed to allocate contiguous pool of %u MB: %d. Standard OS heap will be used.\n",
 			(unsigned int)(pool_size >> 20), ret);
 		ps3_mem_inited = 1;
 	}
+
+	pthread_mutex_unlock(&ps3_mem_mutex);
 }
 
 void *I_PS3_Malloc(size_t size) {

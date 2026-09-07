@@ -290,13 +290,25 @@ static void HWR_DrawPatchInCache(GLMipmap_t *mipmap,
 
 	palette = HWR_GetTexturePalette();
 
-	ncols = pwidth;
+	// Compute unscaled power-of-2 container dimensions for realpatch
+	INT32 unscaled_w = 1, unscaled_h = 1;
+	while (unscaled_w < pwidth) unscaled_w <<= 1;
+	while (unscaled_h < pheight) unscaled_h <<= 1;
+
+	// Target dimensions inside the mipmap block (which may be downscaled on PS3)
+	INT32 target_patch_w = (pwidth * pblockwidth) / unscaled_w;
+	INT32 target_patch_h = (pheight * pblockheight) / unscaled_h;
+
+	if (target_patch_w <= 0 || target_patch_h <= 0)
+		return;
+
+	ncols = target_patch_w;
 
 	// source advance
 	xfrac = 0;
-	xfracstep = FRACUNIT;
-	yfracstep = FRACUNIT;
-	scale_y = FRACUNIT;
+	xfracstep = (pwidth << FRACBITS) / target_patch_w;
+	yfracstep = (pheight << FRACBITS) / target_patch_h;
+	scale_y = (target_patch_h << FRACBITS) / pheight;
 
 	bpp = format2bpp(mipmap->format);
 
@@ -417,9 +429,19 @@ static UINT8 *MakeBlock(GLMipmap_t *grMipmap)
 	UINT16 bu16 = ((0x00 << 8) | HWR_PATCHES_CHROMAKEY_COLORINDEX);
 
 #ifdef __CELLOS_LV2__
-	// PS3 OOM Prevention: Cap texture cache allocations to 1024x1024
-	if (grMipmap->width > 1024) grMipmap->width = 1024;
-	if (grMipmap->height > 1024) grMipmap->height = 1024;
+	// PS3 OOM Prevention: Downscale texture cache allocations to <= 1024 while preserving aspect ratio
+	if (grMipmap->width > 1024 || grMipmap->height > 1024)
+	{
+		UINT16 max_dim = (grMipmap->width > grMipmap->height) ? grMipmap->width : grMipmap->height;
+		while (max_dim > 1024)
+		{
+			grMipmap->width >>= 1;
+			grMipmap->height >>= 1;
+			max_dim >>= 1;
+		}
+		if (grMipmap->width < 1) grMipmap->width = 1;
+		if (grMipmap->height < 1) grMipmap->height = 1;
+	}
 #endif
 
 	INT32 blocksize = (grMipmap->width * grMipmap->height);
@@ -461,12 +483,31 @@ static void HWR_GenerateTexture(INT32 texnum, GLMapTexture_t *grtex, GLMipmap_t 
 	blockheight = texture->height;
 
 #ifdef __CELLOS_LV2__
-	// PS3 OOM prevention: Downscale target cache dimensions BEFORE allocating block memory.
-	// This prevents giant allocations (e.g., 1024x4096 = 16.7MB) in MakeBlock.
-	if (mipmap->width > 1024) mipmap->width = 1024;
-	if (mipmap->height > 1024) mipmap->height = 1024;
-	if (blockwidth > 1024) blockwidth = 1024;
-	if (blockheight > 1024) blockheight = 1024;
+	// PS3 OOM prevention: Downscale target cache dimensions BEFORE allocating block memory, preserving aspect ratio.
+	if (mipmap->width > 1024 || mipmap->height > 1024)
+	{
+		UINT16 max_dim = (mipmap->width > mipmap->height) ? mipmap->width : mipmap->height;
+		while (max_dim > 1024)
+		{
+			mipmap->width >>= 1;
+			mipmap->height >>= 1;
+			max_dim >>= 1;
+		}
+		if (mipmap->width < 1) mipmap->width = 1;
+		if (mipmap->height < 1) mipmap->height = 1;
+	}
+	if (blockwidth > 1024 || blockheight > 1024)
+	{
+		INT32 max_dim = (blockwidth > blockheight) ? blockwidth : blockheight;
+		while (max_dim > 1024)
+		{
+			blockwidth >>= 1;
+			blockheight >>= 1;
+			max_dim >>= 1;
+		}
+		if (blockwidth < 1) blockwidth = 1;
+		if (blockheight < 1) blockheight = 1;
+	}
 #endif
 
 	blocksize = blockwidth * blockheight;
@@ -527,9 +568,28 @@ void HWR_MakePatch(const patch_t *patch, GLPatch_t *grPatch, GLMipmap_t *grMipma
 {
 	if (grMipmap->width == 0)
 	{
-		grMipmap->width = grMipmap->height = 1;
-		while (grMipmap->width < patch->width) grMipmap->width <<= 1;
-		while (grMipmap->height < patch->height) grMipmap->height <<= 1;
+		UINT16 unscaled_w = 1, unscaled_h = 1;
+		while (unscaled_w < patch->width) unscaled_w <<= 1;
+		while (unscaled_h < patch->height) unscaled_h <<= 1;
+
+		grMipmap->width = unscaled_w;
+		grMipmap->height = unscaled_h;
+
+#ifdef __CELLOS_LV2__
+		// PS3 OOM prevention: Downscale patch mipmap dimensions to <= 1024 while preserving aspect ratio.
+		if (grMipmap->width > 1024 || grMipmap->height > 1024)
+		{
+			UINT16 max_dim = (grMipmap->width > grMipmap->height) ? grMipmap->width : grMipmap->height;
+			while (max_dim > 1024)
+			{
+				grMipmap->width >>= 1;
+				grMipmap->height >>= 1;
+				max_dim >>= 1;
+			}
+			if (grMipmap->width < 1) grMipmap->width = 1;
+			if (grMipmap->height < 1) grMipmap->height = 1;
+		}
+#endif
 
 		// no wrap around, no chroma key
 		grMipmap->flags = 0;
@@ -537,8 +597,8 @@ void HWR_MakePatch(const patch_t *patch, GLPatch_t *grPatch, GLMipmap_t *grMipma
 		// setup the texture info
 		grMipmap->format = patchformat;
 
-		grPatch->max_s = (float)patch->width / (float)grMipmap->width;
-		grPatch->max_t = (float)patch->height / (float)grMipmap->height;
+		grPatch->max_s = (float)patch->width / (float)unscaled_w;
+		grPatch->max_t = (float)patch->height / (float)unscaled_h;
 	}
 
 	Z_Free(grMipmap->data);
@@ -774,8 +834,18 @@ GLMapTexture_t *HWR_GetTexture(INT32 tex, boolean chromakeyed)
 		UINT32 tw = textures[tex]->width;
 		UINT32 th = textures[tex]->height;
 #ifdef __CELLOS_LV2__
-		if (tw > 1024) tw = 1024;
-		if (th > 1024) th = 1024;
+		if (tw > 1024 || th > 1024)
+		{
+			UINT32 max_dim = (tw > th) ? tw : th;
+			while (max_dim > 1024)
+			{
+				tw >>= 1;
+				th >>= 1;
+				max_dim >>= 1;
+			}
+			if (tw < 1) tw = 1;
+			if (th < 1) th = 1;
+		}
 #endif
 		originalMipmap->width = (UINT16)tw;
 		originalMipmap->height = (UINT16)th;
@@ -861,8 +931,24 @@ static void MakeLevelFlatMipmap(GLMipmap_t *grMipmap, INT32 texturenum, UINT16 f
 	grMipmap->format = GL_TEXFMT_P_8;
 	grMipmap->flags = flags;
 
-	grMipmap->width = (UINT16)textures[texturenum]->width;
-	grMipmap->height = (UINT16)textures[texturenum]->height;
+	UINT32 tw = textures[texturenum]->width;
+	UINT32 th = textures[texturenum]->height;
+#ifdef __CELLOS_LV2__
+	if (tw > 1024 || th > 1024)
+	{
+		UINT32 max_dim = (tw > th) ? tw : th;
+		while (max_dim > 1024)
+		{
+			tw >>= 1;
+			th >>= 1;
+			max_dim >>= 1;
+		}
+		if (tw < 1) tw = 1;
+		if (th < 1) th = 1;
+	}
+#endif
+	grMipmap->width = (UINT16)tw;
+	grMipmap->height = (UINT16)th;
 }
 
 void HWR_GetLevelFlat(levelflat_t *levelflat, boolean chromakeyed)
@@ -886,7 +972,30 @@ void HWR_GetLevelFlat(levelflat_t *levelflat, boolean chromakeyed)
 	if (!originalMipmap->downloaded && !originalMipmap->data)
 	{
 		size_t size = originalMipmap->width * originalMipmap->height;
-		memcpy(Z_Malloc(size, PU_HWRCACHE, &originalMipmap->data), R_GetFlatForTexture(texturenum), size);
+		UINT8 *src_flat = R_GetFlatForTexture(texturenum);
+		UINT8 *dst_flat = Z_Malloc(size, PU_HWRCACHE, &originalMipmap->data);
+		UINT32 orig_w = textures[texturenum]->width;
+		UINT32 orig_h = textures[texturenum]->height;
+		if (originalMipmap->width == orig_w && originalMipmap->height == orig_h)
+		{
+			memcpy(dst_flat, src_flat, size);
+		}
+		else
+		{
+			UINT32 x, y;
+			fixed_t xfrac, xfracstep = (orig_w << FRACBITS) / originalMipmap->width;
+			fixed_t yfrac = 0, yfracstep = (orig_h << FRACBITS) / originalMipmap->height;
+			for (y = 0; y < originalMipmap->height; y++, yfrac += yfracstep)
+			{
+				UINT8 *src_row = src_flat + ((yfrac >> FRACBITS) * orig_w);
+				UINT8 *dst_row = dst_flat + (y * originalMipmap->width);
+				xfrac = 0;
+				for (x = 0; x < originalMipmap->width; x++, xfrac += xfracstep)
+				{
+					dst_row[x] = src_row[xfrac >> FRACBITS];
+				}
+			}
+		}
 	}
 
 	// If chroma-keyed, create or use a different mipmap for the variant

@@ -6,7 +6,7 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+list of conditions and the following disclaimer.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -24,6 +24,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 
 #include "apng.h"
+
+#ifndef __CELLOS_LV2__
 
 #define APNG_INFO_acTL 0x20000U
 
@@ -47,31 +49,31 @@ struct apng_info_def
 };
 
 /* PROTOS (FUCK COMPILER) */
-void   apng_seek  (png_structp, apng_const_infop, size_t);
-size_t apng_tell  (png_structp, apng_const_infop);
+void   apng_seek(png_structp, apng_const_infop, size_t);
+size_t apng_tell(png_structp, apng_const_infop);
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
-void   apng_flush (png_structp, apng_infop);
+void   apng_flush(png_structp, apng_infop);
 #ifdef PNG_STDIO_SUPPORTED
-void   apng_default_flush (png_structp);
+void   apng_default_flush(png_structp);
 #endif/* PNG_STDIO_SUPPORTED */
 #endif/* PNG_WRITE_FLUSH_SUPPORTED */
 #ifdef PNG_STDIO_SUPPORTED
-void   apng_default_seek  (png_structp, size_t);
-size_t apng_default_tell  (png_structp);
+void   apng_default_seek(png_structp, size_t);
+size_t apng_default_tell(png_structp);
 #endif/* PNG_STDIO_SUPPORTED */
-void   apng_write_IEND (png_structp);
-void   apng_write_acTL (png_structp, png_uint_32, png_uint_32);
+void   apng_write_IEND(png_structp);
+void   apng_write_acTL(png_structp, png_uint_32, png_uint_32);
 #ifndef PNG_WRITE_APNG_SUPPORTED
-png_uint_32 apng_set_acTL_dummy (png_structp, png_infop,
-		png_uint_32, png_uint_32);
+png_uint_32 apng_set_acTL_dummy(png_structp, png_infop,
+	png_uint_32, png_uint_32);
 #endif/* PNG_WRITE_APNG_SUPPORTED */
 
 apng_infop
-apng_create_info_struct (png_structp pngp)
+apng_create_info_struct(png_structp pngp)
 {
 	apng_infop ainfop;
 	(void)pngp;
-	if (( ainfop = calloc(1,sizeof (apng_info)) ))
+	if ((ainfop = calloc(1, sizeof (apng_info))))
 	{
 		apng_set_write_fn(pngp, ainfop, 0, 0, 0, 0, 0);
 		apng_set_set_acTL_fn(pngp, ainfop, 0);
@@ -80,30 +82,30 @@ apng_create_info_struct (png_structp pngp)
 }
 
 void
-apng_destroy_info_struct (png_structp pngp, apng_infopp ainfopp)
+apng_destroy_info_struct(png_structp pngp, apng_infopp ainfopp)
 {
 	(void)pngp;
-	if (!( pngp && ainfopp ))
+	if (!(pngp && ainfopp))
 		return;
 
 	free((*ainfopp));
 }
 
 void
-apng_seek (png_structp pngp, apng_const_infop ainfop, size_t l)
+apng_seek(png_structp pngp, apng_const_infop ainfop, size_t l)
 {
 	(*(ainfop->output_seek_fn))(pngp, l);
 }
 
 size_t
-apng_tell (png_structp pngp, apng_const_infop ainfop)
+apng_tell(png_structp pngp, apng_const_infop ainfop)
 {
 	return (*(ainfop->output_tell_fn))(pngp);
 }
 
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
 void
-apng_flush (png_structp pngp, apng_infop ainfop)
+apng_flush(png_structp pngp, apng_infop ainfop)
 {
 	if (ainfop->output_flush_fn)
 		(*(ainfop->output_flush_fn))(pngp);
@@ -111,9 +113,9 @@ apng_flush (png_structp pngp, apng_infop ainfop)
 
 #ifdef PNG_STDIO_SUPPORTED
 void
-apng_default_flush (png_structp pngp)
+apng_default_flush(png_structp pngp)
 {
-	if (!( pngp ))
+	if (!(pngp))
 		return;
 
 	fflush((png_FILE_p)png_get_io_ptr);
@@ -123,9 +125,9 @@ apng_default_flush (png_structp pngp)
 
 #ifdef PNG_STDIO_SUPPORTED
 void
-apng_default_seek (png_structp pngp, size_t l)
+apng_default_seek(png_structp pngp, size_t l)
 {
-	if (!( pngp ))
+	if (!(pngp))
 		return;
 
 	if (fseek((png_FILE_p)png_get_io_ptr(pngp), (long)l, SEEK_SET) == -1)
@@ -133,16 +135,16 @@ apng_default_seek (png_structp pngp, size_t l)
 }
 
 size_t
-apng_default_tell (png_structp pngp)
+apng_default_tell(png_structp pngp)
 {
 	long l;
 
-	if (!( pngp ))
+	if (!(pngp))
 	{
 		png_error(pngp, "Call to apng_default_tell with NULL pngp failed");
 	}
 
-	if (( l = ftell((png_FILE_p)png_get_io_ptr(pngp)) ) == -1)
+	if ((l = ftell((png_FILE_p)png_get_io_ptr(pngp))) == -1)
 		png_error(pngp, "Tell Error");
 
 	return (size_t)l;
@@ -150,11 +152,11 @@ apng_default_tell (png_structp pngp)
 #endif/* PNG_STDIO_SUPPORTED */
 
 void
-apng_set_write_fn (png_structp pngp, apng_infop ainfop, png_voidp iop,
-		png_rw_ptr write_f, png_flush_ptr flush_f,
-		apng_seek_ptr seek_f, apng_tell_ptr tell_f)
+apng_set_write_fn(png_structp pngp, apng_infop ainfop, png_voidp iop,
+png_rw_ptr write_f, png_flush_ptr flush_f,
+apng_seek_ptr seek_f, apng_tell_ptr tell_f)
 {
-	if (!( pngp && ainfop ))
+	if (!(pngp && ainfop))
 		return;
 
 	png_set_write_fn(pngp, iop, write_f, flush_f);
@@ -172,24 +174,24 @@ apng_set_write_fn (png_structp pngp, apng_infop ainfop, png_voidp iop,
 		ainfop->output_seek_fn = &apng_default_seek;
 	else
 #endif/* PNG_STDIO_SUPPORTED */
-		ainfop->output_seek_fn  = seek_f;
+		ainfop->output_seek_fn = seek_f;
 #ifdef PNG_STDIO_SUPPORTED
 	if (!seek_f)
-		ainfop->output_tell_fn  = apng_default_tell;
+		ainfop->output_tell_fn = apng_default_tell;
 	else
 #endif/* PNG_STDIO_SUPPORTED */
-		ainfop->output_tell_fn  = tell_f;
+		ainfop->output_tell_fn = tell_f;
 }
 
 void
-apng_write_IEND (png_structp pngp)
+apng_write_IEND(png_structp pngp)
 {
 	png_byte chunkc[] = "IEND";
 	png_write_chunk(pngp, chunkc, 0, 0);
 }
 
 void
-apng_write_acTL (png_structp pngp, png_uint_32 frames, png_uint_32 plays)
+apng_write_acTL(png_structp pngp, png_uint_32 frames, png_uint_32 plays)
 {
 	png_byte chunkc[] = "acTL";
 	png_byte buf[8];
@@ -199,16 +201,16 @@ apng_write_acTL (png_structp pngp, png_uint_32 frames, png_uint_32 plays)
 }
 
 png_uint_32
-apng_set_acTL (png_structp pngp, png_infop infop, apng_infop ainfop,
-		png_uint_32 frames, png_uint_32 plays)
+apng_set_acTL(png_structp pngp, png_infop infop, apng_infop ainfop,
+png_uint_32 frames, png_uint_32 plays)
 {
 	(void)pngp;
 	(void)infop;
-	if (!( pngp && infop && ainfop ))
+	if (!(pngp && infop && ainfop))
 		return 0;
 
 	ainfop->num_frames = frames;
-	ainfop->num_plays  = plays;
+	ainfop->num_plays = plays;
 
 	ainfop->valid |= APNG_INFO_acTL;
 
@@ -216,15 +218,15 @@ apng_set_acTL (png_structp pngp, png_infop infop, apng_infop ainfop,
 }
 
 void
-apng_write_info_before_PLTE (png_structp pngp, png_infop infop,
-		apng_infop ainfop)
+apng_write_info_before_PLTE(png_structp pngp, png_infop infop,
+apng_infop ainfop)
 {
-	if (!( pngp && infop && ainfop ))
+	if (!(pngp && infop && ainfop))
 		return;
 
 	png_write_info_before_PLTE(pngp, infop);
 
-	if (( ainfop->valid & APNG_INFO_acTL )&&!( ainfop->mode & APNG_WROTE_acTL ))
+	if ((ainfop->valid & APNG_INFO_acTL) && !(ainfop->mode & APNG_WROTE_acTL))
 	{
 		ainfop->start_acTL = apng_tell(pngp, ainfop);
 
@@ -237,15 +239,15 @@ apng_write_info_before_PLTE (png_structp pngp, png_infop infop,
 }
 
 void
-apng_write_info (png_structp pngp, png_infop infop,
-		apng_infop ainfop)
+apng_write_info(png_structp pngp, png_infop infop,
+apng_infop ainfop)
 {
 	apng_write_info_before_PLTE(pngp, infop, ainfop);
 	png_write_info(pngp, infop);
 }
 
 void
-apng_write_end (png_structp pngp, png_infop infop, apng_infop ainfop)
+apng_write_end(png_structp pngp, png_infop infop, apng_infop ainfop)
 {
 	(void)infop;
 	apng_write_IEND(pngp);
@@ -261,8 +263,8 @@ apng_write_end (png_structp pngp, png_infop infop, apng_infop ainfop)
 
 #ifndef PNG_WRITE_APNG_SUPPORTED
 png_uint_32
-apng_set_acTL_dummy (png_structp pngp, png_infop infop,
-		png_uint_32 frames, png_uint_32 plays)
+apng_set_acTL_dummy(png_structp pngp, png_infop infop,
+png_uint_32 frames, png_uint_32 plays)
 {
 	(void)pngp;
 	(void)infop;
@@ -274,8 +276,8 @@ apng_set_acTL_dummy (png_structp pngp, png_infop infop,
 
 /* Dynamic runtime linking capable! (Hopefully.) */
 void
-apng_set_set_acTL_fn (png_structp pngp, apng_infop ainfop,
-		apng_set_acTL_ptr set_acTL_f)
+apng_set_set_acTL_fn(png_structp pngp, apng_infop ainfop,
+apng_set_acTL_ptr set_acTL_f)
 {
 	(void)pngp;
 	if (!ainfop->set_acTL_fn)
@@ -287,3 +289,4 @@ apng_set_set_acTL_fn (png_structp pngp, apng_infop ainfop,
 	else
 		ainfop->set_acTL_fn = set_acTL_f;
 }
+#endif

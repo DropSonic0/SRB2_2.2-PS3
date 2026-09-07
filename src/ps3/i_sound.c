@@ -83,7 +83,7 @@ static int16_t g_music_carry_buf[SPU_MUSIC_SRC_MAX_FRAMES * 2];
 static uint32_t g_music_carry_count = 0;
 
 /* Prototipos: I_DispatchSPUMixBlock se llama desde event_loop, que en este
- * archivo aparece ANTES de la definición real de las 4 funciones del SPU. */
+* archivo aparece ANTES de la definición real de las 4 funciones del SPU. */
 static boolean I_InitSPUAudioMixer(void);
 static void I_FillSPUMusicBuffer(uint32_t frames);
 static void I_RetireSPUMusicBuffer(void);
@@ -525,11 +525,11 @@ static int music_seek_fail_count = 0;
 static volatile boolean music_eof_reached = false;
 
 /* Abrir el decoder de una canción nueva (parsear headers/codebooks de
- * Vorbis) puede tardar unos milisegundos. Si eso se hace en el hilo que
- * llama a I_PlaySong (normalmente el hilo principal del juego), se nota
- * como un microcongelamiento de imagen justo al cambiar de música. Estas
- * dos variables difieren esa apertura al hilo de audio (event_loop), que
- * ya corre aparte y no bloquea el render. */
+* Vorbis) puede tardar unos milisegundos. Si eso se hace en el hilo que
+* llama a I_PlaySong (normalmente el hilo principal del juego), se nota
+* como un microcongelamiento de imagen justo al cambiar de música. Estas
+* dos variables difieren esa apertura al hilo de audio (event_loop), que
+* ya corre aparte y no bloquea el render. */
 static volatile boolean pending_song_open = false;
 static boolean pending_song_looping = false;
 static volatile boolean decoding_in_progress = false;
@@ -980,9 +980,9 @@ void I_FreeSfx(sfxinfo_t *sfx)
 }
 
 /*
- * Arranca el thread group del SPU con el mixer embebido.
- * Devuelve false si algo falla (el caller debe caer al mixer de PPU).
- */
+* Arranca el thread group del SPU con el mixer embebido.
+* Devuelve false si algo falla (el caller debe caer al mixer de PPU).
+*/
 static boolean I_InitSPUAudioMixer(void)
 {
 	int ret;
@@ -994,16 +994,16 @@ static boolean I_InitSPUAudioMixer(void)
 	if (ret != CELL_OK)
 	{
 		/* 0x8001000a (EBUSY) es el código real que estás viendo en hardware.
-		 * sys_spu_initialize está documentado para llamarse UNA vez por
-		 * proceso. Si algo más (el loader/CFW, u otra parte del motor) ya
-		 * inicializó los SPUs antes de llegar acá, esto no es un fallo real
-		 * de recursos -- los SPUs ya están listos para usarse, sólo que no
-		 * fuimos nosotros quienes los reclamamos. Seguimos en ese caso
-		 * puntual; cualquier otro código de error sí es fatal de verdad. */
+		* sys_spu_initialize está documentado para llamarse UNA vez por
+		* proceso. Si algo más (el loader/CFW, u otra parte del motor) ya
+		* inicializó los SPUs antes de llegar acá, esto no es un fallo real
+		* de recursos -- los SPUs ya están listos para usarse, sólo que no
+		* fuimos nosotros quienes los reclamamos. Seguimos en ese caso
+		* puntual; cualquier otro código de error sí es fatal de verdad. */
 		if (ret == 0x8001000a)
 		{
 			CONS_Printf("I_InitSPUAudioMixer: sys_spu_initialize ya estaba "
-			            "inicializado (0x%x), sigo de largo\n", ret);
+				"inicializado (0x%x), sigo de largo\n", ret);
 		}
 		else
 		{
@@ -1038,11 +1038,11 @@ static boolean I_InitSPUAudioMixer(void)
 
 	memset(&thread_arg, 0, sizeof(thread_arg));
 	/* Confirmado por prueba en hardware: arg1->spe_id, arg2->argp, arg3->envp.
-	 * Volvemos a la dirección real del control block en arg2. */
+	* Volvemos a la dirección real del control block en arg2. */
 	thread_arg.arg2 = (uint64_t)(uintptr_t)&g_spu_control_block;
 
 	ret = sys_spu_thread_initialize(&g_spu_thread_id, g_spu_group_id, 0,
-	                                 &g_spu_image, &thread_attr, &thread_arg);
+		&g_spu_image, &thread_attr, &thread_arg);
 	if (ret != CELL_OK)
 	{
 		CONS_Printf("I_InitSPUAudioMixer: sys_spu_thread_initialize failed (0x%x)\n", ret);
@@ -1062,11 +1062,11 @@ static boolean I_InitSPUAudioMixer(void)
 }
 
 /*
- * Arma g_spu_music_buf con hasta SPU_MUSIC_SRC_MAX_FRAMES de PCM nativo
- * (carry del bloque anterior + lo que haga falta sacar del music_fifo),
- * y completa los campos music_* del control block. Llamar con el mutex
- * de aud_ptr->lock ya tomado (misma sección que protege music_fifo).
- */
+* Arma g_spu_music_buf con hasta SPU_MUSIC_SRC_MAX_FRAMES de PCM nativo
+* (carry del bloque anterior + lo que haga falta sacar del music_fifo),
+* y completa los campos music_* del control block. Llamar con el mutex
+* de aud_ptr->lock ya tomado (misma sección que protege music_fifo).
+*/
 static void I_FillSPUMusicBuffer(uint32_t frames)
 {
 	uint32_t needed;
@@ -1084,41 +1084,41 @@ static void I_FillSPUMusicBuffer(uint32_t frames)
 	}
 
 	{
-	stb_vorbis_info info = stb_vorbis_get_info(music_decoder);
-	if (info.sample_rate <= 0)
-		return;
+		stb_vorbis_info info = stb_vorbis_get_info(music_decoder);
+		if (info.sample_rate <= 0)
+			return;
 
-	g_spu_control_block.music_step =
-		(uint32_t)(((double)info.sample_rate / 48000.0) * 65536.0);
+		g_spu_control_block.music_step =
+			(uint32_t)(((double)info.sample_rate / 48000.0) * 65536.0);
 
-	needed = (uint32_t)(((double)frames * info.sample_rate) / 48000.0) + 2;
-	if (needed > SPU_MUSIC_SRC_MAX_FRAMES)
-		needed = SPU_MUSIC_SRC_MAX_FRAMES;
+		needed = (uint32_t)(((double)frames * info.sample_rate) / 48000.0) + 2;
+		if (needed > SPU_MUSIC_SRC_MAX_FRAMES)
+			needed = SPU_MUSIC_SRC_MAX_FRAMES;
 
-	total = g_music_carry_count;
-	if (total > needed)
-		total = needed;
-	if (total > 0)
-		memcpy(g_spu_music_buf, g_music_carry_buf, (size_t)total * 4);
+		total = g_music_carry_count;
+		if (total > needed)
+			total = needed;
+		if (total > 0)
+			memcpy(g_spu_music_buf, g_music_carry_buf, (size_t)total * 4);
 
-	from_fifo = needed - total;
-	avail_bytes = (uint32_t)fifo_read_avail(music_fifo);
-	if (from_fifo > avail_bytes / 4)
-		from_fifo = avail_bytes / 4;
+		from_fifo = needed - total;
+		avail_bytes = (uint32_t)fifo_read_avail(music_fifo);
+		if (from_fifo > avail_bytes / 4)
+			from_fifo = avail_bytes / 4;
 
-	if (from_fifo > 0)
-		fifo_read(music_fifo, &g_spu_music_buf[total * 2], (size_t)from_fifo * 4);
+		if (from_fifo > 0)
+			fifo_read(music_fifo, &g_spu_music_buf[total * 2], (size_t)from_fifo * 4);
 
-	total += from_fifo;
-	g_spu_control_block.music_frames_avail = total;
+		total += from_fifo;
+		g_spu_control_block.music_frames_avail = total;
 	}
 }
 
 /*
- * Llamar DESPUÉS de leer el mailbox de vuelta del SPU (ya con
- * music_frames_consumed actualizado en el control block). Guarda como
- * carry los frames nativos que se mandaron pero no se consumieron.
- */
+* Llamar DESPUÉS de leer el mailbox de vuelta del SPU (ya con
+* music_frames_consumed actualizado en el control block). Guarda como
+* carry los frames nativos que se mandaron pero no se consumieron.
+*/
 static void I_RetireSPUMusicBuffer(void)
 {
 	uint32_t avail = g_spu_control_block.music_frames_avail;
@@ -1136,9 +1136,9 @@ static void I_RetireSPUMusicBuffer(void)
 }
 
 /*
- * Llena el control block con el estado actual de canales SFX + música,
- * despacha un bloque de mezcla al SPU vía mailbox y espera el resultado.
- */
+* Llena el control block con el estado actual de canales SFX + música,
+* despacha un bloque de mezcla al SPU vía mailbox y espera el resultado.
+*/
 static void I_DispatchSPUMixBlock(int16_t *out, int frames)
 {
 	INT32 chan;
@@ -1150,10 +1150,10 @@ static void I_DispatchSPUMixBlock(int16_t *out, int frames)
 	g_spu_control_block.ea_out_stream = (uint64_t)(uintptr_t)g_spu_out_buf;
 	g_spu_control_block.ea_music_stream = (uint64_t)(uintptr_t)g_spu_music_buf;
 	/* Antes esto estaba hardcodeado a 255 (volumen máximo fijo), por eso
-	 * la música sonaba siempre a full mientras los SFX sí respetaban el
-	 * volumen real configurado -- desbalance que se sentía como "los SFX
-	 * suenan bajo". music_volume ya existe (0..31, la usa el mixer viejo
-	 * de música) y nunca se conectó acá. */
+	* la música sonaba siempre a full mientras los SFX sí respetaban el
+	* volumen real configurado -- desbalance que se sentía como "los SFX
+	* suenan bajo". music_volume ya existe (0..31, la usa el mixer viejo
+	* de música) y nunca se conectó acá. */
 	g_spu_control_block.music_vol_left = (music_volume * 255) / 31;
 	g_spu_control_block.music_vol_right = (music_volume * 255) / 31;
 
@@ -1170,7 +1170,7 @@ static void I_DispatchSPUMixBlock(int16_t *out, int frames)
 		g_spu_control_block.channels[n].step_remainder = channels[chan].stepremainder;
 
 		/* Redondeo en vez de truncar (+63 antes de dividir por 127) para
-		 * no perder volumen sistemáticamente en cada multiplicación. */
+		* no perder volumen sistemáticamente en cada multiplicación. */
 		g_spu_control_block.channels[n].vol_left = (channels[chan].leftvol * 256 + 63) / 127;
 		g_spu_control_block.channels[n].vol_right = (channels[chan].rightvol * 256 + 63) / 127;
 
@@ -1182,16 +1182,16 @@ static void I_DispatchSPUMixBlock(int16_t *out, int frames)
 
 	{
 		/* DIAGNÓSTICO: probar si esta implementación de mailbox "dedupea"
-		 * o ignora escrituras repetidas con el mismo valor -- hasta ahora
-		 * siempre mandábamos el mismo "1". Mandamos un valor que cambia
-		 * en cada bloque para descartar esto. También revisamos el
-		 * código de retorno, que nunca habíamos chequeado. */
+		* o ignora escrituras repetidas con el mismo valor -- hasta ahora
+		* siempre mandábamos el mismo "1". Mandamos un valor que cambia
+		* en cada bloque para descartar esto. También revisamos el
+		* código de retorno, que nunca habíamos chequeado. */
 		static uint32_t mbox_send_counter = 1;
 		int mbox_ret = sys_spu_thread_write_spu_mb(g_spu_thread_id, mbox_send_counter);
 		if (mbox_ret != CELL_OK)
 		{
 			CONS_Printf("I_DispatchSPUMixBlock: sys_spu_thread_write_spu_mb "
-			            "devolvió error 0x%x (valor=%u)\n", mbox_ret, mbox_send_counter);
+				"devolvió error 0x%x (valor=%u)\n", mbox_ret, mbox_send_counter);
 		}
 		mbox_send_counter++;
 		if (mbox_send_counter == 0xFFFFFFFF) {
@@ -1200,12 +1200,12 @@ static void I_DispatchSPUMixBlock(int16_t *out, int frames)
 	}
 	{
 		/* La PPU nunca veía block_done actualizado por DMA (probablemente
-		 * por caché -- confirmado con diagnóstico que el SPU sí terminaba
-		 * el bloque entero, la PPU simplemente no se enteraba). En vez de
-		 * confiar en memoria compartida por DMA para la señal de "listo",
-		 * usamos sys_spu_thread_read_ls (que en TODAS las pruebas reflejó
-		 * siempre el valor real) para leer un contador que el SPU
-		 * incrementa en su propio Local Store al terminar cada bloque. */
+		* por caché -- confirmado con diagnóstico que el SPU sí terminaba
+		* el bloque entero, la PPU simplemente no se enteraba). En vez de
+		* confiar en memoria compartida por DMA para la señal de "listo",
+		* usamos sys_spu_thread_read_ls (que en TODAS las pruebas reflejó
+		* siempre el valor real) para leer un contador que el SPU
+		* incrementa en su propio Local Store al terminar cada bloque. */
 		static uint32_t last_seen_counter = 0;
 		uint32_t spins = 0;
 		const uint32_t SPU_WAIT_MAX_SPINS = 5000000; /* DIAGNÓSTICO: mucho más alto que antes, para descartar que simplemente haga falta más tiempo/reintentos */
@@ -1231,10 +1231,10 @@ static void I_DispatchSPUMixBlock(int16_t *out, int frames)
 				exit_ret = sys_spu_thread_get_exit_status(g_spu_thread_id, &exit_status);
 
 				CONS_Printf("I_DispatchSPUMixBlock: timeout esperando al SPU "
-				            "(terminados=%u, iniciados=%u, vueltas_loop=%u, "
-				            "exit_ret=0x%x, exit_status=%d)\n",
-				            (uint32_t)counter_val, (uint32_t)started_val, (uint32_t)loop_val,
-				            exit_ret, exit_status);
+					"(terminados=%u, iniciados=%u, vueltas_loop=%u, "
+					"exit_ret=0x%x, exit_status=%d)\n",
+					(uint32_t)counter_val, (uint32_t)started_val, (uint32_t)loop_val,
+					exit_ret, exit_status);
 				break;
 			}
 		}
@@ -1281,6 +1281,7 @@ void I_StartupSound(void)
 
 	memset(&g_spu_control_block, 0, sizeof(g_spu_control_block));
 	g_spu_audio_enabled = I_InitSPUAudioMixer();
+	g_spu_audio_enabled = false; /* DIAGNÓSTICO TEMPORAL: forzar fallback de PPU para comparar volumen de SFX -- sacar esta línea después de la prueba */
 
 	sound_started = 1;
 }
@@ -1597,11 +1598,11 @@ void I_UnloadSong(void)
 }
 
 /*
- * Hace el trabajo pesado real de arrancar una canción (abrir el decoder,
- * parsear comentarios/loop points, armar el fifo). Se llama con
- * aud->lock ya tomado -- desde event_loop (hilo de audio), de forma
- * diferida, para no bloquear al hilo que llamó a I_PlaySong.
- */
+* Hace el trabajo pesado real de arrancar una canción (abrir el decoder,
+* parsear comentarios/loop points, armar el fifo). Se llama con
+* aud->lock ya tomado -- desde event_loop (hilo de audio), de forma
+* diferida, para no bloquear al hilo que llamó a I_PlaySong.
+*/
 static void I_PlaySong_DoOpen(boolean looping)
 {
 	int error_code = 0;
@@ -1748,9 +1749,9 @@ boolean I_PlaySong(boolean looping)
 	}
 
 	/* No abrimos el decoder acá -- se lo pasamos al hilo de audio para
-	 * que lo haga en segundo plano (ver I_PlaySong_DoOpen), y así no
-	 * bloqueamos al hilo que llamó a I_PlaySong (frena la imagen si es
-	 * el hilo principal del juego). */
+	* que lo haga en segundo plano (ver I_PlaySong_DoOpen), y así no
+	* bloqueamos al hilo que llamó a I_PlaySong (frena la imagen si es
+	* el hilo principal del juego). */
 	pending_song_looping = looping;
 	pending_song_open = true;
 	pthread_cond_signal(&aud->cond);

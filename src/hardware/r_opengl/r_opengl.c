@@ -1014,6 +1014,10 @@ void SetStates(void)
 
 	//	GL_DBG_Printf("SetStates()\n");
 
+#ifdef __CELLOS_LV2__
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+#endif
+
 	// Hurdler: not necessary, is it?
 	pglShadeModel(GL_SMOOTH);      // iterate vertice colors
 	//pglShadeModel(GL_FLAT);

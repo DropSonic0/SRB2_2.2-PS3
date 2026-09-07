@@ -261,7 +261,7 @@ void I_StartupGraphics(void)
 	options.transientMemorySize = 0;
 	options.errorConsole = 0;
 	options.fifoSize = 0;
-	options.hostMemorySize = 8 * 1024 * 1024;
+	options.hostMemorySize = 4 * 1024 * 1024;
 
 	psglInit(&options);
 

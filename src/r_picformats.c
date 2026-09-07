@@ -45,9 +45,16 @@
 #define _FILE_OFFSET_BITS 0
 #endif
 
+#ifdef __CELLOS_LV2__
+#include <cell/codec/pngdec.h>
+#include <cell/codec/pngenc.h>
+#include <cell/codec/pngcom.h>
+#include <cell/sysmodule.h>
+#else
 #include "png.h"
 #ifndef PNG_READ_SUPPORTED
 #undef HAVE_PNG
+#endif
 #endif
 #endif
 
@@ -56,21 +63,21 @@ static colorlookup_t png_colorlookup;
 #endif
 
 /** Converts a picture between two formats.
-  *
-  * \param informat Input picture format.
-  * \param picture Input picture data.
-  * \param outformat Output picture format.
-  * \param insize Input picture size.
-  * \param outsize Output picture size, as a pointer.
-  * \param inwidth Input picture width.
-  * \param inheight Input picture height.
-  * \param inleftoffset Input picture left offset, for patches.
-  * \param intopoffset Input picture top offset, for patches.
-  * \param flags Input picture flags.
-  * \return A pointer to the converted picture.
-  * \sa Picture_PatchConvert
-  * \sa Picture_FlatConvert
-  */
+*
+* \param informat Input picture format.
+* \param picture Input picture data.
+* \param outformat Output picture format.
+* \param insize Input picture size.
+* \param outsize Output picture size, as a pointer.
+* \param inwidth Input picture width.
+* \param inheight Input picture height.
+* \param inleftoffset Input picture left offset, for patches.
+* \param intopoffset Input picture top offset, for patches.
+* \param flags Input picture flags.
+* \return A pointer to the converted picture.
+* \sa Picture_PatchConvert
+* \sa Picture_FlatConvert
+*/
 void *Picture_Convert(
 	pictureformat_t informat, void *picture, pictureformat_t outformat,
 	size_t insize, size_t *outsize,
@@ -222,18 +229,18 @@ static void *WritePatchPixel_i8o8(void *ptr, void *input)
 }
 
 /** Converts a picture to a patch.
-  *
-  * \param informat Input picture format.
-  * \param picture Input picture data.
-  * \param outformat Output picture format.
-  * \param outsize Output picture size, as a pointer.
-  * \param inwidth Input picture width.
-  * \param inheight Input picture height.
-  * \param inleftoffset Input picture left offset, for patches.
-  * \param intopoffset Input picture top offset, for patches.
-  * \param flags Input picture flags.
-  * \return A pointer to the converted picture.
-  */
+*
+* \param informat Input picture format.
+* \param picture Input picture data.
+* \param outformat Output picture format.
+* \param outsize Output picture size, as a pointer.
+* \param inwidth Input picture width.
+* \param inheight Input picture height.
+* \param inleftoffset Input picture left offset, for patches.
+* \param intopoffset Input picture top offset, for patches.
+* \param flags Input picture flags.
+* \return A pointer to the converted picture.
+*/
 void *Picture_PatchConvert(
 	pictureformat_t informat, void *picture, pictureformat_t outformat,
 	size_t *outsize,
@@ -288,7 +295,7 @@ void *Picture_PatchConvert(
 	}
 
 	void *(*readPixelFunc)(void *, pictureformat_t, INT32, INT32, INT32, INT32, pictureflags_t) = NULL;
-	UINT8 (*getAlphaFunc)(void *, pictureflags_t) = NULL;
+	UINT8(*getAlphaFunc)(void *, pictureflags_t) = NULL;
 	void *(*writePatchPixel)(void *, void *) = NULL;
 
 	if (Picture_IsPatchFormat(informat))
@@ -297,18 +304,18 @@ void *Picture_PatchConvert(
 	{
 		switch (informat)
 		{
-			case PICFMT_FLAT32:
-				readPixelFunc = ReadPixelFunc_Flat_32bpp;
-				break;
-			case PICFMT_FLAT16:
-				readPixelFunc = ReadPixelFunc_Flat_16bpp;
-				break;
-			case PICFMT_FLAT:
-				readPixelFunc = ReadPixelFunc_Flat_8bpp;
-				break;
-			default:
-				I_Error("Picture_PatchConvert: unsupported flat input format!");
-				break;
+		case PICFMT_FLAT32:
+			readPixelFunc = ReadPixelFunc_Flat_32bpp;
+			break;
+		case PICFMT_FLAT16:
+			readPixelFunc = ReadPixelFunc_Flat_16bpp;
+			break;
+		case PICFMT_FLAT:
+			readPixelFunc = ReadPixelFunc_Flat_8bpp;
+			break;
+		default:
+			I_Error("Picture_PatchConvert: unsupported flat input format!");
+			break;
 		}
 	}
 	else
@@ -323,36 +330,36 @@ void *Picture_PatchConvert(
 
 	switch (outformat)
 	{
-		case PICFMT_PATCH32:
-		case PICFMT_DOOMPATCH32:
-		{
-			if (inbpp == PICDEPTH_32BPP)
-				writePatchPixel = WritePatchPixel_i32o32;
-			else if (inbpp == PICDEPTH_16BPP)
-				writePatchPixel = WritePatchPixel_i16o32;
-			else // PICFMT_PATCH
-				writePatchPixel = WritePatchPixel_i8o32;
-			break;
-		}
-		case PICFMT_PATCH16:
-		case PICFMT_DOOMPATCH16:
-			if (inbpp == PICDEPTH_32BPP)
-				writePatchPixel = WritePatchPixel_i32o16;
-			else if (inbpp == PICDEPTH_16BPP)
-				writePatchPixel = WritePatchPixel_i16o16;
-			else // PICFMT_PATCH
-				writePatchPixel = WritePatchPixel_i8o16;
-			break;
-		default: // PICFMT_PATCH
-		{
-			if (inbpp == PICDEPTH_32BPP)
-				writePatchPixel = WritePatchPixel_i32o8;
-			else if (inbpp == PICDEPTH_16BPP)
-				writePatchPixel = WritePatchPixel_i16o8;
-			else // PICFMT_PATCH
-				writePatchPixel = WritePatchPixel_i8o8;
-			break;
-		}
+	case PICFMT_PATCH32:
+	case PICFMT_DOOMPATCH32:
+	{
+							   if (inbpp == PICDEPTH_32BPP)
+								   writePatchPixel = WritePatchPixel_i32o32;
+							   else if (inbpp == PICDEPTH_16BPP)
+								   writePatchPixel = WritePatchPixel_i16o32;
+							   else // PICFMT_PATCH
+								   writePatchPixel = WritePatchPixel_i8o32;
+							   break;
+	}
+	case PICFMT_PATCH16:
+	case PICFMT_DOOMPATCH16:
+		if (inbpp == PICDEPTH_32BPP)
+			writePatchPixel = WritePatchPixel_i32o16;
+		else if (inbpp == PICDEPTH_16BPP)
+			writePatchPixel = WritePatchPixel_i16o16;
+		else // PICFMT_PATCH
+			writePatchPixel = WritePatchPixel_i8o16;
+		break;
+	default: // PICFMT_PATCH
+	{
+				 if (inbpp == PICDEPTH_32BPP)
+					 writePatchPixel = WritePatchPixel_i32o8;
+				 else if (inbpp == PICDEPTH_16BPP)
+					 writePatchPixel = WritePatchPixel_i16o8;
+				 else // PICFMT_PATCH
+					 writePatchPixel = WritePatchPixel_i8o8;
+				 break;
+	}
 	}
 
 	patch_t *out = Z_Calloc(sizeof(patch_t), PU_PATCH, NULL);
@@ -365,13 +372,13 @@ void *Picture_PatchConvert(
 	size_t max_pixels = out->width * out->height;
 	unsigned num_posts = 0;
 
-	out->columns = Z_Calloc(sizeof(column_t) * out->width, PU_PATCH_DATA, NULL);
+	out->columns = Z_Calloc(sizeof(column_t)* out->width, PU_PATCH_DATA, NULL);
 	out->pixels = Z_Calloc(max_pixels * (outbpp / 8), PU_PATCH_DATA, NULL);
 	out->posts = NULL;
 
 	UINT8 *imgptr = out->pixels;
 
-	unsigned *column_posts = Z_Calloc(sizeof(unsigned) * inwidth, PU_STATIC, NULL);
+	unsigned *column_posts = Z_Calloc(sizeof(unsigned)* inwidth, PU_STATIC, NULL);
 
 	// Write columns
 	for (INT32 x = 0; x < inwidth; x++)
@@ -410,7 +417,7 @@ void *Picture_PatchConvert(
 			{
 				num_posts++;
 
-				out->posts = Z_Realloc(out->posts, sizeof(post_t) * num_posts, PU_PATCH_DATA, NULL);
+				out->posts = Z_Realloc(out->posts, sizeof(post_t)* num_posts, PU_PATCH_DATA, NULL);
 				post = &out->posts[num_posts - 1];
 				post->topdelta = (size_t)y;
 				post->length = 0;
@@ -454,16 +461,16 @@ void *Picture_PatchConvert(
 }
 
 /** Converts a picture to a flat.
-  *
-  * \param informat Input picture format.
-  * \param picture Input picture data.
-  * \param outformat Output picture format.
-  * \param outsize Output picture size, as a pointer.
-  * \param inwidth Input picture width.
-  * \param inheight Input picture height.
-  * \param flags Input picture flags.
-  * \return A pointer to the converted picture.
-  */
+*
+* \param informat Input picture format.
+* \param picture Input picture data.
+* \param outformat Output picture format.
+* \param outsize Output picture size, as a pointer.
+* \param inwidth Input picture width.
+* \param inheight Input picture height.
+* \param flags Input picture flags.
+* \return A pointer to the converted picture.
+*/
 void *Picture_FlatConvert(
 	pictureformat_t informat, void *picture, pictureformat_t outformat,
 	size_t *outsize,
@@ -517,103 +524,103 @@ void *Picture_FlatConvert(
 		memset(outflat, TRANSPARENTPIXEL, size);
 
 	for (y = 0; y < inheight; y++)
-		for (x = 0; x < inwidth; x++)
+	for (x = 0; x < inwidth; x++)
+	{
+		void *input = NULL;
+		int sx = x;
+		int sy = y;
+
+		if (flags & PICFLAGS_XFLIP)
+			sx = inwidth - x - 1;
+		if (flags & PICFLAGS_YFLIP)
+			sy = inheight - y - 1;
+
+		size_t in_offs = ((sy * inwidth) + sx);
+		size_t out_offs = ((y * inwidth) + x);
+
+		// Read pixel
+		if (Picture_IsPatchFormat(informat))
+			input = Picture_GetPatchPixel(inpatch, informat, sx, sy, 0);
+		else if (Picture_IsFlatFormat(informat))
+			input = (UINT8 *)picture + (in_offs * (inbpp / 8));
+		else
+			I_Error("Picture_FlatConvert: unsupported input format!");
+
+		if (!input)
+			continue;
+
+		switch (outformat)
 		{
-			void *input = NULL;
-			int sx = x;
-			int sy = y;
-
-			if (flags & PICFLAGS_XFLIP)
-				sx = inwidth - x - 1;
-			if (flags & PICFLAGS_YFLIP)
-				sy = inheight - y - 1;
-
-			size_t in_offs = ((sy * inwidth) + sx);
-			size_t out_offs = ((y * inwidth) + x);
-
-			// Read pixel
-			if (Picture_IsPatchFormat(informat))
-				input = Picture_GetPatchPixel(inpatch, informat, sx, sy, 0);
-			else if (Picture_IsFlatFormat(informat))
-				input = (UINT8 *)picture + (in_offs * (inbpp / 8));
-			else
-				I_Error("Picture_FlatConvert: unsupported input format!");
-
-			if (!input)
-				continue;
-
-			switch (outformat)
-			{
-				case PICFMT_FLAT32:
-				{
-					UINT32 *f32 = (UINT32 *)outflat;
-					if (inbpp == PICDEPTH_32BPP)
-					{
-						RGBA_t out = *(RGBA_t *)input;
-						f32[out_offs] = out.rgba;
-					}
-					else if (inbpp == PICDEPTH_16BPP)
-					{
-						RGBA_t out = pMasterPalette[*((UINT16 *)input) & 0xFF];
-						f32[out_offs] = out.rgba;
-					}
-					else // PICFMT_PATCH
-					{
-						RGBA_t out = pMasterPalette[*((UINT8 *)input) & 0xFF];
-						f32[out_offs] = out.rgba;
-					}
-					break;
-				}
-				case PICFMT_FLAT16:
-				{
-					UINT16 *f16 = (UINT16 *)outflat;
-					if (inbpp == PICDEPTH_32BPP)
-					{
-						RGBA_t in = *(RGBA_t *)input;
-						UINT8 out = NearestColor(in.s.red, in.s.green, in.s.blue);
-						f16[out_offs] = (0xFF00 | out);
-					}
-					else if (inbpp == PICDEPTH_16BPP)
-						f16[out_offs] = *(UINT16 *)input;
-					else // PICFMT_PATCH
-						f16[out_offs] = (0xFF00 | *((UINT8 *)input));
-					break;
-				}
-				case PICFMT_FLAT:
-				{
-					UINT8 *f8 = (UINT8 *)outflat;
-					if (inbpp == PICDEPTH_32BPP)
-					{
-						RGBA_t in = *(RGBA_t *)input;
-						UINT8 out = NearestColor(in.s.red, in.s.green, in.s.blue);
-						f8[out_offs] = out;
-					}
-					else if (inbpp == PICDEPTH_16BPP)
-					{
-						UINT16 out = *(UINT16 *)input;
-						f8[out_offs] = (out & 0xFF);
-					}
-					else // PICFMT_PATCH
-						f8[out_offs] = *(UINT8 *)input;
-					break;
-				}
-				default:
-					I_Error("Picture_FlatConvert: unsupported output format!");
-			}
+		case PICFMT_FLAT32:
+		{
+							  UINT32 *f32 = (UINT32 *)outflat;
+							  if (inbpp == PICDEPTH_32BPP)
+							  {
+								  RGBA_t out = *(RGBA_t *)input;
+								  f32[out_offs] = out.rgba;
+							  }
+							  else if (inbpp == PICDEPTH_16BPP)
+							  {
+								  RGBA_t out = pMasterPalette[*((UINT16 *)input) & 0xFF];
+								  f32[out_offs] = out.rgba;
+							  }
+							  else // PICFMT_PATCH
+							  {
+								  RGBA_t out = pMasterPalette[*((UINT8 *)input) & 0xFF];
+								  f32[out_offs] = out.rgba;
+							  }
+							  break;
 		}
+		case PICFMT_FLAT16:
+		{
+							  UINT16 *f16 = (UINT16 *)outflat;
+							  if (inbpp == PICDEPTH_32BPP)
+							  {
+								  RGBA_t in = *(RGBA_t *)input;
+								  UINT8 out = NearestColor(in.s.red, in.s.green, in.s.blue);
+								  f16[out_offs] = (0xFF00 | out);
+							  }
+							  else if (inbpp == PICDEPTH_16BPP)
+								  f16[out_offs] = *(UINT16 *)input;
+							  else // PICFMT_PATCH
+								  f16[out_offs] = (0xFF00 | *((UINT8 *)input));
+							  break;
+		}
+		case PICFMT_FLAT:
+		{
+							UINT8 *f8 = (UINT8 *)outflat;
+							if (inbpp == PICDEPTH_32BPP)
+							{
+								RGBA_t in = *(RGBA_t *)input;
+								UINT8 out = NearestColor(in.s.red, in.s.green, in.s.blue);
+								f8[out_offs] = out;
+							}
+							else if (inbpp == PICDEPTH_16BPP)
+							{
+								UINT16 out = *(UINT16 *)input;
+								f8[out_offs] = (out & 0xFF);
+							}
+							else // PICFMT_PATCH
+								f8[out_offs] = *(UINT8 *)input;
+							break;
+		}
+		default:
+			I_Error("Picture_FlatConvert: unsupported output format!");
+		}
+	}
 
 	return outflat;
 }
 
 /** Returns a pixel from a patch.
-  *
-  * \param patch Input patch.
-  * \param informat Input picture format.
-  * \param x Pixel X position.
-  * \param y Pixel Y position.
-  * \param flags Input picture flags.
-  * \return A pointer to a pixel in the patch. Returns NULL if not opaque.
-  */
+*
+* \param patch Input patch.
+* \param informat Input picture format.
+* \param x Pixel X position.
+* \param y Pixel Y position.
+* \param flags Input picture flags.
+* \return A pointer to a pixel in the patch. Returns NULL if not opaque.
+*/
 void *Picture_GetPatchPixel(
 	patch_t *patch, pictureformat_t informat,
 	INT32 x, INT32 y,
@@ -632,8 +639,8 @@ void *Picture_GetPatchPixel(
 	if (x < 0 || x >= width || y < 0 || y >= height)
 		return NULL;
 
-	INT32 sx = (flags & PICFLAGS_XFLIP) ? (width-1)-x : x;
-	INT32 sy = (flags & PICFLAGS_YFLIP) ? (height-1)-y : y;
+	INT32 sx = (flags & PICFLAGS_XFLIP) ? (width - 1) - x : x;
+	INT32 sy = (flags & PICFLAGS_YFLIP) ? (height - 1) - y : y;
 	UINT8 *s8 = NULL;
 	UINT16 *s16 = NULL;
 	UINT32 *s32 = NULL;
@@ -657,17 +664,17 @@ void *Picture_GetPatchPixel(
 
 			if (sy >= topdelta && ofs < column->length)
 			{
-				s8 = (UINT8 *)(column) + 3;
+				s8 = (UINT8 *)(column)+3;
 				switch (inbpp)
 				{
-					case PICDEPTH_32BPP:
-						s32 = (UINT32 *)s8;
-						return &s32[ofs];
-					case PICDEPTH_16BPP:
-						s16 = (UINT16 *)s8;
-						return &s16[ofs];
-					default: // PICDEPTH_8BPP
-						return &s8[ofs];
+				case PICDEPTH_32BPP:
+					s32 = (UINT32 *)s8;
+					return &s32[ofs];
+				case PICDEPTH_16BPP:
+					s16 = (UINT16 *)s8;
+					return &s16[ofs];
+				default: // PICDEPTH_8BPP
+					return &s8[ofs];
 				}
 			}
 
@@ -694,14 +701,14 @@ void *Picture_GetPatchPixel(
 				s8 = column->pixels + post->data_offset;
 				switch (inbpp)
 				{
-					case PICDEPTH_32BPP:
-						s32 = (UINT32 *)s8;
-						return &s32[ofs];
-					case PICDEPTH_16BPP:
-						s16 = (UINT16 *)s8;
-						return &s16[ofs];
-					default: // PICDEPTH_8BPP
-						return &s8[ofs];
+				case PICDEPTH_32BPP:
+					s32 = (UINT32 *)s8;
+					return &s32[ofs];
+				case PICDEPTH_16BPP:
+					s16 = (UINT16 *)s8;
+					return &s16[ofs];
+				default: // PICDEPTH_8BPP
+					return &s8[ofs];
 				}
 			}
 		}
@@ -711,100 +718,100 @@ void *Picture_GetPatchPixel(
 }
 
 /** Returns the amount of bits per pixel in the specified picture format.
-  *
-  * \param format Input picture format.
-  * \return The bits per pixel amount of the picture format.
-  */
+*
+* \param format Input picture format.
+* \return The bits per pixel amount of the picture format.
+*/
 INT32 Picture_FormatBPP(pictureformat_t format)
 {
 	INT32 bpp = PICDEPTH_NONE;
 	switch (format)
 	{
-		case PICFMT_PATCH32:
-		case PICFMT_FLAT32:
-		case PICFMT_DOOMPATCH32:
-		case PICFMT_PNG:
-			bpp = PICDEPTH_32BPP;
-			break;
-		case PICFMT_PATCH16:
-		case PICFMT_FLAT16:
-		case PICFMT_DOOMPATCH16:
-			bpp = PICDEPTH_16BPP;
-			break;
-		case PICFMT_PATCH:
-		case PICFMT_FLAT:
-		case PICFMT_DOOMPATCH:
-			bpp = PICDEPTH_8BPP;
-			break;
-		default:
-			break;
+	case PICFMT_PATCH32:
+	case PICFMT_FLAT32:
+	case PICFMT_DOOMPATCH32:
+	case PICFMT_PNG:
+		bpp = PICDEPTH_32BPP;
+		break;
+	case PICFMT_PATCH16:
+	case PICFMT_FLAT16:
+	case PICFMT_DOOMPATCH16:
+		bpp = PICDEPTH_16BPP;
+		break;
+	case PICFMT_PATCH:
+	case PICFMT_FLAT:
+	case PICFMT_DOOMPATCH:
+		bpp = PICDEPTH_8BPP;
+		break;
+	default:
+		break;
 	}
 	return bpp;
 }
 
 /** Checks if the specified picture format is a patch.
-  *
-  * \param format Input picture format.
-  * \return True if the picture format is a patch, false if not.
-  */
+*
+* \param format Input picture format.
+* \return True if the picture format is a patch, false if not.
+*/
 boolean Picture_IsPatchFormat(pictureformat_t format)
 {
 	return (Picture_IsInternalPatchFormat(format) || Picture_IsDoomPatchFormat(format));
 }
 
 /** Checks if the specified picture format is an internal patch.
-  *
-  * \param format Input picture format.
-  * \return True if the picture format is an internal patch, false if not.
-  */
+*
+* \param format Input picture format.
+* \return True if the picture format is an internal patch, false if not.
+*/
 boolean Picture_IsInternalPatchFormat(pictureformat_t format)
 {
 	switch (format)
 	{
-		case PICFMT_PATCH:
-		case PICFMT_PATCH16:
-		case PICFMT_PATCH32:
-			return true;
-		default:
-			return false;
+	case PICFMT_PATCH:
+	case PICFMT_PATCH16:
+	case PICFMT_PATCH32:
+		return true;
+	default:
+		return false;
 	}
 }
 
 /** Checks if the specified picture format is a Doom patch.
-  *
-  * \param format Input picture format.
-  * \return True if the picture format is a Doom patch, false if not.
-  */
+*
+* \param format Input picture format.
+* \return True if the picture format is a Doom patch, false if not.
+*/
 boolean Picture_IsDoomPatchFormat(pictureformat_t format)
 {
 	switch (format)
 	{
-		case PICFMT_DOOMPATCH:
-		case PICFMT_DOOMPATCH16:
-		case PICFMT_DOOMPATCH32:
-			return true;
-		default:
-			return false;
+	case PICFMT_DOOMPATCH:
+	case PICFMT_DOOMPATCH16:
+	case PICFMT_DOOMPATCH32:
+		return true;
+	default:
+		return false;
 	}
 }
 
 /** Checks if the specified picture format is a flat.
-  *
-  * \param format Input picture format.
-  * \return True if the picture format is a flat, false if not.
-  */
+*
+* \param format Input picture format.
+* \return True if the picture format is a flat, false if not.
+*/
 boolean Picture_IsFlatFormat(pictureformat_t format)
 {
 	return (format == PICFMT_FLAT || format == PICFMT_FLAT16 || format == PICFMT_FLAT32);
 }
 
 /** Returns true if the lump is a valid Doom patch.
-  * PICFMT_DOOMPATCH only.
-  *
-  * \param patch Input patch.
-  * \param picture Input patch size.
-  * \return True if the input patch is valid.
-  */
+* PICFMT_DOOMPATCH only.
+*
+* \param patch Input patch.
+* \param picture Input patch size.
+* \return True if the input patch is valid.
+*/
 boolean Picture_CheckIfDoomPatch(softwarepatch_t *patch, size_t size)
 {
 	INT16 width, height;
@@ -843,10 +850,10 @@ boolean Picture_CheckIfDoomPatch(softwarepatch_t *patch, size_t size)
 }
 
 /** Converts a texture to a flat.
-  *
-  * \param texnum The texture number.
-  * \return The converted flat.
-  */
+*
+* \param texnum The texture number.
+* \return The converted flat.
+*/
 void *Picture_TextureToFlat(size_t texnum)
 {
 	texture_t *texture;
@@ -894,11 +901,11 @@ void *Picture_TextureToFlat(size_t texnum)
 }
 
 /** Returns true if the lump is a valid PNG.
-  *
-  * \param d The lump to be checked.
-  * \param s The lump size.
-  * \return True if the lump is a PNG image.
-  */
+*
+* \param d The lump to be checked.
+* \param s The lump size.
+* \return True if the lump is a PNG image.
+*/
 boolean Picture_IsLumpPNG(const UINT8 *d, size_t s)
 {
 	if (s < 67) // https://web.archive.org/web/20230524232139/http://garethrees.org/2007/11/14/pngcrush/
@@ -912,6 +919,7 @@ boolean Picture_IsLumpPNG(const UINT8 *d, size_t s)
 #ifndef NO_PNG_LUMPS
 #ifdef HAVE_PNG
 
+#ifndef __CELLOS_LV2__
 /*#if PNG_LIBPNG_VER_DLLNUM < 14
 typedef PNG_CONST png_byte *png_const_bytep;
 #endif*/
@@ -965,8 +973,320 @@ static void PNG_warn(png_structp PNG, png_const_charp pngtext)
 	CONS_Debug(DBG_RENDER, "libpng warning at %p: %s", PNG, pngtext);
 }
 
-static png_byte grAb_chunk[5] = {'g', 'r', 'A', 'b', (png_byte)'\0'};
+static png_byte grAb_chunk[5] = { 'g', 'r', 'A', 'b', (png_byte)'\0' };
+#endif
 
+#ifdef __CELLOS_LV2__
+typedef struct {
+	UINT8 r, g, b, a;
+} ps3_png_palette_entry_t;
+
+typedef struct {
+	boolean has_trns;
+	boolean has_plte;
+	ps3_png_palette_entry_t palette[256];
+	INT32 num_palette;
+	UINT8 keyR, keyG, keyB;
+	UINT8 keyGray;
+} ps3_png_info_ext_t;
+
+static void PS3_ParsePNG_Chunks(const UINT8 *png, size_t size, int colorSpace, ps3_png_info_ext_t *info)
+{
+	size_t i;
+	memset(info, 0, sizeof(*info));
+	for (i = 0; i < 256; i++)
+	{
+		info->palette[i].r = 0;
+		info->palette[i].g = 0;
+		info->palette[i].b = 0;
+		info->palette[i].a = 0xFF;
+	}
+
+	if (!png || size < 12)
+		return;
+
+	for (i = 8; i + 12 <= size;)
+	{
+		UINT32 len = (png[i] << 24) | (png[i + 1] << 16) | (png[i + 2] << 8) | png[i + 3];
+		const UINT8 *type = &png[i + 4];
+		const UINT8 *data = &png[i + 8];
+
+		if (i + 12 + len > size)
+			break;
+
+		if (type[0] == 'P' && type[1] == 'L' && type[2] == 'T' && type[3] == 'E')
+		{
+			UINT32 entries = len / 3;
+			UINT32 j;
+			if (entries > 256) entries = 256;
+			info->has_plte = true;
+			info->num_palette = (INT32)entries;
+			for (j = 0; j < entries; j++)
+			{
+				info->palette[j].r = data[j * 3 + 0];
+				info->palette[j].g = data[j * 3 + 1];
+				info->palette[j].b = data[j * 3 + 2];
+				info->palette[j].a = 0xFF;
+			}
+		}
+		else if (type[0] == 't' && type[1] == 'R' && type[2] == 'N' && type[3] == 'S')
+		{
+			info->has_trns = true;
+			if (colorSpace == CELL_PNGDEC_PALETTE)
+			{
+				UINT32 count = (len > 256) ? 256 : len;
+				UINT32 j;
+				for (j = 0; j < count; j++)
+				{
+					info->palette[j].a = data[j];
+				}
+			}
+			else if (colorSpace == CELL_PNGDEC_RGB && len >= 6)
+			{
+				info->keyR = data[1];
+				info->keyG = data[3];
+				info->keyB = data[5];
+			}
+			else if (colorSpace == CELL_PNGDEC_GRAYSCALE && len >= 2)
+			{
+				info->keyGray = data[1];
+			}
+		}
+		else if (type[0] == 'I' && type[1] == 'D' && type[2] == 'A' && type[3] == 'T')
+		{
+			break;
+		}
+
+		i += 12 + len;
+	}
+}
+
+static void *ps3_pngdec_malloc(uint32_t size, void *cbCtrlCbArg)
+{
+	(void)cbCtrlCbArg;
+	return malloc(size);
+}
+
+static int32_t ps3_pngdec_free(void *ptr, void *cbCtrlCbArg)
+{
+	(void)cbCtrlCbArg;
+	free(ptr);
+	return 0;
+}
+
+static UINT8 **PNG_Read(
+	const UINT8 *png,
+	INT32 *w, INT32 *h, INT16 *topoffset, INT16 *leftoffset,
+	boolean *use_palette, size_t size)
+{
+	int ret;
+	CellPngDecMainHandle mainHandle;
+	CellPngDecSubHandle subHandle;
+	CellPngDecThreadInParam threadInParam;
+	CellPngDecThreadOutParam threadOutParam;
+	CellPngDecSrc pngdecSrc;
+	CellPngDecOpnInfo pngdecOpenInfo;
+	CellPngDecInfo pngdecInfo;
+	CellPngDecInParam pngdecInParam;
+	CellPngDecOutParam pngdecOutParam;
+	CellPngDecDataCtrlParam pngdecCtrlParam;
+	CellPngDecDataOutInfo pngdecDataOutInfo;
+	UINT32 y, width, height, pitch;
+	UINT8 **row_pointers;
+	UINT8 *decodeBuffer;
+	ps3_png_info_ext_t pngExt;
+
+	if (!png || size < 8)
+		I_Error("PNG_Read: invalid PNG data or size");
+
+	// Parse grAb chunk for offsets
+	if (leftoffset) *leftoffset = 0;
+	if (topoffset) *topoffset = 0;
+
+	if (topoffset || leftoffset)
+	{
+		size_t i;
+		for (i = 8; i + 12 <= size; i++)
+		{
+			if (png[i + 4] == 'g' && png[i + 5] == 'r' && png[i + 6] == 'A' && png[i + 7] == 'b')
+			{
+				UINT32 len = (png[i] << 24) | (png[i + 1] << 16) | (png[i + 2] << 8) | png[i + 3];
+				if (len >= 8 && i + 8 + len <= size)
+				{
+					const UINT8 *data = &png[i + 8];
+					INT32 left = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+					INT32 top = (data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7];
+					if (leftoffset) *leftoffset = (INT16)left;
+					if (topoffset) *topoffset = (INT16)top;
+				}
+				break;
+			}
+		}
+	}
+
+	ret = cellSysmoduleLoadModule(CELL_SYSMODULE_PNGDEC);
+	if (ret != CELL_OK && ret != (int)0x80010003 /* CELL_SYSMODULE_ERROR_DUPLICATED */)
+		I_Error("PNG_Read: cellSysmoduleLoadModule(PNGDEC) failed (0x%x)", ret);
+
+	memset(&threadInParam, 0, sizeof(threadInParam));
+	memset(&threadOutParam, 0, sizeof(threadOutParam));
+	threadInParam.spuThreadEnable = CELL_PNGDEC_SPU_THREAD_DISABLE;
+	threadInParam.ppuThreadPriority = 512;
+	threadInParam.spuThreadPriority = 200;
+	threadInParam.cbCtrlMallocFunc = ps3_pngdec_malloc;
+	threadInParam.cbCtrlMallocArg = NULL;
+	threadInParam.cbCtrlFreeFunc = ps3_pngdec_free;
+	threadInParam.cbCtrlFreeArg = NULL;
+
+	ret = cellPngDecCreate(&mainHandle, &threadInParam, &threadOutParam);
+	if (ret != CELL_OK)
+		I_Error("PNG_Read: cellPngDecCreate failed (0x%x)", ret);
+
+	memset(&pngdecSrc, 0, sizeof(pngdecSrc));
+	pngdecSrc.srcSelect = CELL_PNGDEC_BUFFER;
+	pngdecSrc.streamPtr = (uint8_t*)(uintptr_t)png;
+	pngdecSrc.streamSize = (uint32_t)size;
+	pngdecSrc.spuThreadEnable = CELL_PNGDEC_SPU_THREAD_DISABLE;
+
+	ret = cellPngDecOpen(mainHandle, &subHandle, &pngdecSrc, &pngdecOpenInfo);
+	if (ret != CELL_OK)
+	{
+		cellPngDecDestroy(mainHandle);
+		I_Error("PNG_Read: cellPngDecOpen failed (0x%x)", ret);
+	}
+
+	ret = cellPngDecReadHeader(mainHandle, subHandle, &pngdecInfo);
+	if (ret != CELL_OK)
+	{
+		cellPngDecClose(mainHandle, subHandle);
+		cellPngDecDestroy(mainHandle);
+		I_Error("PNG_Read: cellPngDecReadHeader failed (0x%x)", ret);
+	}
+
+	*w = (INT32)pngdecInfo.imageWidth;
+	*h = (INT32)pngdecInfo.imageHeight;
+	*use_palette = false;
+
+	PS3_ParsePNG_Chunks(png, size, pngdecInfo.colorSpace, &pngExt);
+
+	memset(&pngdecInParam, 0, sizeof(pngdecInParam));
+	pngdecInParam.commandPtr = NULL;
+	pngdecInParam.outputMode = CELL_PNGDEC_TOP_TO_BOTTOM;
+
+	if (pngdecInfo.colorSpace == CELL_PNGDEC_PALETTE)
+	{
+		pngdecInParam.outputColorSpace = CELL_PNGDEC_PALETTE;
+		pngdecInParam.outputBitDepth = 8;
+		pngdecInParam.outputPackFlag = CELL_PNGDEC_1BYTE_PER_1PIXEL;
+		pngdecInParam.outputAlphaSelect = CELL_PNGDEC_FIX_ALPHA;
+		pngdecInParam.outputColorAlpha = 0xff;
+	}
+	else if (pngdecInfo.colorSpace == CELL_PNGDEC_RGBA ||
+		pngdecInfo.colorSpace == CELL_PNGDEC_GRAYSCALE_ALPHA)
+	{
+		pngdecInParam.outputColorSpace = CELL_PNGDEC_RGBA;
+		pngdecInParam.outputBitDepth = 8;
+		pngdecInParam.outputPackFlag = CELL_PNGDEC_1BYTE_PER_1PIXEL;
+		pngdecInParam.outputAlphaSelect = CELL_PNGDEC_STREAM_ALPHA;
+		pngdecInParam.outputColorAlpha = 0xff;
+	}
+	else
+	{
+		pngdecInParam.outputColorSpace = CELL_PNGDEC_RGBA;
+		pngdecInParam.outputBitDepth = 8;
+		pngdecInParam.outputPackFlag = CELL_PNGDEC_1BYTE_PER_1PIXEL;
+		pngdecInParam.outputAlphaSelect = CELL_PNGDEC_FIX_ALPHA;
+		pngdecInParam.outputColorAlpha = 0xff;
+	}
+
+	ret = cellPngDecSetParameter(mainHandle, subHandle, &pngdecInParam, &pngdecOutParam);
+	if (ret != CELL_OK)
+	{
+		cellPngDecClose(mainHandle, subHandle);
+		cellPngDecDestroy(mainHandle);
+		I_Error("PNG_Read: cellPngDecSetParameter failed (0x%x)", ret);
+	}
+
+	width = pngdecOutParam.outputWidth;
+	height = pngdecOutParam.outputHeight;
+
+	if (pngdecInfo.colorSpace == CELL_PNGDEC_PALETTE)
+		pitch = width;
+	else
+		pitch = width * 4;
+
+	row_pointers = (UINT8**)malloc(sizeof(UINT8*)* height);
+	decodeBuffer = (UINT8*)malloc(pitch * height);
+
+	memset(&pngdecCtrlParam, 0, sizeof(pngdecCtrlParam));
+	pngdecCtrlParam.outputBytesPerLine = pitch;
+
+	ret = cellPngDecDecodeData(mainHandle, subHandle, decodeBuffer, &pngdecCtrlParam, &pngdecDataOutInfo);
+
+	cellPngDecClose(mainHandle, subHandle);
+	cellPngDecDestroy(mainHandle);
+
+	if (ret != CELL_OK)
+	{
+		free(decodeBuffer);
+		free(row_pointers);
+		I_Error("PNG_Read: cellPngDecDecodeData failed (0x%x)", ret);
+	}
+
+	if (pngdecInfo.colorSpace == CELL_PNGDEC_PALETTE)
+	{
+		UINT32 pxCount = width * height;
+		UINT32 p;
+		UINT8 *rgbaBuffer = (UINT8*)malloc(pxCount * 4);
+		for (p = 0; p < pxCount; p++)
+		{
+			UINT8 idx = decodeBuffer[p];
+			rgbaBuffer[p * 4 + 0] = pngExt.palette[idx].r;
+			rgbaBuffer[p * 4 + 1] = pngExt.palette[idx].g;
+			rgbaBuffer[p * 4 + 2] = pngExt.palette[idx].b;
+			rgbaBuffer[p * 4 + 3] = pngExt.palette[idx].a;
+		}
+		free(decodeBuffer);
+		decodeBuffer = rgbaBuffer;
+		pitch = width * 4;
+	}
+	else if (pngdecInfo.colorSpace == CELL_PNGDEC_RGB && pngExt.has_trns)
+	{
+		UINT32 pxCount = width * height;
+		UINT32 p;
+		for (p = 0; p < pxCount; p++)
+		{
+			if (decodeBuffer[p * 4 + 0] == pngExt.keyR &&
+				decodeBuffer[p * 4 + 1] == pngExt.keyG &&
+				decodeBuffer[p * 4 + 2] == pngExt.keyB)
+			{
+				decodeBuffer[p * 4 + 3] = 0x00;
+			}
+		}
+	}
+	else if (pngdecInfo.colorSpace == CELL_PNGDEC_GRAYSCALE && pngExt.has_trns)
+	{
+		UINT32 pxCount = width * height;
+		UINT32 p;
+		for (p = 0; p < pxCount; p++)
+		{
+			if (decodeBuffer[p * 4 + 0] == pngExt.keyGray)
+			{
+				decodeBuffer[p * 4 + 3] = 0x00;
+			}
+		}
+	}
+
+	for (y = 0; y < height; y++)
+	{
+		row_pointers[y] = (UINT8*)malloc(pitch);
+		memcpy(row_pointers[y], decodeBuffer + (y * pitch), pitch);
+	}
+	free(decodeBuffer);
+
+	return row_pointers;
+}
+#else
 static png_bytep *PNG_Read(
 	const UINT8 *png,
 	INT32 *w, INT32 *h, INT16 *topoffset, INT16 *leftoffset,
@@ -1116,7 +1436,7 @@ static png_bytep *PNG_Read(
 	png_read_update_info(png_ptr, png_info_ptr);
 
 	// Read the image
-	row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
+	row_pointers = (png_bytep*)malloc(sizeof(png_bytep)* height);
 	for (y = 0; y < height; y++)
 		row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png_ptr, png_info_ptr));
 	png_read_image(png_ptr, row_pointers);
@@ -1143,20 +1463,21 @@ static png_bytep *PNG_Read(
 
 	return row_pointers;
 }
+#endif
 
 /** Converts a PNG to a picture.
-  *
-  * \param png The PNG image.
-  * \param outformat The output picture's format.
-  * \param w The output picture's width, as a pointer.
-  * \param h The output picture's height, as a pointer.
-  * \param topoffset The output picture's top offset, for sprites, as a pointer.
-  * \param leftoffset The output picture's left offset, for sprites, as a pointer.
-  * \param insize The input picture's size.
-  * \param outsize A pointer to the output picture's size.
-  * \param flags Input picture flags.
-  * \return A pointer to the converted picture.
-  */
+*
+* \param png The PNG image.
+* \param outformat The output picture's format.
+* \param w The output picture's width, as a pointer.
+* \param h The output picture's height, as a pointer.
+* \param topoffset The output picture's top offset, for sprites, as a pointer.
+* \param leftoffset The output picture's left offset, for sprites, as a pointer.
+* \param insize The input picture's size.
+* \param outsize A pointer to the output picture's size.
+* \param flags Input picture flags.
+* \return A pointer to the converted picture.
+*/
 void *Picture_PNGConvert(
 	const UINT8 *png, pictureformat_t outformat,
 	INT32 *w, INT32 *h,
@@ -1167,11 +1488,11 @@ void *Picture_PNGConvert(
 	void *flat;
 	INT32 outbpp;
 	size_t flatsize;
-	png_uint_32 x, y;
-	png_bytep row;
+	UINT32 x, y;
+	UINT8 *row;
 	boolean palette = false;
-	png_bytep *row_pointers = NULL;
-	png_uint_32 width, height;
+	UINT8 **row_pointers = NULL;
+	UINT32 width, height;
 
 	INT32 pngwidth, pngheight;
 	INT16 loffs = 0, toffs = 0;
@@ -1251,7 +1572,7 @@ void *Picture_PNGConvert(
 				row = row_pointers[y];
 				for (x = 0; x < width; x++)
 				{
-					png_bytep px = &(row[x * 4]);
+					UINT8 *px = &(row[x * 4]);
 					if ((UINT8)px[3])
 					{
 						out.s.red = (UINT8)px[0];
@@ -1286,7 +1607,7 @@ void *Picture_PNGConvert(
 				row = row_pointers[y];
 				for (x = 0; x < width; x++)
 				{
-					png_bytep px = &(row[x * 4]);
+					UINT8 *px = &(row[x * 4]);
 					UINT8 red = (UINT8)px[0];
 					UINT8 green = (UINT8)px[1];
 					UINT8 blue = (UINT8)px[2];
@@ -1327,7 +1648,7 @@ void *Picture_PNGConvert(
 				row = row_pointers[y];
 				for (x = 0; x < width; x++)
 				{
-					png_bytep px = &(row[x * 4]);
+					UINT8 *px = &(row[x * 4]);
 					UINT8 red = (UINT8)px[0];
 					UINT8 green = (UINT8)px[1];
 					UINT8 blue = (UINT8)px[2];
@@ -1361,15 +1682,15 @@ void *Picture_PNGConvert(
 		// Figure out the format of the flat, from the bit depth of the output format
 		switch (outbpp)
 		{
-			case 32:
-				informat = PICFMT_FLAT32;
-				break;
-			case 16:
-				informat = PICFMT_FLAT16;
-				break;
-			default:
-				informat = PICFMT_FLAT;
-				break;
+		case 32:
+			informat = PICFMT_FLAT32;
+			break;
+		case 16:
+			informat = PICFMT_FLAT16;
+			break;
+		default:
+			informat = PICFMT_FLAT;
+			break;
 		}
 
 		// Now, convert it!
@@ -1383,17 +1704,52 @@ void *Picture_PNGConvert(
 }
 
 /** Returns the dimensions of a PNG image, but doesn't perform any conversions.
-  *
-  * \param png The PNG image.
-  * \param width A pointer to the input picture's width.
-  * \param height A pointer to the input picture's height.
-  * \param topoffset A pointer to the input picture's vertical offset.
-  * \param leftoffset A pointer to the input picture's horizontal offset.
-  * \param size The input picture's size.
-  * \return True if reading the file succeeded, false if it failed.
-  */
+*
+* \param png The PNG image.
+* \param width A pointer to the input picture's width.
+* \param height A pointer to the input picture's height.
+* \param topoffset A pointer to the input picture's vertical offset.
+* \param leftoffset A pointer to the input picture's horizontal offset.
+* \param size The input picture's size.
+* \return True if reading the file succeeded, false if it failed.
+*/
 boolean Picture_PNGDimensions(UINT8 *png, INT32 *width, INT32 *height, INT16 *topoffset, INT16 *leftoffset, size_t size)
 {
+#ifdef __CELLOS_LV2__
+	if (!png || size < 24)
+		return false;
+
+	if (png[0] == 0x89 && png[1] == 'P' && png[2] == 'N' && png[3] == 'G')
+	{
+		*width = (INT32)((png[16] << 24) | (png[17] << 16) | (png[18] << 8) | png[19]);
+		*height = (INT32)((png[20] << 24) | (png[21] << 16) | (png[22] << 8) | png[23]);
+	}
+	else
+		return false;
+
+	if (topoffset || leftoffset)
+	{
+		size_t i;
+		for (i = 8; i + 12 <= size; i++)
+		{
+			if (png[i + 4] == 'g' && png[i + 5] == 'r' && png[i + 6] == 'A' && png[i + 7] == 'b')
+			{
+				UINT32 len = (png[i] << 24) | (png[i + 1] << 16) | (png[i + 2] << 8) | png[i + 3];
+				if (len >= 8 && i + 8 + len <= size)
+				{
+					const UINT8 *data = &png[i + 8];
+					INT32 left = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+					INT32 top = (data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7];
+					if (leftoffset) *leftoffset = (INT16)left;
+					if (topoffset) *topoffset = (INT16)top;
+				}
+				break;
+			}
+		}
+	}
+
+	return true;
+#else
 	png_structp png_ptr;
 	png_infop png_info_ptr;
 	png_uint_32 w, h;
@@ -1475,6 +1831,7 @@ boolean Picture_PNGDimensions(UINT8 *png, INT32 *width, INT32 *height, INT16 *to
 	*width = (INT32)w;
 	*height = (INT32)h;
 	return true;
+#endif
 }
 #endif
 #endif
@@ -1502,7 +1859,7 @@ static void R_ParseSpriteInfoFrame(spriteinfo_t *info)
 	sprinfoTokenLength = strlen(sprinfoToken);
 	if (sprinfoTokenLength != 1)
 	{
-		I_Error("Error parsing SPRTINFO lump: Invalid frame \"%s\"",sprinfoToken);
+		I_Error("Error parsing SPRTINFO lump: Invalid frame \"%s\"", sprinfoToken);
 	}
 	else
 		frameChar = sprinfoToken;
@@ -1516,7 +1873,7 @@ static void R_ParseSpriteInfoFrame(spriteinfo_t *info)
 		I_Error("Error parsing SPRTINFO lump: Missing sprite info");
 	else
 	{
-		if (strcmp(sprinfoToken,"{")==0)
+		if (strcmp(sprinfoToken, "{") == 0)
 		{
 			Z_Free(sprinfoToken);
 			sprinfoToken = M_GetToken(NULL);
@@ -1524,21 +1881,21 @@ static void R_ParseSpriteInfoFrame(spriteinfo_t *info)
 			{
 				I_Error("Error parsing SPRTINFO lump: Unexpected end of file where sprite info should be");
 			}
-			while (strcmp(sprinfoToken,"}")!=0)
+			while (strcmp(sprinfoToken, "}") != 0)
 			{
-				if (stricmp(sprinfoToken, "XPIVOT")==0)
+				if (stricmp(sprinfoToken, "XPIVOT") == 0)
 				{
 					Z_Free(sprinfoToken);
 					sprinfoToken = M_GetToken(NULL);
 					frameXPivot = atoi(sprinfoToken);
 				}
-				else if (stricmp(sprinfoToken, "YPIVOT")==0)
+				else if (stricmp(sprinfoToken, "YPIVOT") == 0)
 				{
 					Z_Free(sprinfoToken);
 					sprinfoToken = M_GetToken(NULL);
 					frameYPivot = atoi(sprinfoToken);
 				}
-				else if (stricmp(sprinfoToken, "ROTAXIS")==0)
+				else if (stricmp(sprinfoToken, "ROTAXIS") == 0)
 				{
 					Z_Free(sprinfoToken);
 					sprinfoToken = M_GetToken(NULL);
@@ -1602,7 +1959,7 @@ static void R_ParseSpriteInfo(boolean spr2)
 		{
 			if (i == NUMPLAYERSPRITES)
 				I_Error("Error parsing SPRTINFO lump: Unknown sprite2 name \"%s\"", newSpriteName);
-			if (!memcmp(newSpriteName,spr2names[i],4))
+			if (!memcmp(newSpriteName, spr2names[i], 4))
 			{
 				spr2num = i;
 				break;
@@ -1618,19 +1975,19 @@ static void R_ParseSpriteInfo(boolean spr2)
 	sprinfoToken = M_GetToken(NULL);
 	if (sprinfoToken == NULL)
 	{
-		I_Error("Error parsing SPRTINFO lump: Unexpected end of file where open curly brace for sprite \"%s\" should be",newSpriteName);
+		I_Error("Error parsing SPRTINFO lump: Unexpected end of file where open curly brace for sprite \"%s\" should be", newSpriteName);
 	}
-	if (strcmp(sprinfoToken,"{")==0)
+	if (strcmp(sprinfoToken, "{") == 0)
 	{
 		Z_Free(sprinfoToken);
 		sprinfoToken = M_GetToken(NULL);
 		if (sprinfoToken == NULL)
 		{
-			I_Error("Error parsing SPRTINFO lump: Unexpected end of file where definition for sprite \"%s\" should be",newSpriteName);
+			I_Error("Error parsing SPRTINFO lump: Unexpected end of file where definition for sprite \"%s\" should be", newSpriteName);
 		}
-		while (strcmp(sprinfoToken,"}")!=0)
+		while (strcmp(sprinfoToken, "}") != 0)
 		{
-			if (stricmp(sprinfoToken, "SKIN")==0)
+			if (stricmp(sprinfoToken, "SKIN") == 0)
 			{
 				INT32 skinnum;
 				char *skinName = NULL;
@@ -1648,8 +2005,8 @@ static void R_ParseSpriteInfo(boolean spr2)
 
 				// copy skin name yada yada
 				sprinfoTokenLength = strlen(sprinfoToken);
-				skinName = (char *)Z_Malloc((sprinfoTokenLength+1)*sizeof(char),PU_STATIC,NULL);
-				M_Memcpy(skinName,sprinfoToken,sprinfoTokenLength*sizeof(char));
+				skinName = (char *)Z_Malloc((sprinfoTokenLength + 1)*sizeof(char), PU_STATIC, NULL);
+				M_Memcpy(skinName, sprinfoToken, sprinfoTokenLength*sizeof(char));
 				skinName[sprinfoTokenLength] = '\0';
 				strlwr(skinName);
 				Z_Free(sprinfoToken);
@@ -1659,11 +2016,11 @@ static void R_ParseSpriteInfo(boolean spr2)
 					I_Error("Error parsing SPRTINFO lump: Unknown skin \"%s\"", skinName);
 
 				if (skinnumbers == NULL)
-					skinnumbers = Z_Malloc(sizeof(UINT8) * numskins, PU_STATIC, NULL);
+					skinnumbers = Z_Malloc(sizeof(UINT8)* numskins, PU_STATIC, NULL);
 				skinnumbers[foundskins] = (UINT8)skinnum;
 				foundskins++;
 			}
-			else if (stricmp(sprinfoToken, "FRAME")==0)
+			else if (stricmp(sprinfoToken, "FRAME") == 0)
 			{
 				R_ParseSpriteInfoFrame(info);
 				Z_Free(sprinfoToken);
@@ -1683,19 +2040,19 @@ static void R_ParseSpriteInfo(boolean spr2)
 			}
 			else
 			{
-				I_Error("Error parsing SPRTINFO lump: Unknown keyword \"%s\" in sprite %s",sprinfoToken,newSpriteName);
+				I_Error("Error parsing SPRTINFO lump: Unknown keyword \"%s\" in sprite %s", sprinfoToken, newSpriteName);
 			}
 
 			sprinfoToken = M_GetToken(NULL);
 			if (sprinfoToken == NULL)
 			{
-				I_Error("Error parsing SPRTINFO lump: Unexpected end of file where sprite info or right curly brace for sprite \"%s\" should be",newSpriteName);
+				I_Error("Error parsing SPRTINFO lump: Unexpected end of file where sprite info or right curly brace for sprite \"%s\" should be", newSpriteName);
 			}
 		}
 	}
 	else
 	{
-		I_Error("Error parsing SPRTINFO lump: Expected \"{\" for sprite \"%s\", got \"%s\"",newSpriteName,sprinfoToken);
+		I_Error("Error parsing SPRTINFO lump: Expected \"{\" for sprite \"%s\", got \"%s\"", newSpriteName, sprinfoToken);
 	}
 
 	Z_Free(sprinfoToken);
@@ -1724,9 +2081,9 @@ void R_ParseSPRTINFOLump(UINT16 wadNum, UINT16 lumpNum)
 	if (sprinfoLump == NULL) return;
 	// If we're still here, then it DOES exist; figure out how long it is, and allot memory accordingly.
 	sprinfoLumpLength = W_LumpLengthPwad(wadNum, lumpNum);
-	sprinfoText = (char *)Z_Malloc((sprinfoLumpLength+1)*sizeof(char),PU_STATIC,NULL);
+	sprinfoText = (char *)Z_Malloc((sprinfoLumpLength + 1)*sizeof(char), PU_STATIC, NULL);
 	// Now move the contents of the lump into this new location.
-	memmove(sprinfoText,sprinfoLump,sprinfoLumpLength);
+	memmove(sprinfoText, sprinfoLump, sprinfoLumpLength);
 	// Make damn well sure the last character in our new memory location is \0.
 	sprinfoText[sprinfoLumpLength] = '\0';
 	// Finally, free up the memory from the first data load, because we really

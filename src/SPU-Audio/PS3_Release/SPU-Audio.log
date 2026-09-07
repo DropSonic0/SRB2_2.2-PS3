@@ -1,0 +1,16 @@
+﻿Build started 6/9/2026 15:22:23.
+     1>Project "C:\SRB2_2.2-PS3\src\SPU-Audio\SPU-Audio.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         spu_audio_mixer.c
+         spu-lv2-gcc.exe -o PS3_Release\spu_audio_mixer.o -c -iquote. -fpch-deps -MD -MV -IC:/usr/local/cell\target\spu\include -IC:/usr/local/cell\target\common\include -I"C:/usr/local/cell\host-win32\spu\lib\gcc\spu-lv2\4.1.1\include" -DNDEBUG -D__PS3__ -D__GCC__ -DSPU -Wall -O2 C:\SRB2_2.2-PS3\src\ps3\SPUS\spu_audio_mixer.c
+       Link:
+         C:\usr\local\cell\host-win32\spu\bin\spu-lv2-gcc.exe -o "C:\SRB2_2.2-PS3\src\sdl\PS3_Release\SPU-Audio.elf" -Wl,--start-group PS3_Release\spu_audio_mixer.o -Wl,--end-group
+         SPU-Audio.vcxproj -> C:\SRB2_2.2-PS3\src\sdl\PS3_Release\SPU-Audio.elf
+       SPUElfConvert:
+         C:\usr\local\cell\host-win32\bin\spu_elf-to-ppu_obj.exe --format=elf "C:\SRB2_2.2-PS3\src\sdl\PS3_Release\SPU-Audio.elf" "C:\SRB2_2.2-PS3\src\sdl\PS3_Release\SPU-Audio.ppu.o"
+         "C:\SRB2_2.2-PS3\src\sdl\PS3_Release\SPU-Audio.elf" converted to PPU object file
+     1>Done Building Project "C:\SRB2_2.2-PS3\src\SPU-Audio\SPU-Audio.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.88
