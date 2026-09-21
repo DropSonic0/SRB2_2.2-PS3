@@ -13,9 +13,6 @@
 #include "hw_glob.h"
 #include "hw_batching.h"
 #include "../i_system.h"
-#ifdef __CELLOS_LV2__
-#include "../ps3/ps3_mem_override.h"
-#endif
 
 // The texture for the next polygon given to HWR_ProcessPolygon.
 // Set with HWR_SetCurrentTexture.

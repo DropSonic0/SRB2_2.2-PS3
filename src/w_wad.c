@@ -2015,23 +2015,6 @@ boolean W_IsLumpFolder(UINT16 wad, UINT16 lump)
 }
 
 #ifdef HAVE_ZLIB
-#ifdef __CELLOS_LV2__
-extern void *I_PS3_Malloc(size_t size);
-extern void I_PS3_Free(void *ptr);
-
-static void *zlib_ps3_alloc(void *opaque, unsigned int items, unsigned int size)
-{
-	(void)opaque;
-	return I_PS3_Malloc((size_t)items * size);
-}
-
-static void zlib_ps3_free(void *opaque, void *address)
-{
-	(void)opaque;
-	I_PS3_Free(address);
-}
-#endif
-
 /* report a zlib or i/o error */
 void zerr(int ret)
 {
@@ -2201,13 +2184,8 @@ size_t W_ReadLumpHeaderPwad(UINT16 wad, UINT16 lump, void *dest, size_t size, si
 						 if (fread(rawData, 1, rawSize, handle) < rawSize)
 							 I_Error("wad %d, lump %d: cannot read compressed data", wad, lump);
 
-#ifdef __CELLOS_LV2__
-						 strm.zalloc = zlib_ps3_alloc;
-						 strm.zfree = zlib_ps3_free;
-#else
 						 strm.zalloc = Z_NULL;
 						 strm.zfree = Z_NULL;
-#endif
 						 strm.opaque = Z_NULL;
 
 						 strm.total_in = strm.avail_in = rawSize;
