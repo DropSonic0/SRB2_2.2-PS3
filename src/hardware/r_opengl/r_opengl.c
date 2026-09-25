@@ -26,6 +26,9 @@
 #include "r_opengl.h"
 #include "r_vbo.h"
 #include "../hw_shaders.h"
+#ifdef __CELLOS_LV2__
+#include "../../ps3/ps3_mem_override.h"
+#endif
 
 #if defined (HWRENDER) && !defined (NOROPENGL)
 

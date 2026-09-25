@@ -47,6 +47,16 @@ static boolean Z_calloc = false;
 
 #define ZONEID 0xa441d13d
 
+#ifdef __CELLOS_LV2__
+extern void *I_PS3_Malloc(size_t size);
+extern void I_PS3_Free(void *ptr);
+extern void *I_PS3_Realloc(void *ptr, size_t size);
+extern void *I_PS3_Calloc(size_t nmemb, size_t size);
+#define malloc(x) I_PS3_Malloc(x)
+#define free(x) I_PS3_Free(x)
+#define realloc(x, y) I_PS3_Realloc(x, y)
+#define calloc(x, y) I_PS3_Calloc(x, y)
+#endif
 
 #ifdef ZDEBUG
 //#define ZDEBUG2
